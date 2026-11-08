@@ -1,0 +1,6 @@
+{
+  "name": "TEAMORA AI — Your AI Team. One Smart Workspace",
+  "description": "Premium multi-tenant AI Workforce & Business Automation SaaS platform featuring 15 specialized autonomous AI agents, orchestrator, and real-time business operations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

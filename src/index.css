@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-primary: #F5F1E9;
+    --bg-surface: #FFFEFC;
+    --bg-surface-elevated: #FFFFFF;
+    --bg-subtle: #EBE5DB;
+    --text-primary: #211B2C;
+    --text-secondary: #77717D;
+    --text-muted: #9E98A6;
+    --border-color: #E2DBD0;
+    --border-subtle: #EDE7DC;
+    --brand-violet: #8B5CF6;
+    --brand-violet-hover: #7C3AED;
+    --brand-violet-subtle: rgba(139, 92, 246, 0.12);
+    --brand-lime: #C7F36B;
+    --brand-lime-text: #1C3300;
+    --brand-coral: #FF806E;
+    --brand-coral-subtle: rgba(255, 128, 110, 0.12);
+    --deep-ink: #211B2C;
+    --dark-surface: #2C2438;
+  }
+
+  .dark {
+    --bg-primary: #181320;
+    --bg-surface: #211B2C;
+    --bg-surface-elevated: #2C2438;
+    --bg-subtle: #272033;
+    --text-primary: #F5F1E9;
+    --text-secondary: #AFA8B8;
+    --text-muted: #7E7788;
+    --border-color: #382F47;
+    --border-subtle: #2F273D;
+    --brand-violet: #A78BFA;
+    --brand-violet-hover: #C4B5FD;
+    --brand-violet-subtle: rgba(167, 139, 250, 0.18);
+    --brand-lime: #C7F36B;
+    --brand-lime-text: #112200;
+    --brand-coral: #FF806E;
+    --brand-coral-subtle: rgba(255, 128, 110, 0.18);
+    --deep-ink: #100C16;
+    --dark-surface: #1E1727;
+  }
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* RTL layout helpers */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+/* Custom scrollbar matching Teamora palette */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(119, 113, 125, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(119, 113, 125, 0.45);
+}

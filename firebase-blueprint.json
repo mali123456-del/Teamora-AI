@@ -1,0 +1,127 @@
+{
+  "entities": {
+    "organization": {
+      "title": "Organization",
+      "description": "Multi-tenant business organization workspace",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 128 },
+        "plan": { "type": "string", "enum": ["free", "starter", "pro", "business", "enterprise"] },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "plan", "ownerUid"]
+    },
+    "userProfile": {
+      "title": "User Profile",
+      "description": "User profile with organization association and role",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 128 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["owner", "admin", "manager", "member", "viewer"] },
+        "currentOrgId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "agentTask": {
+      "title": "Agent Task",
+      "description": "Autonomous task executed by an AI workforce agent",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orgId": { "type": "string", "maxLength": 128 },
+        "agentId": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "maxLength": 256 },
+        "prompt": { "type": "string", "maxLength": 4096 },
+        "status": { "type": "string", "enum": ["queued", "running", "completed", "failed", "needs_approval"] },
+        "priority": { "type": "string", "enum": ["low", "medium", "high", "urgent"] },
+        "result": { "type": "string", "maxLength": 16384 },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orgId", "agentId", "title", "status", "createdBy"]
+    },
+    "approval": {
+      "title": "Approval Request",
+      "description": "Human-in-the-loop approval gate for sensitive operations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orgId": { "type": "string", "maxLength": 128 },
+        "agentId": { "type": "string", "maxLength": 64 },
+        "actionType": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "maxLength": 256 },
+        "description": { "type": "string", "maxLength": 2048 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "consequences": { "type": "string", "maxLength": 1024 },
+        "decidedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orgId", "agentId", "actionType", "title", "status"]
+    },
+    "customer": {
+      "title": "Customer or Lead",
+      "description": "CRM customer or sales lead record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orgId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 128 },
+        "company": { "type": "string", "maxLength": 128 },
+        "status": { "type": "string", "enum": ["lead", "prospect", "customer", "churned"] },
+        "value": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orgId", "name", "email", "status"]
+    },
+    "workflow": {
+      "title": "Automation Workflow",
+      "description": "Visual automation workflow definition",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orgId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 512 },
+        "trigger": { "type": "string", "maxLength": 128 },
+        "status": { "type": "string", "enum": ["active", "paused", "draft"] },
+        "stepsCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orgId", "name", "trigger", "status"]
+    }
+  },
+  "firestore": {
+    "/organizations/{orgId}": {
+      "schema": { "$ref": "#/entities/organization" },
+      "description": "Organization records"
+    },
+    "/users/{userId}/profile": {
+      "schema": { "$ref": "#/entities/userProfile" },
+      "description": "User profile records"
+    },
+    "/organizations/{orgId}/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/agentTask" },
+      "description": "Agent tasks within an organization"
+    },
+    "/organizations/{orgId}/approvals/{approvalId}": {
+      "schema": { "$ref": "#/entities/approval" },
+      "description": "Approval requests within an organization"
+    },
+    "/organizations/{orgId}/customers/{customerId}": {
+      "schema": { "$ref": "#/entities/customer" },
+      "description": "CRM customers and leads within an organization"
+    },
+    "/organizations/{orgId}/workflows/{workflowId}": {
+      "schema": { "$ref": "#/entities/workflow" },
+      "description": "Automation workflows within an organization"
+    }
+  }
+}
