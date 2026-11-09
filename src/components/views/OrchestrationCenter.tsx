@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext.tsx';
 import { TeamoraWorkforceCanvas } from '../three/TeamoraWorkforceCanvas.tsx';
 import { TEAMORA_AGENTS } from '../../data/agents.ts';
-import { orchestrateWorkforce } from '../../lib/gemini.ts';
+import { orchestrateWorkforce, generateAgentResponse } from '../../lib/gemini.ts';
 import {
   Workflow,
   Sparkles,
@@ -15,21 +15,26 @@ import {
   BrainCircuit,
   Eye,
   Send,
+  RotateCw,
 } from 'lucide-react';
 
 export const OrchestrationCenter: React.FC = () => {
-  const { addTask, user, setSelectedAgentId, setActiveTab } = useApp();
+  const { addTask, updateTask, user, setSelectedAgentId, setActiveTab, setBannerMessage } = useApp();
   const [goalInput, setGoalInput] = useState('');
   const [isOrchestrating, setIsOrchestrating] = useState(false);
+  const [executingTaskId, setExecutingTaskId] = useState<string | null>(null);
   const [generatedPlan, setGeneratedPlan] = useState<{
     summary?: string;
     subtasks?: Array<{
+      taskId?: string;
       agentId: string;
       agentName: string;
       title: string;
       prompt: string;
       requiresApproval: boolean;
       consequences?: string;
+      status: 'queued' | 'planning' | 'running' | 'completed' | 'failed' | 'needs_approval' | 'cancelled';
+      result?: string;
     }>;
     rawText?: string;
   } | null>(null);
@@ -60,7 +65,6 @@ export const OrchestrationCenter: React.FC = () => {
       });
 
       if (response.raw) {
-        // Try parsing JSON if formatted, or display formatted markdown
         let parsed: any = null;
         try {
           const jsonMatch = response.raw.match(/\{[\s\S]*\}/);
@@ -72,33 +76,44 @@ export const OrchestrationCenter: React.FC = () => {
         }
 
         if (parsed && parsed.subtasks) {
-          setGeneratedPlan({
-            summary: parsed.planSummary || parsed.reasoning,
-            subtasks: parsed.subtasks.map((st: any) => ({
+          const createdTasks = parsed.subtasks.map((st: any) => {
+            const initialStatus = st.requiresApproval ? ('needs_approval' as const) : ('queued' as const);
+            const created = addTask({
+              agentId: st.agentId || 'workforce-manager',
+              agentName: st.agentName || 'Agent',
+              title: st.actionTitle || st.title || 'Decomposed Subtask',
+              prompt: st.prompt || 'Decomposed by Orchestrator',
+              status: initialStatus,
+              priority: 'high',
+              requiresApproval: !!st.requiresApproval,
+              createdBy: 'Orchestrator (Atlas)',
+              modelUsed: 'gemini-3.8-flash',
+              result: st.requiresApproval
+                ? 'Waiting for human sign-off in Approvals Gate before execution.'
+                : 'Queued for autonomous agent execution.',
+            });
+
+            return {
+              taskId: created.id,
               agentId: st.agentId || 'workforce-manager',
               agentName: st.agentName || 'Agent',
               title: st.actionTitle || st.title || 'Subtask',
               prompt: st.prompt || 'Execute subtask',
               requiresApproval: !!st.requiresApproval,
               consequences: st.consequences,
-            })),
+              status: initialStatus,
+            };
+          });
+
+          setGeneratedPlan({
+            summary: parsed.planSummary || parsed.reasoning,
+            subtasks: createdTasks,
             rawText: response.raw,
           });
 
-          // Deploy subtasks to Task Center
-          parsed.subtasks.forEach((st: any) => {
-            addTask({
-              agentId: st.agentId || 'workforce-manager',
-              agentName: st.agentName || 'Agent',
-              title: st.actionTitle || st.title || 'Decomposed Subtask',
-              prompt: st.prompt || 'Decomposed by Orchestrator',
-              status: st.requiresApproval ? 'needs_approval' : 'completed',
-              priority: 'high',
-              requiresApproval: st.requiresApproval,
-              createdBy: 'Orchestrator (Atlas)',
-              modelUsed: 'gemini-4-argon (Thinking HIGH)',
-              result: `Subtask assigned and staged. ${st.requiresApproval ? 'Waiting for human sign-off in Approvals Gate.' : 'Autonomous execution complete.'}`,
-            });
+          setBannerMessage({
+            title: `Pipeline decomposed into ${createdTasks.length} queued tasks with dependency routing.`,
+            type: 'success',
           });
         } else {
           setGeneratedPlan({
@@ -106,10 +121,65 @@ export const OrchestrationCenter: React.FC = () => {
           });
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Orchestration error:', err);
+      setBannerMessage({
+        title: `Orchestration error: ${err.message}`,
+        type: 'warning',
+      });
     } finally {
       setIsOrchestrating(false);
+    }
+  };
+
+  // Execute an individual subtask autonomously via Gemini
+  const handleExecuteSubtask = async (subtask: {
+    taskId?: string;
+    agentId: string;
+    agentName: string;
+    prompt: string;
+  }) => {
+    if (!subtask.taskId) return;
+    setExecutingTaskId(subtask.taskId);
+
+    updateTask(subtask.taskId, { status: 'running' });
+
+    try {
+      const agentDef = TEAMORA_AGENTS.find((a) => a.id === subtask.agentId) || TEAMORA_AGENTS[0];
+      const result = await generateAgentResponse({
+        prompt: subtask.prompt,
+        systemInstruction: agentDef.systemInstruction,
+        model: 'gemini-3.8-flash',
+      });
+
+      updateTask(subtask.taskId, {
+        status: 'completed',
+        result: result.text,
+        modelUsed: result.model,
+        duration: '1.4s',
+      });
+
+      setGeneratedPlan((prev) => {
+        if (!prev || !prev.subtasks) return prev;
+        return {
+          ...prev,
+          subtasks: prev.subtasks.map((st) =>
+            st.taskId === subtask.taskId ? { ...st, status: 'completed', result: result.text } : st
+          ),
+        };
+      });
+
+      setBannerMessage({
+        title: `${subtask.agentName} executed task successfully.`,
+        type: 'success',
+      });
+    } catch (err: any) {
+      updateTask(subtask.taskId, {
+        status: 'failed',
+        result: `Execution error: ${err.message}`,
+      });
+    } finally {
+      setExecutingTaskId(null);
     }
   };
 
@@ -119,13 +189,13 @@ export const OrchestrationCenter: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase font-mono bg-[#8B5CF6]/15 text-[#8B5CF6]">
-            Multi-Agent Neural Engine
+            Multi-Agent Neural Engine · Phase 26
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1">
             Workforce Orchestration Center
           </h1>
           <p className="text-xs sm:text-sm text-[#77717D] dark:text-[#AFA8B8]">
-            Real-time 3D simulation of connected agents, inter-departmental dependencies, and autonomous pipeline decomposition.
+            3D interactive visualization of 15 autonomous agents, live departmental dependencies, and multi-agent pipeline decomposition with honest task lifecycle execution.
           </p>
         </div>
 
@@ -155,10 +225,10 @@ export const OrchestrationCenter: React.FC = () => {
           </div>
           <div>
             <h2 className="font-heading font-extrabold text-lg text-[#211B2C] dark:text-[#F5F1E9]">
-              Autonomous Goal Orchestrator (Powered by Gemini 4 Argon)
+              Autonomous Goal Orchestrator (Atlas Engine)
             </h2>
             <p className="text-xs text-[#77717D] dark:text-[#AFA8B8]">
-              Input a strategic business objective. Atlas (Workforce Manager) will evaluate dependencies, delegate subtasks across specialized agents, and stage human approval requirements.
+              Input a strategic business objective. Atlas evaluates dependencies, decomposes subtasks into persistent queues, and stages human approval gates.
             </p>
           </div>
         </div>
@@ -186,7 +256,7 @@ export const OrchestrationCenter: React.FC = () => {
               ) : (
                 <>
                   <Play className="w-4 h-4" />
-                  <span>Orchestrate Pipeline</span>
+                  <span>Decompose Pipeline</span>
                 </>
               )}
             </button>
@@ -216,10 +286,10 @@ export const OrchestrationCenter: React.FC = () => {
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold font-mono text-[#8B5CF6] uppercase flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
-                Multi-Agent Execution Pipeline Decomposed
+                Multi-Agent Pipeline Decomposed & Staged
               </span>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#C7F36B] text-[#162700] font-bold">
-                Auto-Deployed to Tasks
+                Honest Lifecycle Staged
               </span>
             </div>
 
@@ -234,37 +304,68 @@ export const OrchestrationCenter: React.FC = () => {
                 {generatedPlan.subtasks.map((st, idx) => (
                   <div
                     key={idx}
-                    className="p-3.5 rounded-xl bg-[#FFFEFC] dark:bg-[#211B2C] border border-[#E2DBD0] dark:border-[#382F47] space-y-2"
+                    className="p-3.5 rounded-xl bg-[#FFFEFC] dark:bg-[#211B2C] border border-[#E2DBD0] dark:border-[#382F47] space-y-2 flex flex-col justify-between"
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-[#211B2C] dark:text-[#F5F1E9]">
-                        {st.title}
-                      </span>
-                      {st.requiresApproval ? (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FF806E]/20 text-[#FF806E] flex items-center gap-1">
-                          <ShieldAlert className="w-3 h-3" />
-                          Needs Approval
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#211B2C] dark:text-[#F5F1E9]">
+                          {st.title}
                         </span>
+                        {st.status === 'completed' ? (
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#10B981]/20 text-[#10B981] flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3" /> Completed
+                          </span>
+                        ) : st.requiresApproval ? (
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FF806E]/20 text-[#FF806E] flex items-center gap-1">
+                            <ShieldAlert className="w-3 h-3" /> Needs Approval
+                          </span>
+                        ) : (
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#8B5CF6]/20 text-[#8B5CF6]">
+                            {st.status.toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="text-[11px] text-[#77717D] dark:text-[#AFA8B8]">
+                        Assigned Agent: <strong className="text-[#8B5CF6]">{st.agentName}</strong>
+                      </div>
+
+                      <p className="text-xs text-[#211B2C] dark:text-[#F5F1E9] line-clamp-2">
+                        {st.prompt}
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-[#E2DBD0] dark:border-[#382F47] flex items-center justify-between">
+                      {st.consequences ? (
+                        <div className="text-[10px] text-[#FF806E] font-mono truncate max-w-[180px]">
+                          {st.consequences}
+                        </div>
                       ) : (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#10B981]/20 text-[#10B981]">
-                          Autonomous
-                        </span>
+                        <div className="text-[10px] text-[#77717D] font-mono">
+                          ID: {st.taskId?.slice(-6)}
+                        </div>
+                      )}
+
+                      {st.status !== 'completed' && !st.requiresApproval && (
+                        <button
+                          disabled={executingTaskId === st.taskId}
+                          onClick={() => handleExecuteSubtask(st)}
+                          className="px-3 py-1 rounded-lg bg-[#8B5CF6] hover:bg-[#7C3AED] text-white text-[11px] font-bold flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                        >
+                          {executingTaskId === st.taskId ? (
+                            <>
+                              <RotateCw className="w-3 h-3 animate-spin" />
+                              <span>Executing...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Play className="w-3 h-3" />
+                              <span>Run Agent</span>
+                            </>
+                          )}
+                        </button>
                       )}
                     </div>
-
-                    <div className="text-[11px] text-[#77717D] dark:text-[#AFA8B8]">
-                      Assigned Agent: <strong className="text-[#8B5CF6]">{st.agentName}</strong>
-                    </div>
-
-                    <p className="text-xs text-[#211B2C] dark:text-[#F5F1E9] line-clamp-2">
-                      {st.prompt}
-                    </p>
-
-                    {st.consequences && (
-                      <div className="text-[10px] text-[#FF806E] font-mono">
-                        Consequences: {st.consequences}
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>

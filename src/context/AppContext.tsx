@@ -19,6 +19,24 @@ import {
 import { auth, loginWithGoogle, logoutUser } from '../lib/firebase.ts';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import confetti from 'canvas-confetti';
+import {
+  getStoredTenantData,
+  setStoredTenantData,
+  persistTask,
+  persistApproval,
+  persistCustomer,
+  deleteCustomerFromDb,
+  persistInventoryItem,
+  persistInvoice,
+  persistExpense,
+  persistProject,
+  persistDocument,
+  persistWorkflow,
+  persistAuditLog,
+  testFirestoreConnection,
+  createNewOrganization,
+  ensureOrganizationSynced,
+} from '../lib/firestoreService.ts';
 
 interface AppContextType {
   // Theme & Locale
@@ -30,7 +48,10 @@ interface AppContextType {
   setCurrency: (c: CurrencyCode) => void;
   formatCurrency: (amount: number) => string;
 
-  // Auth & Org
+  // Auth & Org State
+  isAuthReady: boolean;
+  isDemoMode: boolean;
+  toggleDemoMode: () => void;
   user: UserProfile | null;
   firebaseUser: User | null;
   loginGoogle: () => Promise<void>;
@@ -38,6 +59,7 @@ interface AppContextType {
   currentOrg: Organization;
   organizations: Organization[];
   setCurrentOrg: (org: Organization) => void;
+  createOrganization: (name: string, plan: Organization['plan'], currency: CurrencyCode) => Promise<void>;
 
   // Navigation
   activeTab: string;
@@ -45,13 +67,14 @@ interface AppContextType {
   selectedAgentId: string | null;
   setSelectedAgentId: (id: string | null) => void;
 
-  // Domain State
+  // Domain State & Persistence
   tasks: AgentTask[];
   addTask: (task: Omit<AgentTask, 'id' | 'createdAt' | 'updatedAt' | 'orgId'>) => AgentTask;
   updateTask: (id: string, updates: Partial<AgentTask>) => void;
-  
+
   approvals: ApprovalRequest[];
-  resolveApproval: (id: string, decision: 'approved' | 'rejected', notes?: string) => void;
+  resolveApproval: (id: string, decision: 'approved' | 'rejected', notes?: string) => Promise<void>;
+  executeApproval: (id: string) => Promise<{ success: boolean; result: string }>;
 
   customers: Customer[];
   addCustomer: (c: Omit<Customer, 'id' | 'orgId' | 'createdAt'>) => void;
@@ -80,21 +103,21 @@ interface AppContextType {
   auditLogs: SecurityAuditLog[];
   logAuditAction: (action: string, resource: string, status?: 'success' | 'warning' | 'blocked') => void;
 
-  // Toast / System Banner
+  // System Notification Toast
   bannerMessage: { title: string; type: 'success' | 'info' | 'warning' } | null;
   setBannerMessage: (msg: { title: string; type: 'success' | 'info' | 'warning' } | null) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-// Initial Seed Data
+// Initial Clean Seed Data for New Tenants
 const DEFAULT_ORGS: Organization[] = [
   {
     id: 'org-apex',
     name: 'Apex Global Enterprises',
     slug: 'apex-global',
     plan: 'enterprise',
-    ownerUid: 'user-demo',
+    ownerUid: 'user-demo-sulaiman',
     currency: 'USD',
     createdAt: '2026-01-15T08:00:00Z',
     membersCount: 24,
@@ -104,7 +127,7 @@ const DEFAULT_ORGS: Organization[] = [
     name: 'Crescent Dynamics Pakistan',
     slug: 'crescent-dynamics',
     plan: 'pro',
-    ownerUid: 'user-demo',
+    ownerUid: 'user-demo-sulaiman',
     currency: 'PKR',
     createdAt: '2026-02-01T10:30:00Z',
     membersCount: 12,
@@ -112,309 +135,237 @@ const DEFAULT_ORGS: Organization[] = [
 ];
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-  const [language, setLanguageState] = useState<SupportedLanguage>('en');
-  const [currency, setCurrency] = useState<CurrencyCode>('USD');
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => getStoredTenantData('dark_mode', false));
+  const [language, setLanguageState] = useState<SupportedLanguage>(() => getStoredTenantData('language', 'en'));
+  const [currency, setCurrencyState] = useState<CurrencyCode>(() => getStoredTenantData('currency', 'USD'));
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
-  const [currentOrg, setCurrentOrg] = useState<Organization>(DEFAULT_ORGS[0]);
-  const [organizations] = useState<Organization[]>(DEFAULT_ORGS);
-  const [bannerMessage, setBannerMessage] = useState<{ title: string; type: 'success' | 'info' | 'warning' } | null>(null);
 
-  // Authenticated User Profile
+  // Authentication State
   const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
-  const [user, setUser] = useState<UserProfile>({
-    uid: 'user-demo-sulaiman',
-    email: 'm.sulaiman10thclass@gmail.com',
-    displayName: 'Sulaiman Khan',
-    role: 'owner',
-    orgId: 'org-apex',
-    language: 'en',
+  const [isAuthReady, setIsAuthReady] = useState<boolean>(false);
+  const [isDemoMode, setIsDemoMode] = useState<boolean>(() => getStoredTenantData('demo_mode', false));
+
+  // Multi-Tenant Organizations
+  const [organizations, setOrganizations] = useState<Organization[]>(() =>
+    getStoredTenantData('organizations', DEFAULT_ORGS)
+  );
+  const [currentOrg, setCurrentOrgState] = useState<Organization>(() => {
+    const stored = getStoredTenantData<Organization | null>('current_org', null);
+    return stored || organizations[0];
   });
 
-  // Listen to Firebase Auth state
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (fbUser) => {
-      setFirebaseUser(fbUser);
-      if (fbUser) {
-        setUser({
-          uid: fbUser.uid,
-          email: fbUser.email || 'user@teamora.ai',
-          displayName: fbUser.displayName || 'Authorized User',
-          photoURL: fbUser.photoURL || undefined,
-          role: 'owner',
-          orgId: currentOrg.id,
-          language,
-        });
-      }
-    });
-    return () => unsubscribe();
-  }, [currentOrg.id, language]);
-
-  // Synchronize HTML lang, dir, and dark class
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDarkMode) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
+  // User Profile
+  const [user, setUser] = useState<UserProfile | null>(() => {
+    const isDemo = getStoredTenantData('demo_mode', false);
+    if (isDemo) {
+      return {
+        uid: 'user-demo-sulaiman',
+        email: 'm.sulaiman10thclass@gmail.com',
+        displayName: 'Sulaiman Khan (Demo Sandbox)',
+        role: 'owner',
+        orgId: 'org-apex',
+        language: 'en',
+      };
     }
-  }, [isDarkMode]);
+    return null;
+  });
 
-  useEffect(() => {
-    const root = document.documentElement;
-    root.setAttribute('lang', language);
-    root.setAttribute('dir', language === 'ur' ? 'rtl' : 'ltr');
-  }, [language]);
+  const [bannerMessage, setBannerMessage] = useState<{ title: string; type: 'success' | 'info' | 'warning' } | null>(
+    null
+  );
 
-  const toggleTheme = () => setIsDarkMode((prev) => !prev);
+  // Domain Collections with Refresh-Safe Persistence
+  const [tasks, setTasks] = useState<AgentTask[]>(() =>
+    getStoredTenantData('tasks', [
+      {
+        id: 'task-101',
+        orgId: 'org-apex',
+        agentId: 'workforce-manager',
+        agentName: 'Atlas',
+        title: 'Q3 Enterprise Product Launch Orchestration',
+        prompt: 'Coordinate launch steps across Marketing, Content, and Support teams with milestones.',
+        status: 'completed',
+        priority: 'high',
+        result: `### Q3 Launch Roadmap Approved\n- **Marketing (Pulse):** 4-week ad campaign and landing page live.\n- **Content (Quill):** Release notes and press brief finalized.\n- **Support (Echo):** Help center FAQs updated and 24/7 coverage active.`,
+        createdBy: 'Sulaiman Khan',
+        createdAt: '2026-11-07T12:00:00Z',
+        updatedAt: '2026-11-07T12:04:12Z',
+        duration: '4.2s',
+        modelUsed: 'gemini-3.8-flash',
+      },
+      {
+        id: 'task-102',
+        orgId: 'org-apex',
+        agentId: 'research-agent',
+        agentName: 'Scout',
+        title: 'Competitive Market Benchmark: AI Agent Platforms',
+        prompt: 'Synthesize market benchmarks using live Google Search Grounding for enterprise autonomous agents.',
+        status: 'completed',
+        priority: 'medium',
+        result: `### Market Intelligence Summary\n- High enterprise demand for human-in-the-loop approval gates.\n- Autonomous agents resolving 85%+ tier-1 tickets.\n- Multilingual localized support is top differentiator in MENA and South Asia.`,
+        groundingChunks: [
+          { web: { uri: 'https://cloud.google.com/products/ai', title: 'Google Cloud AI & Gemini Workspaces' } },
+          { web: { uri: 'https://www.gartner.com/en/information-technology/research', title: 'Gartner Autonomous Workforce Trends' } },
+        ],
+        createdBy: 'Sulaiman Khan',
+        createdAt: '2026-11-07T14:20:00Z',
+        updatedAt: '2026-11-07T14:22:15Z',
+        duration: '2.1s',
+        modelUsed: 'gemini-3.8-flash (Search Grounded)',
+      },
+      {
+        id: 'task-103',
+        orgId: 'org-apex',
+        agentId: 'finance-agent',
+        agentName: 'Ledger',
+        title: 'Q2 Tax & SaaS Vendor Expense Audit',
+        prompt: 'Audit cloud infrastructure expenses and flag duplications over $500.',
+        status: 'needs_approval',
+        priority: 'urgent',
+        requiresApproval: true,
+        approvalId: 'appr-301',
+        createdBy: 'Sulaiman Khan',
+        createdAt: '2026-11-07T17:15:00Z',
+        updatedAt: '2026-11-07T17:15:02Z',
+        modelUsed: 'gemini-3.8-flash',
+      },
+    ])
+  );
 
-  const setLanguage = (lang: SupportedLanguage) => {
-    setLanguageState(lang);
-    if (lang === 'ur') {
-      setCurrency('PKR');
-    }
-  };
+  const [approvals, setApprovals] = useState<ApprovalRequest[]>(() =>
+    getStoredTenantData('approvals', [
+      {
+        id: 'appr-301',
+        orgId: 'org-apex',
+        agentId: 'finance-agent',
+        agentName: 'Ledger',
+        actionType: 'payout',
+        title: 'Disburse $4,200 Vendor Invoice to ServerHub Cloud',
+        description:
+          'Ledger has verified invoice #SH-9082 against monthly Cloud compute logs. Requires human sign-off before electronic transfer.',
+        consequences: 'Funds will be transferred immediately via ACH. Irreversible debit from operational treasury.',
+        payloadSummary: {
+          vendor: 'ServerHub Cloud Services',
+          invoiceNumber: 'SH-9082',
+          amount: 4200,
+          currency: 'USD',
+          dueDate: '2026-11-15',
+        },
+        status: 'pending',
+        createdAt: '2026-11-07T17:15:00Z',
+      },
+      {
+        id: 'appr-302',
+        orgId: 'org-apex',
+        agentId: 'email-agent',
+        agentName: 'Courier',
+        actionType: 'email_send',
+        title: 'Send Enterprise Contract Counter-Offer to GlobalTech Corp',
+        description: 'Courier prepared customized counter-proposal with 12% discount and annual prepayment terms.',
+        consequences: 'An external email will be dispatched to CEO & Legal Counsel of GlobalTech Corp.',
+        payloadSummary: {
+          recipient: 'r.vance@globaltech.com',
+          subject: 'TEAMORA AI Enterprise Agreement - Custom Term Revision',
+          contractValue: 48000,
+        },
+        status: 'pending',
+        createdAt: '2026-11-07T18:05:00Z',
+      },
+    ])
+  );
 
-  const formatCurrency = (amount: number) => {
-    if (currency === 'PKR') {
-      // Currency conversion demonstration: roughly 280 PKR per USD
-      const pkrAmount = currency === 'PKR' ? amount * 278 : amount;
-      return new Intl.NumberFormat('ur-PK', {
-        style: 'currency',
-        currency: 'PKR',
-        maximumFractionDigits: 0,
-      }).format(pkrAmount);
-    }
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  // Google Sign-In Action
-  const loginGoogle = async () => {
-    try {
-      const fbUser = await loginWithGoogle();
-      if (fbUser) {
-        setBannerMessage({
-          title: `Successfully signed in as ${fbUser.displayName || fbUser.email}`,
-          type: 'success',
-        });
-        logAuditAction('USER_LOGIN_GOOGLE', `User ${fbUser.email} signed in via Firebase Auth`, 'success');
-      }
-    } catch (err: any) {
-      console.error('Sign-in failed:', err);
-      setBannerMessage({
-        title: 'Sign in failed. Using workspace authenticated session.',
-        type: 'warning',
-      });
-    }
-  };
-
-  const logout = async () => {
-    await logoutUser();
-    setUser({
-      uid: 'user-guest',
-      email: 'guest@teamora.ai',
-      displayName: 'Guest Viewer',
-      role: 'viewer',
-      orgId: currentOrg.id,
-      language: 'en',
-    });
-    setBannerMessage({
-      title: 'Signed out of Firebase session',
-      type: 'info',
-    });
-  };
-
-  // 1. Initial Tasks Seed Data
-  const [tasks, setTasks] = useState<AgentTask[]>([
-    {
-      id: 'task-101',
-      orgId: 'org-apex',
-      agentId: 'workforce-manager',
-      agentName: 'Atlas',
-      title: 'Q3 Enterprise Product Launch Orchestration',
-      prompt: 'Coordinate launch steps across Marketing, Content, and Support teams with milestones.',
-      status: 'completed',
-      priority: 'high',
-      result: `### Q3 Launch Roadmap Approved\n- **Marketing (Pulse):** 4-week ad campaign and landing page live.\n- **Content (Quill):** Release notes and press brief finalized.\n- **Support (Echo):** Help center FAQs updated and 24/7 coverage active.`,
-      createdBy: 'Sulaiman Khan',
-      createdAt: '2026-11-07T12:00:00Z',
-      updatedAt: '2026-11-07T12:04:12Z',
-      duration: '4.2s',
-      modelUsed: 'gemini-4-argon',
-    },
-    {
-      id: 'task-102',
-      orgId: 'org-apex',
-      agentId: 'research-agent',
-      agentName: 'Scout',
-      title: 'Competitive Market Benchmark: AI Agent Platforms',
-      prompt: 'Synthesize market benchmarks using live Google Search Grounding for enterprise autonomous agents.',
-      status: 'completed',
-      priority: 'medium',
-      result: `### Market Intelligence Summary\n- High enterprise demand for human-in-the-loop approval gates.\n- Autonomous agents resolving 85%+ tier-1 tickets.\n- Multilingual localized support is top differentiator in MENA and South Asia.`,
-      groundingChunks: [
-        { web: { uri: 'https://cloud.google.com/products/ai', title: 'Google Cloud AI & Gemini Workspaces' } },
-        { web: { uri: 'https://www.gartner.com/en/information-technology/research', title: 'Gartner Autonomous Workforce Trends' } },
-      ],
-      createdBy: 'Sulaiman Khan',
-      createdAt: '2026-11-07T14:20:00Z',
-      updatedAt: '2026-11-07T14:22:15Z',
-      duration: '2.1s',
-      modelUsed: 'gemini-3.8-flash (Search Grounded)',
-    },
-    {
-      id: 'task-103',
-      orgId: 'org-apex',
-      agentId: 'finance-agent',
-      agentName: 'Ledger',
-      title: 'Q2 Tax & SaaS Vendor Expense Audit',
-      prompt: 'Audit cloud infrastructure expenses and flag duplications over $500.',
-      status: 'needs_approval',
-      priority: 'urgent',
-      requiresApproval: true,
-      approvalId: 'appr-301',
-      createdBy: 'Sulaiman Khan',
-      createdAt: '2026-11-07T17:15:00Z',
-      updatedAt: '2026-11-07T17:15:02Z',
-      modelUsed: 'gemini-4-argon',
-    },
-  ]);
-
-  // 2. Approvals Seed Data (Human-in-the-Loop Safe Execution Center)
-  const [approvals, setApprovals] = useState<ApprovalRequest[]>([
-    {
-      id: 'appr-301',
-      orgId: 'org-apex',
-      agentId: 'finance-agent',
-      agentName: 'Ledger',
-      actionType: 'payout',
-      title: 'Disburse $4,200 Vendor Invoice to ServerHub Cloud',
-      description: 'Ledger has verified invoice #SH-9082 against monthly Cloud compute logs. Requires human sign-off before electronic transfer.',
-      consequences: 'Funds will be transferred immediately via ACH. Irreversible debit from operational treasury.',
-      payloadSummary: {
-        vendor: 'ServerHub Cloud Services',
-        invoiceNumber: 'SH-9082',
-        amount: 4200,
+  const [customers, setCustomers] = useState<Customer[]>(() =>
+    getStoredTenantData('customers', [
+      {
+        id: 'cust-1',
+        orgId: 'org-apex',
+        name: 'Sarah Chen',
+        email: 'sarah.chen@novatech.io',
+        company: 'NovaTech Solutions',
+        status: 'customer',
+        value: 36000,
         currency: 'USD',
-        dueDate: '2026-11-15',
+        phone: '+1 (555) 234-5678',
+        notes: 'Signed 3-year Pro contract with 15 agents enabled.',
+        assignedAgent: 'Vanguard',
+        createdAt: '2026-02-10T09:00:00Z',
       },
-      status: 'pending',
-      createdAt: '2026-11-07T17:15:00Z',
-    },
-    {
-      id: 'appr-302',
-      orgId: 'org-apex',
-      agentId: 'email-agent',
-      agentName: 'Courier',
-      actionType: 'email_send',
-      title: 'Send Enterprise Contract Counter-Offer to GlobalTech Corp',
-      description: 'Courier prepared customized counter-proposal with 12% discount and annual prepayment terms.',
-      consequences: 'An external email will be dispatched to CEO & Legal Counsel of GlobalTech Corp.',
-      payloadSummary: {
-        recipient: 'r.vance@globaltech.com',
-        subject: 'TEAMORA AI Enterprise Agreement - Custom Term Revision',
-        contractValue: 48000,
+      {
+        id: 'cust-2',
+        orgId: 'org-apex',
+        name: 'Tariq Mansoor',
+        email: 'tariq@induslogistics.pk',
+        company: 'Indus Logistics Hub',
+        status: 'prospect',
+        value: 24000,
+        currency: 'PKR',
+        phone: '+92 300 8472910',
+        notes: 'Evaluating Inventory & Operations agents for warehouse routing.',
+        assignedAgent: 'Stockwell',
+        createdAt: '2026-03-01T11:15:00Z',
       },
-      status: 'pending',
-      createdAt: '2026-11-07T18:05:00Z',
-    },
-  ]);
+      {
+        id: 'cust-3',
+        orgId: 'org-apex',
+        name: 'Elena Rostova',
+        email: 'elena@heliosenergy.com',
+        company: 'Helios Clean Energy',
+        status: 'lead',
+        value: 52000,
+        currency: 'USD',
+        phone: '+1 (555) 987-6543',
+        notes: 'Inbound demo request from webinar on Autonomous Finance.',
+        assignedAgent: 'Vanguard',
+        createdAt: '2026-03-04T15:30:00Z',
+      },
+    ])
+  );
 
-  // 3. CRM Customers & Leads Seed Data
-  const [customers, setCustomers] = useState<Customer[]>([
-    {
-      id: 'cust-1',
-      orgId: 'org-apex',
-      name: 'Sarah Chen',
-      email: 'sarah.chen@novatech.io',
-      company: 'NovaTech Solutions',
-      status: 'customer',
-      value: 36000,
-      currency: 'USD',
-      phone: '+1 (555) 234-5678',
-      notes: 'Signed 3-year Pro contract with 15 agents enabled.',
-      assignedAgent: 'Vanguard',
-      createdAt: '2026-02-10T09:00:00Z',
-    },
-    {
-      id: 'cust-2',
-      orgId: 'org-apex',
-      name: 'Tariq Mansoor',
-      email: 'tariq@induslogistics.pk',
-      company: 'Indus Logistics Hub',
-      status: 'prospect',
-      value: 24000,
-      currency: 'PKR',
-      phone: '+92 300 8472910',
-      notes: 'Evaluating Inventory & Operations agents for warehouse routing.',
-      assignedAgent: 'Stockwell',
-      createdAt: '2026-03-01T11:15:00Z',
-    },
-    {
-      id: 'cust-3',
-      orgId: 'org-apex',
-      name: 'Elena Rostova',
-      email: 'elena@heliosenergy.com',
-      company: 'Helios Clean Energy',
-      status: 'lead',
-      value: 52000,
-      currency: 'USD',
-      phone: '+1 (555) 987-6543',
-      notes: 'Inbound demo request from webinar on Autonomous Finance.',
-      assignedAgent: 'Vanguard',
-      createdAt: '2026-03-04T15:30:00Z',
-    },
-  ]);
+  const [inventory, setInventory] = useState<ProductInventory[]>(() =>
+    getStoredTenantData('inventory', [
+      {
+        id: 'inv-1',
+        orgId: 'org-apex',
+        sku: 'SKU-NEO-01',
+        name: 'Neural Edge Sensor Gateway',
+        category: 'Hardware',
+        stockQuantity: 420,
+        minThreshold: 100,
+        unitPrice: 280,
+        currency: 'USD',
+        supplier: 'Apex Microelectronics',
+        status: 'in_stock',
+      },
+      {
+        id: 'inv-2',
+        orgId: 'org-apex',
+        sku: 'SKU-IOT-08',
+        name: 'Smart Telemetry Beacon',
+        category: 'Sensors',
+        stockQuantity: 28,
+        minThreshold: 50,
+        unitPrice: 65,
+        currency: 'USD',
+        supplier: 'Indus Components Ltd',
+        status: 'low_stock',
+      },
+      {
+        id: 'inv-3',
+        orgId: 'org-apex',
+        sku: 'SKU-MOD-44',
+        name: 'Enterprise AI Compute Unit',
+        category: 'Servers',
+        stockQuantity: 0,
+        minThreshold: 10,
+        unitPrice: 1850,
+        currency: 'USD',
+        supplier: 'ServerTech Asia',
+        status: 'out_of_stock',
+      },
+    ])
+  );
 
-  // 4. Products & Inventory
-  const [inventory, setInventory] = useState<ProductInventory[]>([
-    {
-      id: 'inv-1',
-      orgId: 'org-apex',
-      sku: 'SKU-NEO-01',
-      name: 'Neural Edge Sensor Gateway',
-      category: 'Hardware',
-      stockQuantity: 420,
-      minThreshold: 100,
-      unitPrice: 280,
-      currency: 'USD',
-      supplier: 'Apex Microelectronics',
-      status: 'in_stock',
-    },
-    {
-      id: 'inv-2',
-      orgId: 'org-apex',
-      sku: 'SKU-IOT-08',
-      name: 'Smart Telemetry Beacon',
-      category: 'Sensors',
-      stockQuantity: 28,
-      minThreshold: 50,
-      unitPrice: 65,
-      currency: 'USD',
-      supplier: 'Indus Components Ltd',
-      status: 'low_stock',
-    },
-    {
-      id: 'inv-3',
-      orgId: 'org-apex',
-      sku: 'SKU-MOD-44',
-      name: 'Enterprise AI Compute Unit',
-      category: 'Servers',
-      stockQuantity: 0,
-      minThreshold: 10,
-      unitPrice: 1850,
-      currency: 'USD',
-      supplier: 'ServerTech Asia',
-      status: 'out_of_stock',
-    },
-  ]);
-
-  // 5. Orders & Invoices
   const [orders] = useState<Order[]>([
     {
       id: 'ord-1001',
@@ -433,182 +384,411 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     },
   ]);
 
-  const [invoices, setInvoices] = useState<Invoice[]>([
-    {
-      id: 'inv-801',
-      orgId: 'org-apex',
-      invoiceNumber: 'INV-2026-041',
-      customerId: 'cust-1',
-      customerName: 'NovaTech Solutions',
-      amount: 17600,
+  const [invoices, setInvoices] = useState<Invoice[]>(() =>
+    getStoredTenantData('invoices', [
+      {
+        id: 'inv-801',
+        orgId: 'org-apex',
+        invoiceNumber: 'INV-2026-041',
+        customerId: 'cust-1',
+        customerName: 'NovaTech Solutions',
+        amount: 17600,
+        currency: 'USD',
+        status: 'paid',
+        dueDate: '2026-03-20',
+        createdAt: '2026-03-02T10:05:00Z',
+      },
+      {
+        id: 'inv-802',
+        orgId: 'org-apex',
+        invoiceNumber: 'INV-2026-042',
+        customerId: 'cust-2',
+        customerName: 'Indus Logistics Hub',
+        amount: 4800,
+        currency: 'USD',
+        status: 'sent',
+        dueDate: '2026-03-25',
+        createdAt: '2026-03-05T14:20:00Z',
+      },
+    ])
+  );
+
+  const [expenses, setExpenses] = useState<Expense[]>(() =>
+    getStoredTenantData('expenses', [
+      {
+        id: 'exp-501',
+        orgId: 'org-apex',
+        category: 'infrastructure',
+        description: 'Cloud GPU Inference Clusters (asia-southeast1)',
+        amount: 3240,
+        currency: 'USD',
+        status: 'approved',
+        submittedBy: 'Ledger (Auto-Reconciled)',
+        createdAt: '2026-03-01T08:00:00Z',
+      },
+      {
+        id: 'exp-502',
+        orgId: 'org-apex',
+        category: 'marketing',
+        description: 'Global SaaS Product Launch Sponsorship',
+        amount: 2500,
+        currency: 'USD',
+        status: 'approved',
+        submittedBy: 'Pulse (Marketing Lead)',
+        createdAt: '2026-03-03T16:00:00Z',
+      },
+    ])
+  );
+
+  const [projects] = useState<Project[]>(() =>
+    getStoredTenantData('projects', [
+      {
+        id: 'proj-1',
+        orgId: 'org-apex',
+        title: 'Autonomous Omnichannel Customer Experience',
+        description: 'Deploy Echo & Courier to automate 90% of routine client interactions with sentiment intelligence.',
+        status: 'active',
+        progress: 78,
+        deadline: '2026-04-15',
+        tasksCount: 18,
+        completedTasksCount: 14,
+        leadAgentId: 'support-agent',
+      },
+      {
+        id: 'proj-2',
+        orgId: 'org-apex',
+        title: 'South Asia & Middle East Market Expansion',
+        description: 'Deep market analysis, localization in Urdu & Arabic, and regional billing enablement.',
+        status: 'active',
+        progress: 45,
+        deadline: '2026-05-30',
+        tasksCount: 22,
+        completedTasksCount: 10,
+        leadAgentId: 'research-agent',
+      },
+    ])
+  );
+
+  const [documents, setDocuments] = useState<DocumentItem[]>(() =>
+    getStoredTenantData('documents', [
+      {
+        id: 'doc-1',
+        orgId: 'org-apex',
+        name: 'Teamora_Enterprise_SLA_Master.pdf',
+        size: '1.4 MB',
+        type: 'pdf',
+        category: 'contracts',
+        status: 'indexed',
+        uploadedAt: '2026-02-14T09:00:00Z',
+        tags: ['SLA', 'Legal', 'Enterprise'],
+        summary: 'Outlines 99.9% uptime guarantee, incident response tiers, and liability caps for multi-agent workflows.',
+      },
+      {
+        id: 'doc-2',
+        orgId: 'org-apex',
+        name: 'Standard_Operating_Procedure_Refunds.docx',
+        size: '640 KB',
+        type: 'docx',
+        category: 'sop',
+        status: 'indexed',
+        uploadedAt: '2026-02-20T11:30:00Z',
+        tags: ['SOP', 'Finance', 'Echo'],
+        summary: 'Rules governing automated customer refunds under $50 and managerial approvals for higher limits.',
+      },
+    ])
+  );
+
+  const [workflows, setWorkflows] = useState<AutomationWorkflow[]>(() =>
+    getStoredTenantData('workflows', [
+      {
+        id: 'wf-1',
+        orgId: 'org-apex',
+        name: 'High-Value Lead Escalation & Proposal Draft',
+        description: 'When new lead enters CRM with estimated value > $10,000, assign Vanguard to draft custom proposal and notify Slack.',
+        trigger: 'New CRM Lead Value > $10k',
+        status: 'active',
+        stepsCount: 4,
+        executionsCount: 38,
+        lastRunAt: '2026-11-07T16:20:00Z',
+        requiresApproval: true,
+      },
+      {
+        id: 'wf-2',
+        orgId: 'org-apex',
+        name: 'Autonomous Low-Stock Reorder Gate',
+        description: 'When inventory drops below safety threshold, trigger Stockwell to create purchase order and request Ledger review.',
+        trigger: 'Inventory Quantity < Minimum Threshold',
+        status: 'active',
+        stepsCount: 3,
+        executionsCount: 12,
+        lastRunAt: '2026-11-06T19:40:00Z',
+        requiresApproval: true,
+      },
+    ])
+  );
+
+  const [auditLogs, setAuditLogs] = useState<SecurityAuditLog[]>(() =>
+    getStoredTenantData('audit_logs', [
+      {
+        id: 'log-1',
+        orgId: 'org-apex',
+        action: 'SECURITY_AUDIT_INITIALIZED',
+        actor: 'Security Kernel',
+        resource: 'Centralized RBAC & Zero-Trust Gateways',
+        ipAddress: '127.0.0.1',
+        status: 'success',
+        timestamp: '2026-11-07T19:00:00Z',
+      },
+    ])
+  );
+
+  // Sync to local tenant storage on mutations for resilience
+  useEffect(() => {
+    setStoredTenantData('tasks', tasks);
+  }, [tasks]);
+  useEffect(() => {
+    setStoredTenantData('approvals', approvals);
+  }, [approvals]);
+  useEffect(() => {
+    setStoredTenantData('customers', customers);
+  }, [customers]);
+  useEffect(() => {
+    setStoredTenantData('inventory', inventory);
+  }, [inventory]);
+  useEffect(() => {
+    setStoredTenantData('invoices', invoices);
+  }, [invoices]);
+  useEffect(() => {
+    setStoredTenantData('expenses', expenses);
+  }, [expenses]);
+  useEffect(() => {
+    setStoredTenantData('documents', documents);
+  }, [documents]);
+  useEffect(() => {
+    setStoredTenantData('workflows', workflows);
+  }, [workflows]);
+  useEffect(() => {
+    setStoredTenantData('audit_logs', auditLogs);
+  }, [auditLogs]);
+  useEffect(() => {
+    setStoredTenantData('organizations', organizations);
+  }, [organizations]);
+  useEffect(() => {
+    setStoredTenantData('current_org', currentOrg);
+  }, [currentOrg]);
+  useEffect(() => {
+    setStoredTenantData('demo_mode', isDemoMode);
+  }, [isDemoMode]);
+
+  // Boot connection check
+  useEffect(() => {
+    testFirestoreConnection().catch(() => {});
+  }, []);
+
+  // Listen to Firebase Auth state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (fbUser) => {
+      setFirebaseUser(fbUser);
+      setIsAuthReady(true);
+
+      if (fbUser) {
+        // Real authenticated user session
+        setIsDemoMode(false);
+        const isOwner = currentOrg.ownerUid === fbUser.uid || currentOrg.ownerUid === 'user-demo-sulaiman';
+        if (currentOrg.ownerUid === 'user-demo-sulaiman') {
+          setCurrentOrgState((prev) => ({ ...prev, ownerUid: fbUser.uid }));
+        }
+        setUser({
+          uid: fbUser.uid,
+          email: fbUser.email || 'user@teamora.ai',
+          displayName: fbUser.displayName || fbUser.email?.split('@')[0] || 'Teamora Member',
+          photoURL: fbUser.photoURL || undefined,
+          role: isOwner ? 'owner' : 'admin',
+          orgId: currentOrg.id,
+          language,
+        });
+        ensureOrganizationSynced(currentOrg, {
+          uid: fbUser.uid,
+          email: fbUser.email || 'user@teamora.ai',
+        }).catch((err) => console.warn('Sync org failed:', err));
+      } else {
+        // If not logged in and not explicitly demo mode, user is unauthenticated
+        if (!isDemoMode) {
+          setUser(null);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, [currentOrg.id, currentOrg.ownerUid, language, isDemoMode]);
+
+  // Synchronize Theme & Locale
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDarkMode) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    setStoredTenantData('dark_mode', isDarkMode);
+  }, [isDarkMode]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute('lang', language);
+    root.setAttribute('dir', language === 'ur' ? 'rtl' : 'ltr');
+    setStoredTenantData('language', language);
+  }, [language]);
+
+  const toggleTheme = () => setIsDarkMode((prev) => !prev);
+
+  const setLanguage = (lang: SupportedLanguage) => {
+    setLanguageState(lang);
+    if (lang === 'ur') {
+      setCurrencyState('PKR');
+    }
+  };
+
+  const setCurrency = (c: CurrencyCode) => {
+    setCurrencyState(c);
+    setStoredTenantData('currency', c);
+  };
+
+  const formatCurrency = (amount: number) => {
+    if (currency === 'PKR') {
+      const pkrAmount = currentOrg.currency === 'USD' ? amount * 278 : amount;
+      return new Intl.NumberFormat('ur-PK', {
+        style: 'currency',
+        currency: 'PKR',
+        maximumFractionDigits: 0,
+      }).format(pkrAmount);
+    }
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
       currency: 'USD',
-      status: 'paid',
-      dueDate: '2026-03-20',
-      createdAt: '2026-03-02T10:05:00Z',
-    },
-    {
-      id: 'inv-802',
-      orgId: 'org-apex',
-      invoiceNumber: 'INV-2026-042',
-      customerId: 'cust-2',
-      customerName: 'Indus Logistics Hub',
-      amount: 4800,
-      currency: 'USD',
-      status: 'sent',
-      dueDate: '2026-03-25',
-      createdAt: '2026-03-05T14:20:00Z',
-    },
-  ]);
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
 
-  // 6. Expenses
-  const [expenses, setExpenses] = useState<Expense[]>([
-    {
-      id: 'exp-501',
-      orgId: 'org-apex',
-      category: 'infrastructure',
-      description: 'Cloud GPU Inference Clusters (asia-southeast1)',
-      amount: 3240,
-      currency: 'USD',
-      status: 'approved',
-      submittedBy: 'Ledger (Auto-Reconciled)',
-      createdAt: '2026-03-01T08:00:00Z',
-    },
-    {
-      id: 'exp-502',
-      orgId: 'org-apex',
-      category: 'marketing',
-      description: 'Global SaaS Product Launch Sponsorship',
-      amount: 2500,
-      currency: 'USD',
-      status: 'approved',
-      submittedBy: 'Pulse (Marketing Lead)',
-      createdAt: '2026-03-03T16:00:00Z',
-    },
-  ]);
+  // Switch / Toggle Demo Sandbox Mode
+  const toggleDemoMode = () => {
+    if (firebaseUser) {
+      setBannerMessage({
+        title: 'You are signed in with a verified account. Sign out first to enter Demo Sandbox.',
+        type: 'info',
+      });
+      return;
+    }
+    const nextMode = !isDemoMode;
+    setIsDemoMode(nextMode);
+    if (nextMode) {
+      setUser({
+        uid: 'user-demo-sulaiman',
+        email: 'm.sulaiman10thclass@gmail.com',
+        displayName: 'Sulaiman Khan (Demo Sandbox)',
+        role: 'owner',
+        orgId: 'org-apex',
+        language: 'en',
+      });
+      setBannerMessage({
+        title: 'Demo Sandbox enabled. Data changes are kept in isolated local state.',
+        type: 'info',
+      });
+    } else {
+      setUser(null);
+      setBannerMessage({
+        title: 'Exited Demo Sandbox. Please sign in with Google to access your cloud workspace.',
+        type: 'info',
+      });
+    }
+  };
 
-  // 7. Projects
-  const [projects] = useState<Project[]>([
-    {
-      id: 'proj-1',
-      orgId: 'org-apex',
-      title: 'Autonomous Omnichannel Customer Experience',
-      description: 'Deploy Echo & Courier to automate 90% of routine client interactions with sentiment intelligence.',
-      status: 'active',
-      progress: 78,
-      deadline: '2026-04-15',
-      tasksCount: 18,
-      completedTasksCount: 14,
-      leadAgentId: 'support-agent',
-    },
-    {
-      id: 'proj-2',
-      orgId: 'org-apex',
-      title: 'South Asia & Middle East Market Expansion',
-      description: 'Deep market analysis, localization in Urdu & Arabic, and regional billing enablement.',
-      status: 'active',
-      progress: 45,
-      deadline: '2026-05-30',
-      tasksCount: 22,
-      completedTasksCount: 10,
-      leadAgentId: 'research-agent',
-    },
-  ]);
+  // Google Sign-In Action
+  const loginGoogle = async () => {
+    try {
+      const fbUser = await loginWithGoogle();
+      if (fbUser) {
+        setIsDemoMode(false);
+        setBannerMessage({
+          title: `Signed in as ${fbUser.displayName || fbUser.email}`,
+          type: 'success',
+        });
+        logAuditAction('USER_LOGIN_GOOGLE', `User ${fbUser.email} authenticated via Firebase`, 'success');
+      }
+    } catch (err: any) {
+      console.error('Sign-in failed:', err);
+      setBannerMessage({
+        title: 'Sign in failed or cancelled. Try again.',
+        type: 'warning',
+      });
+    }
+  };
 
-  // 8. Documents
-  const [documents, setDocuments] = useState<DocumentItem[]>([
-    {
-      id: 'doc-1',
-      orgId: 'org-apex',
-      name: 'Teamora_Enterprise_SLA_Master.pdf',
-      size: '1.4 MB',
-      type: 'pdf',
-      category: 'contracts',
-      status: 'indexed',
-      uploadedAt: '2026-02-14T09:00:00Z',
-      tags: ['SLA', 'Legal', 'Enterprise'],
-      summary: 'Outlines 99.9% uptime guarantee, incident response tiers, and liability caps for multi-agent workflows.',
-    },
-    {
-      id: 'doc-2',
-      orgId: 'org-apex',
-      name: 'Standard_Operating_Procedure_Refunds.docx',
-      size: '640 KB',
-      type: 'docx',
-      category: 'sop',
-      status: 'indexed',
-      uploadedAt: '2026-02-20T11:30:00Z',
-      tags: ['SOP', 'Finance', 'Echo'],
-      summary: 'Rules governing automated customer refunds under $50 and managerial approvals for higher limits.',
-    },
-  ]);
+  const logout = async () => {
+    await logoutUser();
+    setUser(null);
+    setIsDemoMode(false);
+    setBannerMessage({
+      title: 'Signed out of Teamora workspace',
+      type: 'info',
+    });
+  };
 
-  // 9. Workflows
-  const [workflows, setWorkflows] = useState<AutomationWorkflow[]>([
-    {
-      id: 'wf-1',
-      orgId: 'org-apex',
-      name: 'High-Value Lead Escalation & Proposal Draft',
-      description: 'When new lead enters CRM with estimated value > $10,000, assign Vanguard to draft custom proposal and notify Slack.',
-      trigger: 'New CRM Lead Value > $10k',
-      status: 'active',
-      stepsCount: 4,
-      executionsCount: 38,
-      lastRunAt: '2026-11-07T16:20:00Z',
-      requiresApproval: true,
-    },
-    {
-      id: 'wf-2',
-      orgId: 'org-apex',
-      name: 'Autonomous Low-Stock Reorder Gate',
-      description: 'When inventory drops below safety threshold, trigger Stockwell to create purchase order and request Ledger review.',
-      trigger: 'Inventory Quantity < Minimum Threshold',
-      status: 'active',
-      stepsCount: 3,
-      executionsCount: 12,
-      lastRunAt: '2026-11-06T19:40:00Z',
-      requiresApproval: true,
-    },
-  ]);
+  const setCurrentOrg = (org: Organization) => {
+    setCurrentOrgState(org);
+    setCurrencyState(org.currency);
+    setBannerMessage({
+      title: `Switched workspace to ${org.name}`,
+      type: 'info',
+    });
+    logAuditAction('ORG_SWITCH', `Active organization changed to ${org.name} (${org.id})`, 'success');
+  };
 
-  // 10. Security Audit Logs
-  const [auditLogs, setAuditLogs] = useState<SecurityAuditLog[]>([
-    {
-      id: 'log-1',
-      orgId: 'org-apex',
-      action: 'FIREBASE_AUTH_VERIFY',
-      actor: 'm.sulaiman10thclass@gmail.com',
-      resource: 'Firebase Authentication & Cloud Firestore',
-      ipAddress: '192.168.1.1',
-      status: 'success',
-      timestamp: '2026-11-07T18:42:25Z',
-    },
-    {
-      id: 'log-2',
-      orgId: 'org-apex',
-      action: 'APPROVAL_GATE_ENFORCED',
-      actor: 'Finance Agent (Ledger)',
-      resource: 'Disbursement > $1,000 Action',
-      ipAddress: 'Internal Agent Engine',
-      status: 'warning',
-      timestamp: '2026-11-07T17:15:00Z',
-    },
-  ]);
+  const createOrganization = async (name: string, plan: Organization['plan'], orgCurrency: CurrencyCode) => {
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const newOrg: Organization = {
+      id: `org-${Date.now()}`,
+      name,
+      slug,
+      plan,
+      ownerUid: user?.uid || 'user-anonymous',
+      currency: orgCurrency,
+      createdAt: new Date().toISOString(),
+      membersCount: 1,
+    };
+
+    setOrganizations((prev) => [newOrg, ...prev]);
+    setCurrentOrgState(newOrg);
+    setCurrencyState(orgCurrency);
+
+    if (firebaseUser) {
+      await createNewOrganization(newOrg, firebaseUser.uid).catch((err) =>
+        console.warn('Could not persist new org to Firestore:', err)
+      );
+    }
+
+    setBannerMessage({
+      title: `Created new organization: ${name}`,
+      type: 'success',
+    });
+    logAuditAction('ORG_CREATE', `Created workspace: ${name} (${newOrg.id})`, 'success');
+  };
 
   const logAuditAction = (action: string, resource: string, status: 'success' | 'warning' | 'blocked' = 'success') => {
     const newLog: SecurityAuditLog = {
-      id: `log-${Date.now()}`,
+      id: `log-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       orgId: currentOrg.id,
       action,
-      actor: user?.email || 'System Agent',
+      actor: user?.email || 'Anonymous',
       resource,
-      ipAddress: 'Workspace Client',
+      ipAddress: 'Client Session',
       status,
       timestamp: new Date().toISOString(),
     };
     setAuditLogs((prev) => [newLog, ...prev]);
+    persistAuditLog(currentOrg.id, newLog).catch(() => {});
   };
 
-  // Helper Actions
+  // Domain Actions with Real Persistence
   const addTask = (taskData: Omit<AgentTask, 'id' | 'createdAt' | 'updatedAt' | 'orgId'>) => {
     const newTask: AgentTask = {
       ...taskData,
@@ -618,34 +798,39 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       updatedAt: new Date().toISOString(),
     };
     setTasks((prev) => [newTask, ...prev]);
+    persistTask(currentOrg.id, newTask).catch(() => {});
     logAuditAction('AGENT_TASK_CREATE', `Agent ${taskData.agentName}: ${taskData.title}`, 'success');
     return newTask;
   };
 
   const updateTask = (id: string, updates: Partial<AgentTask>) => {
     setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, ...updates, updatedAt: new Date().toISOString() } : t))
+      prev.map((t) => {
+        if (t.id === id) {
+          const updated = { ...t, ...updates, updatedAt: new Date().toISOString() };
+          persistTask(currentOrg.id, updated).catch(() => {});
+          return updated;
+        }
+        return t;
+      })
     );
   };
 
-  const resolveApproval = (id: string, decision: 'approved' | 'rejected', notes?: string) => {
+  // Phase 28: Human-In-The-Loop Approval Decision
+  const resolveApproval = async (id: string, decision: 'approved' | 'rejected', notes?: string) => {
     const target = approvals.find((a) => a.id === id);
     if (!target) return;
 
-    setApprovals((prev) =>
-      prev.map((a) =>
-        a.id === id
-          ? {
-              ...a,
-              status: decision,
-              decidedBy: user?.displayName || user?.email,
-              decidedAt: new Date().toISOString(),
-            }
-          : a
-      )
-    );
+    const updatedApproval: ApprovalRequest = {
+      ...target,
+      status: decision,
+      decidedBy: user?.displayName || user?.email || 'Human Manager',
+      decidedAt: new Date().toISOString(),
+    };
 
-    // If approved, trigger celebratory confetti!
+    setApprovals((prev) => prev.map((a) => (a.id === id ? updatedApproval : a)));
+    persistApproval(currentOrg.id, updatedApproval).catch(() => {});
+
     if (decision === 'approved') {
       confetti({
         particleCount: 80,
@@ -653,34 +838,114 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         origin: { y: 0.6 },
         colors: ['#8B5CF6', '#C7F36B', '#FF806E'],
       });
+      setBannerMessage({
+        title: `Approved: ${target.title}. Ready for server-side gateway execution.`,
+        type: 'success',
+      });
+    } else {
+      // If rejected, abort linked task immediately
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.approvalId === id
+            ? {
+                ...t,
+                status: 'failed',
+                result: `[Rejected by ${user?.displayName || 'Human Manager'}] Operation aborted. Reason: ${
+                  notes || 'Managerial discretion'
+                }.`,
+              }
+            : t
+        )
+      );
+      setBannerMessage({
+        title: `Rejected: ${target.title}. Operation aborted.`,
+        type: 'info',
+      });
     }
-
-    // Update related task if any
-    setTasks((prev) =>
-      prev.map((t) =>
-        t.approvalId === id
-          ? {
-              ...t,
-              status: decision === 'approved' ? 'completed' : 'failed',
-              result:
-                decision === 'approved'
-                  ? `[Approved by ${user?.displayName || 'Human Manager'}] Action executed successfully. Verified audit recorded.`
-                  : `[Rejected by ${user?.displayName || 'Human Manager'}] Operation aborted. Reason: ${notes || 'Managerial discretion'}.`,
-            }
-          : t
-      )
-    );
-
-    setBannerMessage({
-      title: `Approval Request ${decision.toUpperCase()}: ${target.title}`,
-      type: decision === 'approved' ? 'success' : 'info',
-    });
 
     logAuditAction(
       `APPROVAL_${decision.toUpperCase()}`,
-      `Approval #${id} (${target.title}) decided by ${user?.email}`,
+      `Approval #${id} (${target.title}) marked as ${decision}`,
       decision === 'approved' ? 'success' : 'warning'
     );
+  };
+
+  // Phase 28: Separate Server-Side Execution of Approved Action
+  const executeApproval = async (id: string): Promise<{ success: boolean; result: string }> => {
+    const target = approvals.find((a) => a.id === id);
+    if (!target) return { success: false, result: 'Approval not found' };
+
+    // Set state to executing
+    setApprovals((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, status: 'executing' as const } : a))
+    );
+
+    try {
+      const response = await fetch('/api/approval/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          approvalId: id,
+          orgId: currentOrg.id,
+          actionType: target.actionType,
+          reviewerId: user?.uid || firebaseUser?.uid || 'user-anonymous',
+          reviewerRole: user?.role || (currentOrg.ownerUid === (firebaseUser?.uid || user?.uid) ? 'owner' : 'admin'),
+          payloadSummary: target.payloadSummary || {},
+          idempotencyKey: id,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Server executor reported failure');
+      }
+
+      // Mark executed
+      const completedApproval: ApprovalRequest = {
+        ...target,
+        status: 'executed',
+        executionId: data.executionId,
+        executionResult: data.result,
+      };
+      setApprovals((prev) => prev.map((a) => (a.id === id ? completedApproval : a)));
+      persistApproval(currentOrg.id, completedApproval).catch(() => {});
+
+      // Mark linked task as completed
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.approvalId === id
+            ? {
+                ...t,
+                status: 'completed',
+                result: `[Verified Execution ${data.executionId}]\n${data.result}`,
+              }
+            : t
+        )
+      );
+
+      setBannerMessage({
+        title: `Execution Confirmed: ${data.executionId}`,
+        type: 'success',
+      });
+      logAuditAction('APPROVAL_EXECUTED', `Execution ID: ${data.executionId} (${target.title})`, 'success');
+
+      return { success: true, result: data.result };
+    } catch (err: any) {
+      const failedApproval: ApprovalRequest = {
+        ...target,
+        status: 'execution_failed',
+        executionError: err.message || 'Execution failed',
+      };
+      setApprovals((prev) => prev.map((a) => (a.id === id ? failedApproval : a)));
+      persistApproval(currentOrg.id, failedApproval).catch(() => {});
+
+      setBannerMessage({
+        title: `Execution Failed: ${err.message}`,
+        type: 'warning',
+      });
+      logAuditAction('APPROVAL_EXEC_FAILED', `Error: ${err.message}`, 'blocked');
+      return { success: false, result: err.message };
+    }
   };
 
   const addCustomer = (c: Omit<Customer, 'id' | 'orgId' | 'createdAt'>) => {
@@ -691,15 +956,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       createdAt: new Date().toISOString(),
     };
     setCustomers((prev) => [newCust, ...prev]);
+    persistCustomer(currentOrg.id, newCust).catch(() => {});
     logAuditAction('CRM_CUSTOMER_ADD', `${newCust.name} (${newCust.company})`, 'success');
   };
 
   const updateCustomer = (id: string, updates: Partial<Customer>) => {
-    setCustomers((prev) => prev.map((c) => (c.id === id ? { ...c, ...updates } : c)));
+    setCustomers((prev) =>
+      prev.map((c) => {
+        if (c.id === id) {
+          const updated = { ...c, ...updates };
+          persistCustomer(currentOrg.id, updated).catch(() => {});
+          return updated;
+        }
+        return c;
+      })
+    );
   };
 
   const deleteCustomer = (id: string) => {
     setCustomers((prev) => prev.filter((c) => c.id !== id));
+    deleteCustomerFromDb(currentOrg.id, id).catch(() => {});
     logAuditAction('CRM_CUSTOMER_DELETE', `Customer ID: ${id}`, 'warning');
   };
 
@@ -708,9 +984,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       prev.map((item) => {
         if (item.id !== id) return item;
         const newQty = Math.max(0, item.stockQuantity + delta);
-        const newStatus =
+        const newStatus: ProductInventory['status'] =
           newQty === 0 ? 'out_of_stock' : newQty <= item.minThreshold ? 'low_stock' : 'in_stock';
-        return { ...item, stockQuantity: newQty, status: newStatus };
+        const updated = { ...item, stockQuantity: newQty, status: newStatus };
+        persistInventoryItem(currentOrg.id, updated).catch(() => {});
+        return updated;
       })
     );
   };
@@ -723,11 +1001,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       createdAt: new Date().toISOString(),
     };
     setInvoices((prev) => [newInv, ...prev]);
+    persistInvoice(currentOrg.id, newInv).catch(() => {});
     logAuditAction('INVOICE_CREATE', `${newInv.invoiceNumber} for ${newInv.customerName}`, 'success');
   };
 
   const updateInvoiceStatus = (id: string, status: Invoice['status']) => {
-    setInvoices((prev) => prev.map((inv) => (inv.id === id ? { ...inv, status } : inv)));
+    setInvoices((prev) =>
+      prev.map((inv) => {
+        if (inv.id === id) {
+          const updated = { ...inv, status };
+          persistInvoice(currentOrg.id, updated).catch(() => {});
+          return updated;
+        }
+        return inv;
+      })
+    );
   };
 
   const addExpense = (exp: Omit<Expense, 'id' | 'orgId' | 'createdAt'>) => {
@@ -738,6 +1026,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       createdAt: new Date().toISOString(),
     };
     setExpenses((prev) => [newExp, ...prev]);
+    persistExpense(currentOrg.id, newExp).catch(() => {});
   };
 
   const addDocument = (doc: Omit<DocumentItem, 'id' | 'orgId' | 'uploadedAt'>) => {
@@ -748,28 +1037,37 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       uploadedAt: new Date().toISOString(),
     };
     setDocuments((prev) => [newDoc, ...prev]);
+    persistDocument(currentOrg.id, newDoc).catch(() => {});
     logAuditAction('DOCUMENT_UPLOAD', `${newDoc.name} (${newDoc.category})`, 'success');
   };
 
   const toggleWorkflowStatus = (id: string) => {
     setWorkflows((prev) =>
-      prev.map((w) =>
-        w.id === id ? { ...w, status: w.status === 'active' ? 'paused' : 'active' } : w
-      )
+      prev.map((w) => {
+        if (w.id === id) {
+          const updated = { ...w, status: w.status === 'active' ? ('paused' as const) : ('active' as const) };
+          persistWorkflow(currentOrg.id, updated).catch(() => {});
+          return updated;
+        }
+        return w;
+      })
     );
   };
 
   const runWorkflowNow = (id: string) => {
     setWorkflows((prev) =>
-      prev.map((w) =>
-        w.id === id
-          ? {
-              ...w,
-              executionsCount: w.executionsCount + 1,
-              lastRunAt: new Date().toISOString(),
-            }
-          : w
-      )
+      prev.map((w) => {
+        if (w.id === id) {
+          const updated = {
+            ...w,
+            executionsCount: w.executionsCount + 1,
+            lastRunAt: new Date().toISOString(),
+          };
+          persistWorkflow(currentOrg.id, updated).catch(() => {});
+          return updated;
+        }
+        return w;
+      })
     );
     setBannerMessage({
       title: 'Workflow triggered successfully. Executing across interconnected agents.',
@@ -788,6 +1086,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         currency,
         setCurrency,
         formatCurrency,
+        isAuthReady,
+        isDemoMode,
+        toggleDemoMode,
         user,
         firebaseUser,
         loginGoogle,
@@ -795,6 +1096,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         currentOrg,
         organizations,
         setCurrentOrg,
+        createOrganization,
         activeTab,
         setActiveTab,
         selectedAgentId,
@@ -804,6 +1106,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         updateTask,
         approvals,
         resolveApproval,
+        executeApproval,
         customers,
         addCustomer,
         updateCustomer,

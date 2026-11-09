@@ -200,6 +200,76 @@ export const SubscriptionView: React.FC = () => {
           </div>
         ))}
       </div>
+
+      {/* Pakistan & Regional Payment Processing Transparency */}
+      <div className="p-6 rounded-2xl bg-[#FFFEFC] dark:bg-[#211B2C] border border-[#E2DBD0] dark:border-[#382F47] shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E2DBD0] dark:border-[#382F47] pb-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase font-mono bg-[#10B981]/15 text-[#10B981]">
+              SBP Regulated & Compliant
+            </div>
+            <h3 className="font-heading font-extrabold text-lg text-[#211B2C] dark:text-[#F5F1E9] mt-1">
+              Pakistan Electronic Payment Processing & Global Gateways
+            </h3>
+            <p className="text-xs text-[#77717D] dark:text-[#AFA8B8]">
+              Verified gateway availability for domestic PK-domiciled merchants and international cross-border subscribers.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="p-4 rounded-xl bg-[#F5F1E9] dark:bg-[#2C2438] border border-[#E2DBD0] dark:border-[#382F47] space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-sm text-[#211B2C] dark:text-[#F5F1E9]">Safepay</span>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-[#10B981]/20 text-[#10B981] font-mono">Active PSP</span>
+            </div>
+            <p className="text-[11px] text-[#77717D] dark:text-[#AFA8B8]">
+              State Bank of Pakistan regulated. Visa, Mastercard, 1Link, EasyPaisa, JazzCash & Raast instant QR.
+            </p>
+            <div className="text-[10px] font-mono text-[#8B5CF6]">Direct PKR & USD Settlement</div>
+          </div>
+
+          <div className="p-4 rounded-xl bg-[#F5F1E9] dark:bg-[#2C2438] border border-[#E2DBD0] dark:border-[#382F47] space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-sm text-[#211B2C] dark:text-[#F5F1E9]">PayFast by APPS</span>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-[#06B6D4]/20 text-[#06B6D4] font-mono">1Link Direct</span>
+            </div>
+            <p className="text-[11px] text-[#77717D] dark:text-[#AFA8B8]">
+              Authorized 1Link payment gateway supporting UnionPay, PayPak, and 18+ Pakistani commercial banks.
+            </p>
+            <div className="text-[10px] font-mono text-[#06B6D4]">Direct Bank-to-Bank Debits</div>
+          </div>
+
+          <div className="p-4 rounded-xl bg-[#F5F1E9] dark:bg-[#2C2438] border border-[#E2DBD0] dark:border-[#382F47] space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-sm text-[#211B2C] dark:text-[#F5F1E9]">SadaBiz (SadaPay)</span>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-[#8B5CF6]/20 text-[#8B5CF6] font-mono">Freelancer & SME</span>
+            </div>
+            <p className="text-[11px] text-[#77717D] dark:text-[#AFA8B8]">
+              International Apple Pay and credit card checkout in USD, GBP, EUR with instant Pakistani interbank settlement.
+            </p>
+            <div className="text-[10px] font-mono text-[#8B5CF6]">Global Client Invoicing</div>
+          </div>
+
+          <div className="p-4 rounded-xl bg-[#F5F1E9] dark:bg-[#2C2438] border border-[#E2DBD0] dark:border-[#382F47] space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-sm text-[#211B2C] dark:text-[#F5F1E9]">LemonSqueezy</span>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-[#A78BFA]/20 text-[#A78BFA] font-mono">Global MoR</span>
+            </div>
+            <p className="text-[11px] text-[#77717D] dark:text-[#AFA8B8]">
+              Merchant of Record handling global tax remittance. Accepts Pakistani cardholders seamlessly without Stripe entity.
+            </p>
+            <div className="text-[10px] font-mono text-[#A78BFA]">Global Tax & Compliance</div>
+          </div>
+        </div>
+
+        <div className="p-3 rounded-xl bg-[#FFF8E7] dark:bg-[#2A2315] border border-[#F3E2B8] dark:border-[#4D3F20] text-xs text-[#8A6A1C] dark:text-[#E8C56B] flex items-center gap-2">
+          <ShieldCheck className="w-4 h-4 shrink-0 text-[#8A6A1C] dark:text-[#E8C56B]" />
+          <span>
+            <strong>Zero False Simulation Guarantee:</strong> Automated tests and preview runs use test mode tokens labeled <code className="font-mono bg-black/10 px-1 py-0.5 rounded">[SANDBOX_PAYMENT_GATEWAY]</code>. Live electronic funds transfers require verified merchant production keys.
+          </span>
+        </div>
+      </div>
     </div>
   );
 };

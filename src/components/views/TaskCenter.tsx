@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext.tsx';
 import {
   ListTodo,
@@ -10,20 +10,59 @@ import {
   Search,
   Filter,
   Sparkles,
+  WifiOff,
+  Database,
+  AlertTriangle,
+  RefreshCw,
 } from 'lucide-react';
+import { getCachedTasksForOrg, OfflineTaskRecord } from '../../lib/indexedDbService.ts';
+import { syncEngine, SyncEngineStatus } from '../../lib/syncEngine.ts';
 
 export const TaskCenter: React.FC = () => {
-  const { tasks, addTask, user } = useApp();
+  const { tasks: appTasks, currentOrg } = useApp();
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [selectedTask, setSelectedTask] = useState<(typeof tasks)[0] | null>(null);
+  const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [cachedTasks, setCachedTasks] = useState<OfflineTaskRecord[]>([]);
+  const [syncStatus, setSyncStatus] = useState<SyncEngineStatus>(syncEngine.getStatus());
 
-  const filteredTasks = tasks.filter((t) => {
+  const loadCachedTasks = async () => {
+    try {
+      const records = await getCachedTasksForOrg(currentOrg.id);
+      setCachedTasks(records);
+    } catch {
+      // Ignore
+    }
+  };
+
+  useEffect(() => {
+    loadCachedTasks();
+    const unsub = syncEngine.subscribe((status) => {
+      setSyncStatus(status);
+      loadCachedTasks();
+    });
+    return unsub;
+  }, [currentOrg.id]);
+
+  // Combine and deduplicate tasks (indexedDB cached tasks override or supplement memory tasks)
+  const taskMap = new Map<string, any>();
+  for (const t of appTasks) {
+    taskMap.set(t.id, t);
+  }
+  for (const ct of cachedTasks) {
+    taskMap.set(ct.id, {
+      ...taskMap.get(ct.id),
+      ...ct,
+    });
+  }
+  const mergedTasks = Array.from(taskMap.values());
+
+  const filteredTasks = mergedTasks.filter((t) => {
     const matchStatus = filterStatus === 'all' || t.status === filterStatus;
     const matchSearch =
-      t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.agentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.prompt.toLowerCase().includes(searchTerm.toLowerCase());
+      (t.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (t.agentName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (t.prompt || '').toLowerCase().includes(searchTerm.toLowerCase());
     return matchStatus && matchSearch;
   });
 
@@ -111,13 +150,25 @@ export const TaskCenter: React.FC = () => {
                       <span>{t.status.replace('_', ' ')}</span>
                     </span>
                   </td>
-                  <td className="px-5 py-4 font-semibold text-[#211B2C] dark:text-[#F5F1E9] max-w-xs truncate">
-                    {t.title}
+                  <td className="px-5 py-4 font-semibold text-[#211B2C] dark:text-[#F5F1E9] max-w-xs">
+                    <div className="flex items-center gap-2 truncate">
+                      <span className="truncate">{t.title}</span>
+                      {t.syncStatus === 'pending_create' && (
+                        <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-[#FFF8E7] dark:bg-[#2A2315] text-[#8A6A1C] dark:text-[#E8C56B] border border-[#F3E2B8] shrink-0">
+                          Offline Draft
+                        </span>
+                      )}
+                      {t.syncStatus === 'conflict' && (
+                        <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-[#FF806E]/20 text-[#FF806E] border border-[#FF806E]/30 font-bold shrink-0">
+                          Conflict
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-5 py-4 text-[#8B5CF6] font-semibold">{t.agentName}</td>
                   <td className="px-5 py-4 uppercase font-mono text-[10px]">{t.priority}</td>
                   <td className="px-5 py-4 font-mono text-[11px] text-[#77717D] dark:text-[#AFA8B8]">
-                    {t.modelUsed || 'gemini-3.8-flash'}
+                    {t.localDraft ? 'Pending Server Sync' : t.modelUsed || 'gemini-3.8-flash'}
                   </td>
                   <td className="px-5 py-4 text-right font-mono text-[11px] text-[#77717D] dark:text-[#AFA8B8]">
                     {new Date(t.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -180,7 +231,7 @@ export const TaskCenter: React.FC = () => {
                   Google Search Grounded Citations:
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  {selectedTask.groundingChunks.map((c, i) =>
+                  {selectedTask.groundingChunks.map((c: any, i: number) =>
                     c.web ? (
                       <a
                         key={i}
@@ -193,6 +244,39 @@ export const TaskCenter: React.FC = () => {
                       </a>
                     ) : null
                   )}
+                </div>
+              </div>
+            )}
+
+            {/* Conflict Resolution Controls if in conflict state */}
+            {selectedTask.syncStatus === 'conflict' && (
+              <div className="p-3.5 rounded-xl bg-[#FFF8E7] dark:bg-[#2A2315] border border-[#F3E2B8] dark:border-[#4D3F20] space-y-2 text-xs">
+                <div className="flex items-center gap-1.5 font-bold text-[#8A6A1C] dark:text-[#E8C56B]">
+                  <AlertTriangle className="w-4 h-4" />
+                  <span>Synchronization Conflict Detected</span>
+                </div>
+                <p className="text-[11px] text-[#8A6A1C] dark:text-[#E8C56B]">
+                  This task was modified offline while the server had a newer state. Choose how to reconcile this record:
+                </p>
+                <div className="flex gap-2 pt-1">
+                  <button
+                    onClick={async () => {
+                      await syncEngine.resolveConflict(selectedTask.id, 'keep_local');
+                      setSelectedTask(null);
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-[#8B5CF6] text-white text-xs font-bold hover:bg-[#7C3AED] cursor-pointer shadow-sm"
+                  >
+                    Force Overwrite (Keep Local)
+                  </button>
+                  <button
+                    onClick={async () => {
+                      await syncEngine.resolveConflict(selectedTask.id, 'accept_server');
+                      setSelectedTask(null);
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-[#EBE5DB] dark:bg-[#382F47] text-xs font-semibold hover:opacity-90 cursor-pointer"
+                  >
+                    Accept Server Version
+                  </button>
                 </div>
               </div>
             )}

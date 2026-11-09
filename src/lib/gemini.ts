@@ -1,6 +1,11 @@
 export interface GeminiResponse {
   text: string;
   model: string;
+  requestedModel?: string;
+  actualModel?: string;
+  fallbackTriggered?: boolean;
+  fallbackReason?: string | null;
+  latencyMs?: number;
   groundingChunks?: Array<{ web?: { uri: string; title: string } }> | null;
   error?: string;
   missingKey?: boolean;
@@ -44,6 +49,8 @@ export async function generateGeminiContent(options: {
     };
   }
 }
+
+export const generateAgentResponse = generateGeminiContent;
 
 export async function chatGeminiAgent(options: {
   message: string;

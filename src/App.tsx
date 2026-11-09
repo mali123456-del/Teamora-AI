@@ -20,6 +20,7 @@ import { TeamSettingsView } from './components/views/TeamSettingsView.tsx';
 import { IntegrationsView } from './components/views/IntegrationsView.tsx';
 import { SubscriptionView } from './components/views/SubscriptionView.tsx';
 import { SecurityLogsView } from './components/views/SecurityLogsView.tsx';
+import { ErrorBoundary } from './components/common/ErrorBoundary.tsx';
 import { CheckCircle2, AlertTriangle, X } from 'lucide-react';
 
 const AppContent: React.FC = () => {
@@ -105,11 +106,19 @@ const AppContent: React.FC = () => {
 
       {/* Main Body */}
       {isPublicLanding ? (
-        <main className="flex-1 overflow-x-hidden">{renderActiveView()}</main>
+        <main className="flex-1 overflow-x-hidden">
+          <ErrorBoundary key={activeTab}>
+            {renderActiveView()}
+          </ErrorBoundary>
+        </main>
       ) : (
         <div className="flex-1 flex overflow-hidden">
           <Sidebar />
-          <main className="flex-1 overflow-y-auto">{renderActiveView()}</main>
+          <main className="flex-1 overflow-y-auto">
+            <ErrorBoundary key={activeTab}>
+              {renderActiveView()}
+            </ErrorBoundary>
+          </main>
         </div>
       )}
     </div>

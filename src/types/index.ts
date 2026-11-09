@@ -31,7 +31,7 @@ export interface AgentTask {
   agentName: string;
   title: string;
   prompt: string;
-  status: 'queued' | 'running' | 'completed' | 'failed' | 'needs_approval';
+  status: 'queued' | 'planning' | 'running' | 'completed' | 'failed' | 'needs_approval' | 'cancelled';
   priority: 'low' | 'medium' | 'high' | 'urgent';
   result?: string;
   groundingChunks?: Array<{ web?: { uri: string; title: string } }>;
@@ -59,7 +59,10 @@ export interface ApprovalRequest {
   description: string;
   consequences: string;
   payloadSummary: Record<string, any>;
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'pending' | 'approved' | 'rejected' | 'executing' | 'executed' | 'execution_failed' | 'cancelled';
+  executionId?: string;
+  executionResult?: string;
+  executionError?: string;
   decidedBy?: string;
   decidedAt?: string;
   createdAt: string;

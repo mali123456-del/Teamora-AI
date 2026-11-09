@@ -1,0 +1,53 @@
+[
+  {
+    "id": "audit-1794218979863-cde6e4b7",
+    "timestamp": "2026-11-09T10:09:39.863Z",
+    "orgId": "org-apex",
+    "actorUid": "user-admin-002",
+    "actorRole": "admin",
+    "action": "test_action_1",
+    "targetResource": "res-1",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "step": 1
+    },
+    "previousHash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "entryHash": "e0dd1731a366e3af52870dd7e23975ca07c1e08f5a683ffa3e3e04b024b70150"
+  },
+  {
+    "id": "audit-1794218979864-f4c061ae",
+    "timestamp": "2026-11-09T10:09:39.864Z",
+    "orgId": "org-apex",
+    "actorUid": "user-admin-002",
+    "actorRole": "admin",
+    "action": "test_action_2",
+    "targetResource": "res-2",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "step": 2
+    },
+    "previousHash": "e0dd1731a366e3af52870dd7e23975ca07c1e08f5a683ffa3e3e04b024b70150",
+    "entryHash": "676f7a42c3939cc457e6c0f48627fa6811f3fe42d982fca61befe8a5d5c47f1a"
+  },
+  {
+    "id": "audit-1794218979868-6d3224da",
+    "timestamp": "2026-11-09T10:09:39.868Z",
+    "orgId": "org-apex",
+    "actorUid": "user-admin-002",
+    "actorRole": "admin",
+    "action": "subscription_plan_updated",
+    "targetResource": "org-apex",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "targetPlan": "business",
+      "currency": "USD",
+      "invoiceId": "inv-1794218979868-c8efb0",
+      "provider": "simulated_test"
+    },
+    "previousHash": "676f7a42c3939cc457e6c0f48627fa6811f3fe42d982fca61befe8a5d5c47f1a",
+    "entryHash": "ddef2181c864923285f22468e51dc02e306e3b202dffb3fc8af9993b28803755"
+  }
+]

@@ -24,7 +24,7 @@ export default defineConfig(() => {
     plugins: [react(), tailwindcss(), apiMiddlewarePlugin()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve('.'),
       },
     },
     server: {

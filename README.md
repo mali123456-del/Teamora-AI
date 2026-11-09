@@ -4,64 +4,81 @@ A premium, modern, multi-tenant AI Workforce & Business Automation SaaS platform
 
 ![TEAMORA AI](https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80)
 
-## Overview
+---
 
-TEAMORA AI unifies 15 specialized autonomous AI agents into an orchestrated business workspace. Rather than isolated chatbots, TEAMORA AI provides a coordinated workforce with distinct departmental roles, tools, and human-in-the-loop safety gates.
+## 1. Overview
 
-## Key Features
+**TEAMORA AI** unifies 15 specialized autonomous AI employees into an orchestrated, enterprise-grade business workspace. Unlike generic AI chatbots, TEAMORA AI provides a coordinated workforce with distinct departmental responsibilities, tools, and human-in-the-loop safety gates.
 
-1. **The 15 Autonomous AI Employees:**
-   - **Atlas** (Workforce Manager & Chief Orchestrator)
-   - **Echo** (Customer Support Lead)
-   - **Vanguard** (Enterprise Sales & Revenue Agent)
-   - **Pulse** (Growth Marketing & Campaign Strategist)
-   - **Ledger** (Finance & Compliance Specialist)
-   - **Prism** (Business Intelligence & Data Scientist)
-   - **Stockwell** (Supply Chain & Inventory Controller)
-   - **Nexus** (Operations & Process Optimization Lead)
-   - **Scout** (Market Intelligence & Deep Research Agent with Google Search Grounding)
-   - **Harmony** (People Operations & Talent Manager)
-   - **Quill** (Editorial & Brand Voice Director)
-   - **Courier** (Communications & Inbox Dispatcher)
-   - **Chronos** (Agile Project & Sprint Director)
-   - **Scribe** (Document Intelligence & Knowledge Architect)
-   - **Synapse** (Autonomous Workflow & Integration Engineer)
+- **Unique Visual Identity:** Warm Ivory (`#F5F1E9`), Deep Ink (`#211B2C`), Muted Lavender (`#8B5CF6`), Electric Lime (`#C7F36B`), Soft Coral (`#FF806E`). Zero generic blue gradients or boilerplate AI sparkle templates.
+- **Original Logo:** Architectural letter **T** integrated with connected team nodes.
+- **Multilingual & Dual-Currency:** Full English and Urdu (`اردو`, true `dir="rtl"`) layout adaptation; dual USD (`$`) and Pakistani Rupee (`₨` PKR) currency formatting.
+- **3D Neural Workforce Canvas:** Interactive Three.js r187 procedural workforce visualization with studio PBR lighting, PMREMGenerator, and software WebGL guard.
+- **Two-Stage Human Safety Gate:** Mandatory policy sign-off followed by server-side physical execution with verifiable cryptographic receipts.
+- **Truthful Integrations:** Real Firebase Authentication, Google Cloud Firestore ABAC rules, and truthful Google Keep Enterprise API eligibility verification.
 
-2. **3D Neural Workforce Canvas (Three.js r187):**
-   - Procedural composite models with 3–12 parts
-   - Studio PBR lighting (`ACESFilmicToneMapping`, `RoomEnvironment` with `PMREMGenerator`)
-   - Software WebGL detection & frame pacing guard (`afterDraw`)
-   - Collapsible bottom control dock with Zen mode and camera view presets
+---
 
-3. **Gemini AI Provider Architecture:**
-   - `gemini-4-argon` with `ThinkingLevel.HIGH` for deep strategic reasoning
-   - `gemini-3.8-flash` with Google Search Grounding & citations
-   - `gemini-3.1-flash-lite` for high-throughput responses
-   - Zero client-side API key leakage (`/api/gemini/*` server-side routes)
+## 2. The 15 Autonomous AI Employees
 
-4. **Human-in-the-Loop Safe Execution Gate:**
-   - Mandatory manager sign-off on payouts, external emails, refunds, and contracts
+1. **Atlas** — Workforce Manager & Chief Orchestrator (Leadership & Strategy)
+2. **Echo** — Customer Support Lead (Customer Experience)
+3. **Vanguard** — Enterprise Sales & Revenue Agent (Revenue Operations)
+4. **Pulse** — Growth Marketing & Campaign Strategist (Revenue Operations)
+5. **Ledger** — Finance & Compliance Specialist (Finance & Treasury)
+6. **Prism** — Business Intelligence & Data Scientist (Intelligence & Data)
+7. **Stockwell** — Supply Chain & Inventory Controller (Operations)
+8. **Nexus** — Operations & Process Optimization Lead (Operations)
+9. **Scout** — Market Intelligence & Research Agent (with Google Search Grounding)
+10. **Harmony** — People Operations & Talent Manager (Human Resources)
+11. **Quill** — Editorial & Brand Voice Director (Content & Communications)
+12. **Courier** — Communications & Inbox Dispatcher (Outbound Email)
+13. **Chronos** — Agile Project & Sprint Director (Project Management)
+14. **Scribe** — Document Intelligence & Knowledge Architect (Knowledge Systems)
+15. **Synapse** — Autonomous Workflow & Integration Engineer (Automation Studio)
 
-5. **Business Modules:**
-   - CRM & Leads Pipeline
-   - Products & SKU Inventory with Restock Warnings
-   - Financial Invoices & Expenses with dual USD / PKR currency
-   - Projects & Sprint Kanban
-   - Knowledge Hub with semantic document indexing
-   - Automation Studio visual event-driven workflow builder
-   - Google Workspace Keep integration
-   - Multi-tenant RBAC and audit trail logging
-   - Full English and Urdu internationalization with true RTL layout
+---
 
-## Development
+## 3. Architecture & Security Invariants
+
+- **Zero Client Secret Leakage:** `@google/genai` is only accessed server-side in `server/geminiHandler.ts`. `GEMINI_API_KEY` is never exposed in browser bundles.
+- **Sliding-Window Rate Limiting:** Enforces max 60 req/min per IP to prevent Denial-of-Wallet attacks.
+- **Multi-Tier Resilience:** Primary `gemini-3.8-flash` automatically cascades to `gemini-3.1-flash-lite` on quota spikes or high demand.
+- **Two-Stage Safe Approvals:** Decoupled `pending` -> `approved` -> `executing` -> `executed` pipeline prevents premature task completion.
+- **Multi-Tenant Firestore Isolation:** Strict Zero-Trust ABAC rules in `firestore.rules` protect organization data.
+
+---
+
+## 4. Documentation Suite
+
+- [`ARCHITECTURE.md`](./ARCHITECTURE.md) — System topology, gateway proxy, and cascade engine
+- [`DATABASE_SCHEMA.md`](./DATABASE_SCHEMA.md) — Firestore collection schemas and relational rules
+- [`SECURITY.md`](./SECURITY.md) — RBAC matrix, Zod schemas, and threat defense
+- [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) — Color tokens, typography, and Three.js standards
+- [`ENVIRONMENT_SETUP.md`](./ENVIRONMENT_SETUP.md) — Local development and environment configuration
+- [`TESTING.md`](./TESTING.md) — Vitest test results and real endpoint curl receipts
+- [`ROADMAP.md`](./ROADMAP.md) — Completed milestones and near-term capabilities
+- [`CHANGELOG.md`](./CHANGELOG.md) — Version history and release notes
+- [`DEPLOYMENT.md`](./DEPLOYMENT.md) — Cloud Run Dockerfile and rollback procedures
+- [`BUILD_STATUS.md`](./BUILD_STATUS.md) — Live build status and phase audit verification
+
+---
+
+## 5. Development & Testing Commands
 
 ```bash
-# Run local development server
+# Start local development server (Port 3000)
 npm run dev
 
-# Run TypeScript checks
+# Run TypeScript type check
 npm run lint
 
-# Build production bundle
+# Run automated unit & security test suite
+npm run test
+
+# Compile production bundle
 npm run build
+
+# Start full-stack Express production server
+npm start
 ```

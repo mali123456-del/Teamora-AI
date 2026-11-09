@@ -1,0 +1,972 @@
+# TEAMORA AI — ULTIMATE MASTER IMPLEMENTATION COMMAND
+## Phase 71–130 | Enterprise Hardening, Advanced RAG, Web Crawler, API Infrastructure, New Feature Ecosystem & Production Readiness
+
+**Project:** TEAMORA AI  
+**Tagline:** Your AI Team. One Smart Workspace.  
+**GitHub:** https://github.com/mali123456-del/Teamora-AI  
+**Local Workspace:** `G:\Temp\My projects\TEAMORA AI`  
+**Current Checkpoint:** Phase 1–70 reportedly implemented. Google AI Studio is currently fixing one remaining execution error.  
+**Next Phase:** 71  
+**Primary Objective:** Transform TEAMORA AI into a reliable, secure, modular, intelligent AI workforce and business automation SaaS.
+
+---
+
+# 1. CRITICAL INSTRUCTIONS — READ FIRST
+
+You are the lead software architect, senior full-stack developer, AI infrastructure engineer, security engineer, QA engineer and product designer for TEAMORA AI.
+
+Do not start coding immediately.
+
+First inspect the entire existing project, including:
+
+- Source code and folder architecture.
+- `package.json` and dependencies.
+- React components, pages, hooks and services.
+- Backend routes, middleware and server services.
+- Firebase Authentication and Firestore.
+- Firestore security rules and indexes.
+- Existing AI agents and orchestration engine.
+- Gemini integration and provider fallback.
+- RAG pipeline, embeddings and vector search.
+- Web crawler and document ingestion.
+- API gateway, external APIs and integrations.
+- Voice command service.
+- IndexedDB and offline synchronization.
+- Subscription, billing and quota systems.
+- Existing tests and test configurations.
+- `README.md`, `BUILD_STATUS.md` and technical documentation.
+
+**Important:** The previous Phase 1–70 completion reports are checkpoints, not proof that every feature works. Verify the actual source code and runtime behavior.
+
+### Non-negotiable rules
+
+1. Continue the existing TEAMORA AI repository. Never create a duplicate project.
+2. Preserve existing working features and user data.
+3. Do not perform blind rewrites or unnecessary architecture migrations.
+4. Do not replace Firebase with Supabase.
+5. Do not remove existing dependencies without checking their usage.
+6. Do not use fake API responses, fake integrations or fabricated AI execution results.
+7. Never report a feature as complete without implementation and verification.
+8. Never expose API keys, tokens, credentials or private user data.
+9. Never execute financial transactions, send external messages, delete important data or make purchases without appropriate human approval.
+10. Never deploy, publish, commit, push or modify Git history without my approval.
+11. Fix root causes instead of hiding errors with workarounds.
+12. Use lightweight, modular and hardware-efficient architecture.
+13. When a feature needs paid services or credentials, provide a clearly labelled configuration and graceful unavailable state.
+14. Keep existing brand identity and user experience consistent.
+
+---
+
+# 2. MY PC — PERFORMANCE REQUIREMENTS
+
+Optimize the entire application for:
+
+- Dell Latitude 3340
+- Intel Core i5-4200U
+- 2 cores / 4 threads
+- 8 GB RAM
+- 477 GB TEAM SSD
+- Intel HD integrated graphics
+- Windows 10 Pro 64-bit
+
+### Optimization rules
+
+- Avoid unnecessary background processes.
+- Avoid mandatory GPU acceleration.
+- Prefer lazy loading and code splitting.
+- Use Web Workers for suitable CPU-intensive browser tasks.
+- Use pagination and virtualized lists for large datasets.
+- Avoid loading large AI models into local memory.
+- Use remote AI providers when configured.
+- Keep the Three.js workforce canvas adaptive, with a 2D fallback.
+- Avoid unnecessary polling and excessive API calls.
+- Keep IndexedDB storage bounded and manageable.
+- Use caching intelligently without exposing sensitive information.
+
+---
+
+# 3. BRAND AND DESIGN SYSTEM
+
+Preserve the existing TEAMORA identity.
+
+**Name:** TEAMORA AI  
+**Tagline:** Your AI Team. One Smart Workspace.
+
+Colors:
+- Deep Ink: `#211B2C`
+- Dark Surface: `#2C2438`
+- Warm Ivory: `#F5F1E9`
+- White Surface: `#FFFEFC`
+- Muted Lavender: `#A78BFA`
+- Electric Lime: `#C7F36B`
+- Soft Coral: `#FF806E`
+
+Typography:
+- Manrope for headings.
+- Inter for body text.
+
+Design requirements:
+
+- Premium, polished, original SaaS interface.
+- Responsive desktop, tablet and mobile layouts.
+- Light and dark themes.
+- Proper Urdu RTL and English LTR support.
+- Consistent navigation and reusable components.
+- Accessible keyboard navigation.
+- Proper loading, empty, success, warning and error states.
+- No decorative buttons that do nothing.
+- No fake analytics or fake integration statuses.
+- Preserve the original custom SVG logo.
+
+---
+
+# 4. PHASE 71–80: FOUNDATION, ERROR RECOVERY AND SECURITY
+
+### Phase 71 — Complete Runtime Error Resolution
+- Inspect the remaining execution error from the current checkpoint.
+- Identify the exact error, source file, stack trace and root cause.
+- Fix the actual cause.
+- Check browser console, server console and network requests.
+- Verify voice, offline mode and all existing workflows.
+- Ensure error boundaries show useful recovery information.
+- Do not disable a feature simply to make the error disappear.
+
+### Phase 72 — Full Architecture Audit
+- Map the entire frontend and backend architecture.
+- Identify duplicated services, unused components and circular dependencies.
+- Inspect data flow and authentication boundaries.
+- Identify memory leaks and inefficient rendering.
+- Produce an architecture report.
+
+### Phase 73 — Centralized Error Management
+- Create a consistent application error model.
+- Add structured error codes.
+- Add safe user-facing error messages.
+- Add server-side error logging.
+- Add retry policies for transient failures.
+- Avoid exposing internal stack traces to users.
+- Add correlation IDs for troubleshooting.
+
+### Phase 74 — Authentication Hardening
+- Verify Firebase token validation on protected endpoints.
+- Harden session expiration and refresh handling.
+- Implement safe logout and session revocation behavior.
+- Handle expired, invalid and revoked sessions.
+- Verify role and organization membership on the server.
+
+### Phase 75 — Tenant Isolation
+- Audit every organization-scoped database operation.
+- Enforce organization ownership and membership.
+- Prevent cross-tenant data access.
+- Test users with multiple organizations.
+- Review Firestore rules and server authorization separately.
+
+### Phase 76 — Database Reliability
+- Review Firestore schema and indexes.
+- Implement consistent pagination.
+- Handle concurrent updates safely.
+- Add appropriate transaction boundaries.
+- Add schema versioning where necessary.
+- Avoid accidental duplicate records.
+
+### Phase 77 — API Gateway Hardening
+- Centralize API authentication and validation.
+- Add request IDs.
+- Add request size limits.
+- Add configurable rate limiting.
+- Add request timeouts.
+- Standardize API response formats.
+- Implement safe retry behavior.
+
+### Phase 78 — Input Validation
+- Use Zod or the existing validation library.
+- Validate all API payloads.
+- Validate query parameters and file metadata.
+- Reject malformed or oversized requests.
+- Sanitize untrusted content before displaying it.
+
+### Phase 79 — Secrets and Configuration
+- Audit environment variables.
+- Remove exposed credentials from source code.
+- Add `.env.example` with placeholder values only.
+- Validate configuration at startup.
+- Document required and optional environment variables.
+- Never print secret values in logs.
+
+### Phase 80 — Foundation Regression Suite
+- Add or improve unit, integration and security tests.
+- Test authentication, RBAC and tenant isolation.
+- Test offline behavior.
+- Test duplicate requests and idempotency.
+- Verify build, type checking and application startup.
+- Fix all introduced regressions.
+
+---
+
+# 5. PHASE 81–94: ADVANCED RAG INTELLIGENCE SYSTEM
+
+Build a proper modular Retrieval-Augmented Generation infrastructure.
+
+### Phase 81 — RAG Architecture Audit
+Inspect the existing RAG pipeline and identify incomplete or simulated components.
+
+Map:
+- Data ingestion.
+- Document parsing.
+- Text normalization.
+- Chunking.
+- Metadata extraction.
+- Embedding generation.
+- Vector storage.
+- Retrieval.
+- Reranking.
+- Context construction.
+- Answer generation.
+- Citations and evaluation.
+
+### Phase 82 — Advanced Document Ingestion
+Support:
+- PDF.
+- DOCX.
+- TXT.
+- Markdown.
+- CSV.
+- JSON.
+- HTML.
+- Supported spreadsheet formats.
+
+Add file validation, size limits, parsing errors and extraction status.
+
+### Phase 83 — Intelligent Chunking Engine
+Implement configurable:
+- Fixed-size chunking.
+- Recursive chunking.
+- Paragraph-aware chunking.
+- Sentence-aware chunking.
+- Overlap configuration.
+- Metadata-preserving chunks.
+
+Keep document structure and source references.
+
+### Phase 84 — Metadata Intelligence
+Extract and store:
+- Organization ID.
+- Document ID.
+- Document name.
+- Owner.
+- Source type.
+- Creation date.
+- Updated date.
+- Page number where available.
+- Section title.
+- Access permissions.
+- Document version.
+
+### Phase 85 — Embedding Provider System
+Build a provider-independent embedding interface.
+
+Support configurable providers such as:
+- Gemini embeddings, where available.
+- Other compatible embedding APIs.
+- Locally hosted embedding services, when explicitly configured.
+
+Requirements:
+- Model compatibility checks.
+- Dimension validation.
+- Batch processing.
+- Rate-limit handling.
+- Retry handling.
+- Cost and usage tracking.
+- No mandatory local model download.
+
+### Phase 86 — Vector Storage Abstraction
+- Audit the existing vector store.
+- Create a provider-independent storage interface.
+- Support metadata filtering.
+- Support organization isolation.
+- Support document deletion and re-indexing.
+- Handle embedding model changes safely.
+- Do not silently change vector dimensions.
+
+### Phase 87 — Hybrid Retrieval
+Implement:
+- Semantic search.
+- Keyword search.
+- Metadata filtering.
+- Hybrid result ranking.
+- Configurable relevance thresholds.
+- Duplicate result reduction.
+
+### Phase 88 — Retrieval Reranking
+- Add a configurable reranking interface.
+- Rank results by relevance.
+- Remove irrelevant context.
+- Handle provider failure gracefully.
+- Keep latency and cost measurable.
+
+### Phase 89 — Query Intelligence
+Implement:
+- Query normalization.
+- Search query expansion.
+- Context-aware follow-up queries.
+- Query classification.
+- Language-aware retrieval.
+- Urdu and English support where the selected models support it.
+
+### Phase 90 — Grounded AI Answers
+- Use retrieved evidence as the basis for knowledge answers.
+- Attach source citations.
+- Show document and page references when available.
+- Clearly identify insufficient evidence.
+- Avoid invented citations.
+- Distinguish retrieved facts from general model knowledge.
+
+### Phase 91 — RAG Permissions
+- Apply document access permissions during retrieval.
+- Prevent restricted documents from entering unauthorized prompts.
+- Enforce tenant isolation.
+- Test cross-user and cross-organization access.
+
+### Phase 92 — RAG Evaluation Framework
+Create an evaluation system for:
+- Retrieval precision.
+- Retrieval recall.
+- Citation correctness.
+- Answer relevance.
+- Groundedness.
+- Latency.
+- Token usage.
+- Provider failures.
+
+### Phase 93 — RAG Cache and Optimization
+- Add safe query caching.
+- Invalidate cache on document updates.
+- Respect organization and permission boundaries.
+- Avoid caching sensitive responses across users.
+- Add configurable cache limits.
+
+### Phase 94 — Knowledge Lifecycle Management
+- Document versioning.
+- Re-indexing.
+- Soft deletion and retention rules.
+- Failed ingestion recovery.
+- Duplicate document detection.
+- Knowledge source management.
+
+---
+
+# 6. PHASE 95–106: ENTERPRISE WEB CRAWLER
+
+Build a robust, policy-compliant web crawling and extraction system.
+
+### Phase 95 — Crawler Architecture Audit
+Inspect existing crawler implementation and identify missing safeguards.
+
+### Phase 96 — Respectful Crawling Policies
+- Respect robots.txt and applicable website terms.
+- Respect crawl delays where specified.
+- Identify the crawler with an appropriate user agent.
+- Avoid aggressive request rates.
+- Provide domain-level crawl limits.
+- Respect user cancellation.
+
+### Phase 97 — Sitemap Discovery
+- Discover supported XML sitemaps.
+- Parse sitemap indexes.
+- Extract valid URLs.
+- Detect invalid and duplicate URLs.
+- Enforce configurable crawl limits.
+
+### Phase 98 — URL Normalization
+- Normalize URLs.
+- Remove tracking parameters where appropriate.
+- Handle canonical links.
+- Detect duplicate URLs.
+- Detect redirect loops.
+
+### Phase 99 — SSRF and Network Security
+- Block access to private, loopback and link-local network destinations.
+- Validate DNS resolution and redirect destinations.
+- Restrict unsupported URL schemes.
+- Prevent access to cloud metadata endpoints.
+- Apply safe outbound request timeouts.
+- Revalidate destinations after redirects.
+
+### Phase 100 — Content Extraction
+- Extract readable HTML content.
+- Preserve headings and document structure.
+- Extract metadata.
+- Support relevant structured data.
+- Handle JavaScript-dependent pages only through an approved, resource-limited rendering strategy.
+- Provide extraction failure details.
+
+### Phase 101 — Duplicate Detection
+- Detect duplicate pages.
+- Generate content fingerprints.
+- Track changed content.
+- Avoid unnecessary repeated indexing.
+
+### Phase 102 — Incremental Crawling
+- Detect updated pages.
+- Re-index changed content.
+- Preserve historical metadata.
+- Avoid repeatedly processing unchanged pages.
+
+### Phase 103 — Crawl Job Management
+- Queue crawl jobs.
+- Track progress.
+- Support pause, resume and cancel.
+- Retry transient failures.
+- Enforce per-domain concurrency limits.
+- Persist job state safely.
+
+### Phase 104 — Crawler-to-RAG Pipeline
+- Send approved extracted content into the RAG ingestion pipeline.
+- Preserve source URLs.
+- Attach crawl timestamps.
+- Track indexing status.
+- Prevent unauthorized content ingestion.
+
+### Phase 105 — Source Management
+Create a complete source management interface:
+- Add website.
+- Edit source.
+- Pause and resume.
+- Delete source with confirmation.
+- Set crawl frequency.
+- Configure limits.
+- View source health.
+- View indexing status.
+
+### Phase 106 — Crawler Monitoring Dashboard
+Show real, database-backed metrics:
+- Total sources.
+- Pages discovered.
+- Pages processed.
+- Pages failed.
+- Pages indexed.
+- Last crawl time.
+- Next scheduled crawl.
+- Crawl duration.
+- Errors by domain.
+
+Never display invented metrics.
+
+---
+
+# 7. PHASE 107–114: NEW ADVANCED FEATURE PANELS
+
+Create these as fully functional, reusable product modules.
+
+### Phase 107 — RAG Studio
+New panel: `RAG Studio`
+
+Features:
+- Knowledge source explorer.
+- Document upload.
+- Ingestion progress.
+- Chunk inspection.
+- Embedding provider settings.
+- Retrieval playground.
+- Citation preview.
+- RAG evaluation.
+- Re-indexing controls.
+
+### Phase 108 — API Control Center
+New panel: `API Control Center`
+
+Features:
+- API endpoint explorer.
+- API key management.
+- Request history.
+- Response inspection.
+- Usage and rate-limit information.
+- Webhook management.
+- API health monitoring.
+- API documentation.
+
+Secrets must be masked and shown only through secure one-time display where appropriate.
+
+### Phase 109 — Integration Marketplace
+New panel: `Integration Marketplace`
+
+Organize integrations into categories:
+- AI providers.
+- Google Workspace.
+- Communication.
+- CRM.
+- Project management.
+- Storage.
+- Payments.
+- Analytics.
+- Developer tools.
+
+Each integration must show:
+- Actual connection status.
+- Required permissions.
+- Configuration requirements.
+- Last successful synchronization.
+- Disconnect option.
+
+Do not claim an integration is connected without a verified connection.
+
+### Phase 110 — Webhook Management
+- Create and manage webhooks.
+- Verify signatures.
+- Support event subscriptions.
+- Add retry policies.
+- Add delivery logs.
+- Add failure monitoring.
+- Prevent replay attacks.
+- Support secret rotation.
+
+### Phase 111 — Workflow Builder 2.0
+New panel: `Workflow Builder`
+
+Features:
+- Visual node-based workflow editor.
+- Triggers.
+- Conditions.
+- Actions.
+- AI agent steps.
+- Approval steps.
+- Delays and schedules.
+- Workflow testing.
+- Execution history.
+- Error recovery.
+
+Sensitive actions require approval.
+
+### Phase 112 — AI Agent Command Center
+New panel: `Agent Command Center`
+
+Features:
+- All 15 existing AI employees.
+- Agent profiles.
+- Responsibilities.
+- Skills and tool permissions.
+- Task assignment.
+- Execution history.
+- Agent health.
+- Performance metrics.
+- Manual pause and resume.
+- Human review of generated work.
+
+### Phase 113 — AI Research Workspace
+New panel: `Research Workspace`
+
+Features:
+- Research projects.
+- Source collection.
+- Web research.
+- Knowledge base integration.
+- Evidence-backed summaries.
+- Source citations.
+- Research history.
+- Exportable reports.
+
+Crawler and research actions must respect website access policies.
+
+### Phase 114 — System Health Center
+New panel: `System Health Center`
+
+Features:
+- Backend health.
+- Database health.
+- AI provider health.
+- API status.
+- Crawler status.
+- RAG pipeline status.
+- Queue status.
+- Offline sync status.
+- Error history.
+- Performance metrics.
+
+All displayed information must come from actual system telemetry.
+
+---
+
+# 8. PHASE 115–122: BUSINESS INTELLIGENCE AND SAAS SYSTEMS
+
+### Phase 115 — Advanced Analytics
+- Organization analytics.
+- Agent usage.
+- Workflow execution.
+- API consumption.
+- Knowledge usage.
+- Cost estimates.
+- Time-based reports.
+- Export options.
+
+### Phase 116 — Advanced CRM
+- Contact management.
+- Company management.
+- Lead tracking.
+- Pipeline management.
+- Interaction history.
+- Follow-up tasks.
+- Activity timelines.
+- Organization-scoped permissions.
+
+### Phase 117 — Smart Project Management
+- Project boards.
+- Tasks and subtasks.
+- Dependencies.
+- Milestones.
+- Team assignments.
+- AI-generated task drafts.
+- Progress tracking.
+- Activity history.
+
+### Phase 118 — Finance and Inventory Hardening
+- Audit financial calculations.
+- Add transaction validation.
+- Verify inventory consistency.
+- Add approval workflows.
+- Add immutable financial audit events where appropriate.
+- Keep test transactions clearly separated from real transactions.
+- Never claim that a payment or transfer succeeded without provider confirmation.
+
+### Phase 119 — Subscription and Billing
+- Plan entitlements.
+- Usage quotas.
+- Billing history.
+- Invoice generation.
+- Subscription lifecycle.
+- Grace periods.
+- Payment verification.
+- Webhook reconciliation.
+- Refund approval.
+- Currency formatting for USD and PKR.
+
+Payment providers must be configured and verified before being shown as available.
+
+### Phase 120 — Team Collaboration
+- Organization members.
+- Invitations.
+- Roles and permissions.
+- Shared tasks.
+- Activity feed.
+- Notifications.
+- Team-level settings.
+- Audit trail.
+
+### Phase 121 — Notification Center
+- In-app notifications.
+- Task updates.
+- Approval requests.
+- Agent completion events.
+- Workflow failures.
+- Sync conflicts.
+- User preferences.
+- Read/unread status.
+
+### Phase 122 — Backup, Export and Recovery
+- Organization data export.
+- Document export.
+- Backup status.
+- Restore planning.
+- Data retention.
+- Recovery verification.
+- Permission checks.
+- Clear warnings before destructive recovery actions.
+
+---
+
+# 9. PHASE 123–130: PERFORMANCE, QUALITY AND FINAL READINESS
+
+### Phase 123 — Voice Intelligence 2.0
+Improve the existing voice system:
+- Push-to-talk.
+- Supported language detection.
+- English and Urdu command handling.
+- Navigation commands.
+- Task drafting.
+- Transcript review.
+- Permission handling.
+- Text fallback.
+
+Do not pretend the simulated waveform represents actual audio levels. Keep unsupported browsers fully usable.
+
+### Phase 124 — Offline Workspace 2.0
+- Improve IndexedDB reliability.
+- Add schema migrations.
+- Handle storage quota errors.
+- Add safe synchronization retries.
+- Preserve offline drafts.
+- Improve conflict comparison.
+- Prevent unauthorized overwrite.
+- Never represent pending offline drafts as server-completed work.
+
+### Phase 125 — Performance Optimization
+- Analyze bundle size.
+- Optimize React rendering.
+- Lazy-load feature panels.
+- Reduce unnecessary network calls.
+- Optimize Firestore reads.
+- Add pagination.
+- Optimize 3D rendering.
+- Verify memory usage on modest hardware.
+
+### Phase 126 — Accessibility and Internationalization
+- Keyboard navigation.
+- Accessible dialogs.
+- Screen-reader labels.
+- Color contrast.
+- English and Urdu.
+- RTL layouts.
+- Date, time and currency localization.
+
+### Phase 127 — Full Security Audit
+Audit:
+- Authentication.
+- Authorization.
+- Tenant isolation.
+- Firestore rules.
+- API security.
+- RAG permissions.
+- Crawler SSRF protection.
+- Secrets.
+- File uploads.
+- Webhooks.
+- Offline storage.
+- Billing.
+- Agent tools.
+- Audit logs.
+
+Fix all confirmed vulnerabilities and add regression tests.
+
+### Phase 128 — Comprehensive Testing
+Create or improve tests for:
+- Unit behavior.
+- API contracts.
+- Firebase integration.
+- Authentication.
+- RBAC.
+- Tenant isolation.
+- RAG ingestion and retrieval.
+- Citation correctness.
+- Crawler policies.
+- URL security.
+- Webhooks.
+- AI provider fallback.
+- Voice fallback.
+- Offline synchronization.
+- Billing and approvals.
+- Workflow execution.
+
+Run the real available test suites and report skipped tests explicitly.
+
+### Phase 129 — Documentation and README
+Update `README.md` and `BUILD_STATUS.md` after every completed phase.
+
+README must always explain:
+
+1. What TEAMORA AI is.
+2. Its purpose and target users.
+3. All implemented features.
+4. All feature panels and their functionality.
+5. AI employees and orchestration.
+6. RAG architecture and supported providers.
+7. Web crawler capabilities and limitations.
+8. API gateway and integrations.
+9. Authentication and security.
+10. Database architecture.
+11. Voice and offline features.
+12. SaaS plans and billing architecture.
+13. Installation and setup.
+14. Environment variables.
+15. Development commands.
+16. Testing and verification.
+17. Current implementation progress.
+18. Known limitations.
+19. Upcoming phases.
+20. Roadmap and release status.
+
+Never describe planned features as implemented.
+
+### Phase 130 — Final Release Candidate
+- Run complete production build.
+- Run type checking.
+- Run lint.
+- Run all relevant tests.
+- Run application startup and health checks.
+- Verify all major feature panels.
+- Verify mobile responsiveness.
+- Verify light and dark themes.
+- Verify English and Urdu layouts.
+- Verify error handling.
+- Verify authentication and tenant isolation.
+- Verify RAG and crawler workflows.
+- Verify APIs and integration status.
+- Verify voice and offline fallbacks.
+- Prepare a release report.
+
+Do not deploy or publish without my explicit approval.
+
+---
+
+# 10. REQUIRED NEW NAVIGATION PANELS
+
+Add the following panels to the existing navigation system:
+
+1. RAG Studio
+2. Crawler Control Center
+3. API Control Center
+4. Integration Marketplace
+5. Workflow Builder
+6. Agent Command Center
+7. Research Workspace
+8. System Health Center
+9. Developer Console
+10. Usage and Cost Analytics
+11. Notification Center
+12. Backup and Recovery
+
+Every panel must be a real, reusable React component with:
+- Functional interactions.
+- Actual backend integration where required.
+- Loading and error states.
+- Empty states.
+- Permission checks.
+- Responsive layout.
+- Tests.
+
+Do not add empty placeholder screens and label them complete.
+
+---
+
+# 11. DEVELOPER CONSOLE
+
+Create a dedicated developer-facing workspace.
+
+Features:
+- API endpoint explorer.
+- Request inspector.
+- Response viewer.
+- Server logs with access controls.
+- Provider diagnostics.
+- Webhook event viewer.
+- RAG retrieval debugger.
+- Crawler job debugger.
+- Queue monitoring.
+- Correlation ID search.
+
+Never expose secrets, private prompts or another organization's logs.
+
+---
+
+# 12. AI PROVIDER AND MODEL MANAGEMENT
+
+Improve the provider abstraction.
+
+Requirements:
+- Provider registry.
+- Model capability metadata.
+- Configurable primary provider.
+- Configurable fallback providers.
+- Timeout configuration.
+- Retry limits.
+- Rate-limit handling.
+- Actual model telemetry.
+- Token usage where available.
+- Latency tracking.
+- Cost estimation where pricing data is configured.
+- Provider health checks.
+
+The UI must distinguish:
+
+- Requested model.
+- Actual model.
+- Fallback used.
+- Fallback reason.
+- Provider error.
+- Estimated or reported usage.
+
+Never claim a requested model was used if a fallback model actually generated the response.
+
+---
+
+# 13. FINAL VERIFICATION AND REPORTING RULES
+
+After each phase, report:
+
+**Phase:**  
+**Implementation:**  
+**Files changed:**  
+**Features added:**  
+**Bugs fixed:**  
+**Security improvements:**  
+**Tests executed:**  
+**Tests passed:**  
+**Tests failed:**  
+**TypeScript:**  
+**Lint:**  
+**Production build:**  
+**Runtime verification:**  
+**Known limitations:**  
+**README updated:** YES/NO  
+**BUILD_STATUS updated:** YES/NO  
+**Next phase:**
+
+If an error occurs:
+
+1. Capture the exact error.
+2. Identify its source.
+3. Inspect the relevant code.
+4. Reproduce it where possible.
+5. Fix the root cause.
+6. Add a regression test.
+7. Run the affected tests.
+8. Run the full relevant verification suite.
+9. Confirm the fix in runtime.
+
+Do not move past a critical security or data-integrity failure simply to increase the phase count.
+
+---
+
+# 14. EXECUTION STRATEGY
+
+Work in controlled batches:
+
+- Batch 1: Phases 71–80.
+- Batch 2: Phases 81–94.
+- Batch 3: Phases 95–106.
+- Batch 4: Phases 107–114.
+- Batch 5: Phases 115–122.
+- Batch 6: Phases 123–130.
+
+For every batch:
+
+1. Inspect existing implementation.
+2. Create a concise implementation plan.
+3. Identify dependencies and risks.
+4. Implement the phases sequentially.
+5. Run focused tests after each phase.
+6. Run regression tests after each batch.
+7. Update README and BUILD_STATUS.
+8. Report verified results.
+9. Continue to the next batch only when safe.
+
+If context or execution limits interrupt the work, save the exact checkpoint and resume from the next incomplete phase. Never restart completed work unnecessarily.
+
+# 15. START NOW
+
+Begin by auditing the current TEAMORA AI project and resolving the exact remaining execution error from the Phase 70 checkpoint.
+
+Then produce:
+
+1. Current project health report.
+2. Existing features verification report.
+3. Error and bug inventory.
+4. RAG architecture audit.
+5. Crawler architecture audit.
+6. API and security audit.
+7. Missing feature panel report.
+8. Phase 71–80 implementation plan.
+
+After the inspection, immediately begin Phase 71.
+
+**The goal is not to create a large collection of attractive screens. The goal is to build a genuinely functional, secure, reliable and commercially viable AI workforce SaaS.**
+
+Continue using the existing project, protect working functionality, fix real errors, add real capabilities and verify every meaningful change.

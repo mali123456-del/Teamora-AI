@@ -1,0 +1,968 @@
+# TEAMORA AI — ULTIMATE WORKFORCE TRANSFORMATION & PRODUCT EXPANSION
+## Phases 81–150 | Real AI Employees, Advanced 3D Experience, 90%+ Feature Enhancement, Advanced RAG, Web Crawler, New Feature Ecosystem
+
+**Product:** TEAMORA AI  
+**Tagline:** Your AI Team. One Smart Workspace.  
+**Repository:** https://github.com/mali123456-del/Teamora-AI  
+**Workspace:** `G:\Temp\My projects\TEAMORA AI`  
+**Current Verified Checkpoint (reported):** Phases 1–80  
+**Next Phase:** 81  
+**Current Test Baseline:** 41/41 passing  
+**TypeScript:** 0 errors  
+**Build:** Successful  
+**Backend:** Express + Firebase Authentication + Cloud Firestore  
+**Frontend:** React + TypeScript + Vite  
+**3D Engine:** Three.js r187  
+
+---
+
+# PART 1 — YOUR MISSION
+
+You are the principal software architect, AI agent engineer, 3D graphics developer, backend engineer, product designer, security engineer and QA lead of TEAMORA AI.
+
+Your mission is to transform TEAMORA AI into a genuinely useful, professional, commercially viable AI workforce and business operating platform.
+
+I want substantial improvements throughout the existing application.
+
+The most important objectives are:
+
+1. Turn all 15 AI employees into genuinely functional AI workers.
+2. Upgrade the existing 3D workforce experience and introduce meaningful 3D objects throughout the application.
+3. Improve the functionality and usability of every existing feature panel by at least 90% wherever technically applicable.
+4. Complete the Advanced RAG system.
+5. Build a real, safe and policy-compliant web crawler.
+6. Strengthen the API gateway, integrations and automation infrastructure.
+7. Introduce genuinely useful new feature panels.
+8. Explore the complete existing TEAMORA AI website and application before making design decisions.
+9. Update README.md and BUILD_STATUS.md after EVERY completed phase.
+10. Verify every feature through actual tests and runtime behavior.
+
+**Do not interpret 90% enhancement as simply adding 90% more buttons or code.** It means substantially improving functionality, reliability, workflow completeness, usability, automation, performance and integration.
+
+---
+
+# PART 2 — FIRST: INSPECT AND EXPLORE THE EXISTING WEBSITE
+
+Before implementation, explore the complete running TEAMORA AI application.
+
+Use the existing development server, browser preview or available application URL.
+
+Inspect:
+
+- Landing page and dashboard.
+- Navigation and sidebar.
+- All existing feature panels.
+- All 15 AI employee profiles.
+- Workforce canvas.
+- CRM.
+- Finance.
+- Inventory.
+- Projects.
+- Knowledge Hub.
+- Automation Studio.
+- Approvals.
+- Analytics.
+- Billing and subscriptions.
+- Settings.
+- Voice interface.
+- Offline workspace.
+- Existing responsive mobile interface.
+- Existing 3D scenes and objects.
+
+If an external website URL or preview is unavailable, inspect the actual running local application. Do not invent an inspected URL.
+
+### Website exploration deliverables
+
+Create:
+
+`docs/WEBSITE_UX_AUDIT.md`
+
+Include:
+
+- Existing page inventory.
+- Current navigation architecture.
+- Existing functionality.
+- UI inconsistencies.
+- Missing workflows.
+- Poor user experiences.
+- Mobile responsiveness problems.
+- 3D opportunities.
+- Performance problems.
+- Recommended improvements.
+- Screenshots where the available environment supports them.
+
+### Design inspiration
+
+Study useful product design patterns from relevant products such as:
+
+- Notion.
+- Linear.
+- ClickUp.
+- Monday.com.
+- Asana.
+- HubSpot.
+- Salesforce.
+- Zapier.
+- n8n.
+- Perplexity.
+- Modern AI research and agent workspaces.
+
+Use these as functional and UX references only.
+
+Do not copy their branding, copyrighted assets, source code or exact layouts. TEAMORA must retain its own identity.
+
+---
+
+# PART 3 — 15 AI EMPLOYEES MUST BECOME REAL WORKERS
+
+This is the highest-priority product upgrade.
+
+Current workforce:
+
+1. Atlas
+2. Sarah
+3. Vance
+4. Stockwell
+5. Ledger
+6. Tariq
+7. Maya
+8. Nora
+9. Echo
+10. Scribe
+11. Synapse
+12. Aegis
+13. Orion
+14. Pulse
+15. Mira
+
+First inspect every employee's actual role, system prompt, permissions, tools, services and existing workflows.
+
+Do not replace their existing identities or responsibilities without a good architectural reason.
+
+## A. Real employee execution architecture
+
+Build a common but modular AI Employee Runtime.
+
+Every employee must have:
+
+- Unique identity.
+- Defined job description.
+- Specialized expertise.
+- System instructions.
+- Tool registry.
+- Tool permissions.
+- Organization context.
+- Task context.
+- Memory access rules.
+- Execution state.
+- Progress reporting.
+- Output validation.
+- Error handling.
+- Cancellation support.
+- Retry support.
+- Execution history.
+- Audit records.
+
+Each agent should have its own specialized workflow.
+
+## B. Real tool execution
+
+AI employees must be able to use actual authorized application services.
+
+Examples:
+
+- Read authorized CRM records.
+- Create CRM drafts.
+- Analyze project information.
+- Prepare inventory reports.
+- Calculate financial summaries.
+- Search authorized knowledge documents.
+- Retrieve relevant RAG sources.
+- Create task drafts.
+- Prepare workflow proposals.
+- Generate reports.
+- Analyze uploaded files.
+- Prepare customer follow-up drafts.
+- Identify anomalies.
+- Generate recommendations.
+
+Use existing backend services instead of creating duplicate systems.
+
+When a task requires a missing integration, report that limitation and request configuration rather than pretending the action succeeded.
+
+## C. Agent execution lifecycle
+
+Implement a reliable execution lifecycle:
+
+`Created → Validating → Planning → Awaiting Approval (if needed) → Executing → Verifying → Completed / Failed / Cancelled`
+
+Every transition must be backed by actual execution state.
+
+A language model saying "I completed the task" is not proof that a tool action succeeded.
+
+Require tool results, persisted state and verification before marking an action complete.
+
+## D. Agent planning and task decomposition
+
+Add:
+
+- Task classification.
+- Task complexity estimation.
+- Subtask generation.
+- Agent selection.
+- Dependency management.
+- Execution planning.
+- Parallel execution for independent safe tasks.
+- Sequential execution for dependent tasks.
+- Final output synthesis.
+- Failure recovery.
+
+Avoid unlimited agent loops and uncontrolled recursive tool calls.
+
+Add maximum steps, execution timeouts and configurable resource limits.
+
+## E. Human approval and governance
+
+Require appropriate human approval for:
+
+- Payments.
+- Financial transfers.
+- Refunds.
+- Purchases.
+- External messages.
+- Contract-related actions.
+- Deletion of important data.
+- Changes to billing or account ownership.
+- Other sensitive external actions.
+
+An agent must never bypass its assigned tool permissions or organization permissions.
+
+## F. Agent memory
+
+Implement controlled memory:
+
+- Organization knowledge.
+- Task-specific context.
+- User-approved preferences.
+- Previous execution summaries.
+- Relevant document references.
+
+Apply access control and retention rules.
+
+Never expose one organization's private memory to another organization.
+
+## G. Agent Command Center
+
+Upgrade the employee dashboard with:
+
+- Employee profiles.
+- Specialization.
+- Current status.
+- Assigned tasks.
+- Active executions.
+- Tool permissions.
+- Approval requests.
+- Completed work.
+- Failed executions.
+- Performance statistics.
+- Execution timelines.
+- Cost and token usage where available.
+- Pause and resume controls.
+- Manual task assignment.
+
+## H. Individual employee workspaces
+
+Give each AI employee a dedicated workspace:
+
+- Profile.
+- Responsibilities.
+- Skills.
+- Tools.
+- Assigned tasks.
+- Knowledge access.
+- Activity history.
+- Results.
+- Feedback.
+- Configuration.
+
+Every workspace must be functional, not a decorative profile page.
+
+---
+
+# PART 4 — UPGRADE THE 3D EXPERIENCE
+
+Do not simply add random decorative 3D models.
+
+Create a meaningful 3D visualization system that represents TEAMORA's actual features.
+
+Preserve Three.js r187 and the existing workforce canvas where appropriate.
+
+## A. Upgrade the existing Neural Workforce Canvas
+
+Improve:
+
+- Lighting.
+- Materials.
+- Shadows where affordable.
+- Camera movement.
+- Scene composition.
+- Depth.
+- Object transitions.
+- Agent status visualization.
+- Interactive selection.
+- Hover states.
+- Task activity indicators.
+- Organization visualization.
+- Responsive camera framing.
+
+Use an optimized scene architecture.
+
+## B. Introduce meaningful 3D objects
+
+Create reusable 3D objects representing different application systems.
+
+Suggested objects:
+
+1. **AI Workforce Hub:** Central 3D core representing the 15 employees.
+2. **Agent Nodes:** Individual agent representations connected to the central hub.
+3. **Knowledge Sphere:** Knowledge base and RAG system.
+4. **Data Cube:** Analytics and data intelligence.
+5. **Security Shield:** Security and governance.
+6. **Automation Engine:** Workflow execution.
+7. **API Gateway Core:** API infrastructure.
+8. **Crawler Globe:** Website discovery and indexing.
+9. **Finance Model:** Financial operations.
+10. **CRM Network:** Customer relationships.
+11. **Project Timeline Object:** Project management.
+12. **Cloud Storage Object:** Documents and files.
+13. **Notification Orb:** Events and alerts.
+14. **Integration Bridge:** External application connectivity.
+15. **Health Monitor:** Infrastructure monitoring.
+
+## C. 3D interaction
+
+Where appropriate, users should be able to:
+
+- Rotate objects.
+- Inspect objects.
+- Select systems.
+- Open corresponding application panels.
+- View real status information.
+- See meaningful connections between systems.
+- View agent activity.
+
+For example:
+
+Selecting the Knowledge Sphere should open RAG Studio.
+
+Selecting the API Gateway Core should open API Control Center.
+
+Selecting the Security Shield should open the security dashboard.
+
+These interactions must be backed by real application state.
+
+## D. Visual quality
+
+Use:
+
+- Premium materials.
+- Carefully controlled reflections.
+- Professional lighting.
+- Smooth but restrained animations.
+- Consistent camera controls.
+- Clear visual hierarchy.
+
+Avoid excessive bloom, particles, expensive shaders or unnecessary post-processing.
+
+## E. Performance
+
+Provide:
+
+- Eco mode.
+- Standard mode.
+- High-quality mode.
+- Automatic quality adjustment.
+- Reduced-motion support.
+- Visibility-based rendering pause.
+- Lazy loading.
+- Resource disposal.
+- WebGL context recovery.
+- 2D fallback.
+
+The app must remain usable on my Intel HD integrated graphics and 8 GB RAM system.
+
+3D must enhance the application, never make essential business functionality dependent on WebGL.
+
+---
+
+# PART 5 — ENHANCE ALL EXISTING FEATURE PANELS
+
+Perform a complete audit of every existing panel.
+
+Create:
+
+`docs/FEATURE_ENHANCEMENT_ROADMAP.md`
+
+For every panel, document:
+
+- Existing functionality.
+- Missing functionality.
+- Current backend connection.
+- UI problems.
+- Performance issues.
+- Security issues.
+- Proposed improvements.
+- Tests required.
+- Completion status.
+
+## Required improvement standard
+
+Target at least 90% meaningful enhancement of each existing panel wherever technically applicable.
+
+This is a target, not permission to fabricate a percentage.
+
+Measure improvements using actual completed acceptance criteria.
+
+### Existing systems to improve
+
+**Dashboard**
+- Personalized widgets.
+- Real-time activity.
+- Customizable layouts.
+- Action shortcuts.
+- Real metrics.
+- System health indicators.
+
+**CRM**
+- Better lead pipeline.
+- Contact management.
+- Customer timelines.
+- Follow-up management.
+- Activity history.
+- Search and filtering.
+- Reports.
+- AI-generated drafts.
+
+**Finance**
+- Reliable calculations.
+- Financial summaries.
+- Transaction history.
+- Budgets.
+- Cash flow.
+- Approval workflows.
+- Exportable reports.
+- Reconciliation status.
+
+**Inventory**
+- Stock tracking.
+- Stock movement.
+- Low-stock alerts.
+- Supplier records.
+- Inventory history.
+- Search and filtering.
+- Inventory reports.
+
+**Projects**
+- Kanban.
+- List and timeline views.
+- Dependencies.
+- Milestones.
+- Task assignments.
+- Progress tracking.
+- Team collaboration.
+
+**Knowledge Hub**
+- Better search.
+- Document management.
+- RAG integration.
+- Source citations.
+- Versioning.
+- Permissions.
+- Document processing status.
+
+**Automation Studio**
+- Visual workflow editor.
+- Triggers.
+- Conditions.
+- Actions.
+- Agent integration.
+- Approvals.
+- Execution history.
+- Retry and recovery.
+
+**Approvals**
+- Approval policies.
+- Review queues.
+- Decision history.
+- Expiration handling.
+- Approval delegation where authorized.
+- Verified execution receipts.
+
+**Analytics**
+- Actual database-backed metrics.
+- Filters.
+- Date ranges.
+- Charts.
+- Export.
+- Usage and cost analytics.
+
+**Billing**
+- Plans.
+- Quotas.
+- Usage.
+- Invoices.
+- Subscription status.
+- Payment verification.
+- Clear sandbox/production separation.
+
+**Settings**
+- Organization management.
+- User preferences.
+- Permissions.
+- Integrations.
+- Security settings.
+- Notification preferences.
+
+**Voice**
+- Push-to-talk.
+- Supported languages.
+- Command review.
+- Safe task drafting.
+- Manual fallback.
+- Browser compatibility.
+
+**Offline Workspace**
+- Durable local drafts.
+- Safe sync.
+- Conflict handling.
+- Storage limits.
+- Clear synchronization status.
+
+Do not remove existing functionality while upgrading these systems.
+
+---
+
+# PART 6 — PHASES 81–94: ADVANCED RAG SYSTEM
+
+Complete the Advanced RAG architecture.
+
+### Phase 81 — RAG Audit and Architecture
+Inspect the current document storage, search, indexing and retrieval implementation.
+
+### Phase 82 — Document Ingestion
+Support PDF, DOCX, TXT, Markdown, CSV, JSON, HTML and suitable spreadsheet formats.
+
+### Phase 83 — Advanced Chunking
+Implement:
+- Fixed-size.
+- Recursive.
+- Paragraph-aware.
+- Sentence-aware.
+- Configurable overlap.
+- Metadata preservation.
+
+### Phase 84 — Embedding Providers
+Build provider abstraction with supported embedding providers, dimension checks, batching and retry handling.
+
+### Phase 85 — Vector Storage
+Implement or improve the vector storage abstraction with organization isolation and metadata filtering.
+
+### Phase 86 — BM25 Keyword Search
+Implement a proper keyword retrieval engine with configurable scoring.
+
+### Phase 87 — Hybrid Retrieval
+Combine semantic similarity and BM25 using configurable ranking weights.
+
+### Phase 88 — Reranking
+Add optional reranking providers and fallback behavior.
+
+### Phase 89 — Query Intelligence
+Improve query normalization, expansion, language handling and follow-up query interpretation.
+
+### Phase 90 — Grounded Answers
+Return evidence-backed answers with source citations and clear insufficient-evidence behavior.
+
+### Phase 91 — Document-Level Permissions
+Apply document access controls before results enter the model context.
+
+### Phase 92 — RAG Evaluation
+Measure retrieval relevance, citation correctness, groundedness, latency and usage.
+
+### Phase 93 — RAG Cache
+Implement safe, organization-aware caching and invalidation.
+
+### Phase 94 — RAG Studio
+Build a fully functional RAG Studio with:
+- Document ingestion.
+- Chunk explorer.
+- Embedding settings.
+- Retrieval playground.
+- Search diagnostics.
+- Source citation preview.
+- Evaluation dashboard.
+- Re-indexing.
+- Failure recovery.
+
+---
+
+# PART 7 — PHASES 95–106: ADVANCED WEB CRAWLER
+
+### Phase 95 — Crawler Architecture
+Audit and implement a real job-based crawler.
+
+### Phase 96 — Crawling Policy
+Respect robots.txt, applicable website terms, crawl delays and reasonable request rates.
+
+### Phase 97 — Sitemap Discovery
+Support sitemap indexes and URL discovery.
+
+### Phase 98 — URL Normalization
+Handle canonical URLs, duplicates and redirects.
+
+### Phase 99 — SSRF Protection
+Block private, loopback and link-local addresses.
+
+Revalidate DNS and redirect destinations to prevent bypasses.
+
+Block cloud metadata access and unsafe URL schemes.
+
+### Phase 100 — Content Extraction
+Extract readable content and preserve headings, metadata and source URLs.
+
+### Phase 101 — Duplicate Detection
+Use content fingerprints and canonical URL tracking.
+
+### Phase 102 — Incremental Crawling
+Detect content changes and avoid unnecessary reprocessing.
+
+### Phase 103 — Crawl Queue
+Implement persistent jobs, pause, resume, cancel, retry and status tracking.
+
+### Phase 104 — Crawler-to-RAG
+Send authorized extracted content into the RAG pipeline.
+
+### Phase 105 — Crawler Control Center
+Build a complete domain and source management interface.
+
+### Phase 106 — Crawler Analytics
+Display actual crawl counts, failures, duration, indexed pages and source health.
+
+---
+
+# PART 8 — PHASES 107–120: NEW FEATURE PANELS
+
+Create the following reusable, functional feature panels.
+
+### Phase 107 — RAG Studio
+Complete document ingestion, retrieval and evaluation workspace.
+
+### Phase 108 — Crawler Control Center
+Manage domains, sources, crawl jobs and extraction results.
+
+### Phase 109 — API Control Center
+Manage endpoint diagnostics, API usage, credentials and webhooks.
+
+### Phase 110 — Integration Marketplace
+Browse, configure and verify external integrations.
+
+### Phase 111 — Workflow Builder 2.0
+Create trigger-condition-action workflows using a visual node editor.
+
+### Phase 112 — Agent Command Center
+Control and monitor all 15 AI employees.
+
+### Phase 113 — Research Workspace
+Collect evidence from authorized web sources and internal knowledge.
+
+### Phase 114 — System Health Center
+Monitor database, providers, queues, APIs and background jobs.
+
+### Phase 115 — Developer Console
+Provide request inspection, logs, diagnostics and debugging.
+
+### Phase 116 — Usage and Cost Analytics
+Show real usage, model requests, token counts and configurable cost estimates.
+
+### Phase 117 — Notification Center
+Manage system, task, workflow and approval notifications.
+
+### Phase 118 — Backup and Recovery Center
+Manage backup status, exports and recovery procedures.
+
+### Phase 119 — Data Import and Export Studio
+Create safe CSV, JSON and supported document import/export workflows.
+
+### Phase 120 — Team Collaboration Center
+Provide shared workspaces, activity feeds, assignments and organization collaboration.
+
+---
+
+# PART 9 — PHASES 121–135: REAL AI WORKFORCE AND INTELLIGENT AUTOMATION
+
+### Phase 121 — Unified Agent Runtime
+Standardize agent execution, permissions and telemetry.
+
+### Phase 122 — Agent Tool Registry
+Build a central registry of available tools with authorization checks.
+
+### Phase 123 — Task Planning Engine
+Generate plans and validate dependencies.
+
+### Phase 124 — Multi-Agent Delegation
+Allow authorized agents to delegate tasks to appropriate specialists.
+
+### Phase 125 — Agent Collaboration
+Support shared task context and verified result handoffs.
+
+### Phase 126 — Execution Verification
+Verify actual database and tool results before marking tasks complete.
+
+### Phase 127 — Agent Memory
+Implement permission-aware and organization-scoped memory.
+
+### Phase 128 — Human Review
+Provide review queues for generated reports, drafts and sensitive actions.
+
+### Phase 129 — Agent Evaluation
+Measure task completion quality, failure rate, latency and user feedback.
+
+### Phase 130 — Agent Scheduling
+Add safe scheduled jobs with limits, cancellation and execution history.
+
+### Phase 131 — Workflow Templates
+Create reusable templates for common business operations.
+
+### Phase 132 — Business Process Automation
+Connect CRM, projects, inventory, finance and knowledge workflows through authorized tools.
+
+### Phase 133 — Intelligent Document Processing
+Extract, classify and summarize authorized business documents.
+
+### Phase 134 — AI Report Generation
+Create evidence-backed reports with export support.
+
+### Phase 135 — Workforce Performance Dashboard
+Show real execution metrics and agent performance.
+
+---
+
+# PART 10 — PHASES 136–145: ADVANCED PRODUCT ENHANCEMENTS
+
+### Phase 136 — Unified Global Search
+Search authorized records, documents, projects, contacts and agent results.
+
+### Phase 137 — Universal Command Palette
+Add a keyboard-driven command interface with permission-aware actions.
+
+### Phase 138 — Customizable Workspace
+Allow users to configure dashboards, widgets and navigation preferences.
+
+### Phase 139 — Advanced Search and Filters
+Add saved filters, sorting and pagination across major panels.
+
+### Phase 140 — Document Collaboration
+Support document comments, versions and controlled sharing.
+
+### Phase 141 — Advanced Audit Explorer
+Provide searchable security and business audit events.
+
+### Phase 142 — Integration Health Monitoring
+Monitor actual integration connectivity, failures and synchronization.
+
+### Phase 143 — Advanced API and Webhook Reliability
+Add durable delivery tracking, signature verification, replay prevention and retry policies.
+
+### Phase 144 — Mobile Experience Upgrade
+Improve mobile navigation, touch interactions, tables, forms and 3D fallbacks.
+
+### Phase 145 — Personalization and Localization
+Improve English and Urdu experiences, RTL support, date/time formats and USD/PKR display.
+
+---
+
+# PART 11 — PHASES 146–150: FINAL QUALITY AND RELEASE PREPARATION
+
+### Phase 146 — Performance Audit
+Measure bundle size, rendering performance, memory usage and network efficiency.
+
+### Phase 147 — Complete Security Audit
+Review authentication, authorization, tenant isolation, RAG, crawler, APIs, webhooks, billing and agent tools.
+
+### Phase 148 — Full Regression Testing
+Test every major existing and newly introduced workflow.
+
+### Phase 149 — Complete Documentation
+Update all technical documentation, installation instructions, environment examples and roadmap information.
+
+### Phase 150 — Release Candidate
+Run production build, typecheck, lint, tests and runtime verification.
+
+Prepare a detailed release readiness report.
+
+Do not deploy without approval.
+
+---
+
+# PART 12 — REQUIRED PRODUCT QUALITY RULES
+
+Every feature panel must meet these requirements:
+
+1. Real functionality.
+2. Correct backend integration.
+3. Organization-aware permissions.
+4. Loading states.
+5. Empty states.
+6. Error states.
+7. Responsive layout.
+8. Search and filtering where relevant.
+9. Useful notifications.
+10. Keyboard accessibility.
+11. Proper data validation.
+12. Automated tests.
+13. Documentation.
+14. Actual runtime verification.
+
+### No fake functionality
+
+Never use:
+- Fake agent completion.
+- Fake integration connections.
+- Fake API responses presented as live.
+- Fake financial transactions.
+- Fabricated analytics.
+- Fake crawler progress.
+- Fake RAG citations.
+- Hardcoded production metrics.
+- Buttons that only display success messages without performing their stated action.
+
+Use clearly labelled demo data only in an explicit demo mode.
+
+---
+
+# PART 13 — README AND DOCUMENTATION AFTER EVERY PHASE
+
+This requirement is mandatory.
+
+After EVERY completed phase, immediately update:
+
+1. `README.md`
+2. `BUILD_STATUS.md`
+
+Also update relevant documentation.
+
+README must always include:
+
+- TEAMORA AI purpose.
+- Product overview.
+- Current features.
+- All feature panels.
+- All 15 AI employees.
+- Agent capabilities and permissions.
+- 3D experience.
+- RAG architecture.
+- Crawler architecture.
+- API infrastructure.
+- Integrations.
+- Authentication.
+- Database.
+- Security.
+- Voice.
+- Offline support.
+- Subscription plans.
+- Installation instructions.
+- Environment configuration.
+- Testing commands.
+- Completed phases.
+- Known limitations.
+- Upcoming phases.
+
+Maintain a clear distinction between:
+- Implemented.
+- Tested.
+- Partially implemented.
+- Planned.
+- Unavailable due to external configuration.
+
+Never mark a planned feature as complete.
+
+---
+
+# PART 14 — IMPLEMENTATION STRATEGY
+
+Work in batches:
+
+**Batch A:** Phases 81–94 — RAG  
+**Batch B:** Phases 95–106 — Crawler  
+**Batch C:** Phases 107–120 — New Feature Panels  
+**Batch D:** Phases 121–135 — Real AI Workforce  
+**Batch E:** Phases 136–145 — Product Enhancements  
+**Batch F:** Phases 146–150 — Release Readiness
+
+For every batch:
+
+1. Inspect existing code.
+2. Write the implementation plan.
+3. Identify dependencies.
+4. Implement sequentially.
+5. Test each phase.
+6. Fix errors.
+7. Run regression tests.
+8. Update README.md.
+9. Update BUILD_STATUS.md.
+10. Report the verified checkpoint.
+
+Do not skip critical phases just to increase the phase number.
+
+---
+
+# PART 15 — MY HARDWARE AND RESOURCE LIMITS
+
+Optimize for:
+
+- Dell Latitude 3340.
+- Intel Core i5-4200U.
+- 8 GB RAM.
+- 477 GB SSD.
+- Intel HD integrated graphics.
+- Windows 10 Pro 64-bit.
+
+Avoid mandatory GPU processing, large local models, excessive background services and unnecessary dependencies.
+
+Use remote AI providers when configured, with local lightweight fallback only where genuinely practical.
+
+---
+
+# PART 16 — FINAL START INSTRUCTIONS
+
+START NOW.
+
+First inspect the actual running TEAMORA AI website and repository.
+
+Then produce:
+
+1. Complete website UX audit.
+2. Existing feature panel inventory.
+3. AI employee capability audit.
+4. 3D experience audit.
+5. RAG implementation plan.
+6. Crawler implementation plan.
+7. API and integration audit.
+8. Feature enhancement roadmap.
+9. Phase 81–94 execution plan.
+
+After inspection, begin Phase 81.
+
+**Priority order:**
+
+1. Real AI employees that perform useful work.
+2. Reliable RAG and web crawler.
+3. Meaningful 3D experience.
+4. 90%+ meaningful enhancement across existing panels.
+5. New functional feature panels.
+6. Security, performance, testing and documentation.
+
+If the current batch reaches an execution or context limit, save the exact checkpoint and continue from the next incomplete phase.
+
+Do not restart completed work.
+
+**FINAL GOAL: TEAMORA AI should feel like a complete AI-powered business workspace with 15 genuinely useful AI employees, an intelligent 3D interface, powerful knowledge retrieval, reliable automation and professional business tools—not just a collection of AI-themed dashboards.**

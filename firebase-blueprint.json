@@ -7,12 +7,26 @@
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string", "maxLength": 128 },
+        "slug": { "type": "string", "maxLength": 64 },
         "plan": { "type": "string", "enum": ["free", "starter", "pro", "business", "enterprise"] },
         "ownerUid": { "type": "string", "maxLength": 128 },
+        "currency": { "type": "string", "enum": ["USD", "PKR"] },
         "createdAt": { "type": "string", "format": "date-time" },
         "updatedAt": { "type": "string", "format": "date-time" }
       },
       "required": ["name", "plan", "ownerUid"]
+    },
+    "organizationMember": {
+      "title": "Organization Member",
+      "description": "Member mapping with RBAC role in an organization",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["owner", "admin", "manager", "member", "viewer"] },
+        "joinedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
     },
     "userProfile": {
       "title": "User Profile",
@@ -36,11 +50,14 @@
         "id": { "type": "string" },
         "orgId": { "type": "string", "maxLength": 128 },
         "agentId": { "type": "string", "maxLength": 64 },
+        "agentName": { "type": "string", "maxLength": 64 },
         "title": { "type": "string", "maxLength": 256 },
         "prompt": { "type": "string", "maxLength": 4096 },
-        "status": { "type": "string", "enum": ["queued", "running", "completed", "failed", "needs_approval"] },
+        "status": { "type": "string", "enum": ["queued", "planning", "running", "completed", "failed", "needs_approval", "cancelled"] },
         "priority": { "type": "string", "enum": ["low", "medium", "high", "urgent"] },
         "result": { "type": "string", "maxLength": 16384 },
+        "requiresApproval": { "type": "boolean" },
+        "approvalId": { "type": "string", "maxLength": 128 },
         "createdBy": { "type": "string", "maxLength": 128 },
         "createdAt": { "type": "string", "format": "date-time" },
         "updatedAt": { "type": "string", "format": "date-time" }
@@ -55,12 +72,16 @@
         "id": { "type": "string" },
         "orgId": { "type": "string", "maxLength": 128 },
         "agentId": { "type": "string", "maxLength": 64 },
+        "agentName": { "type": "string", "maxLength": 64 },
         "actionType": { "type": "string", "maxLength": 64 },
         "title": { "type": "string", "maxLength": 256 },
         "description": { "type": "string", "maxLength": 2048 },
-        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
         "consequences": { "type": "string", "maxLength": 1024 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected", "executing", "executed", "execution_failed", "cancelled"] },
+        "executionId": { "type": "string", "maxLength": 128 },
+        "executionResult": { "type": "string", "maxLength": 4096 },
         "decidedBy": { "type": "string", "maxLength": 128 },
+        "decidedAt": { "type": "string", "format": "date-time" },
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["orgId", "agentId", "actionType", "title", "status"]
@@ -77,9 +98,102 @@
         "company": { "type": "string", "maxLength": 128 },
         "status": { "type": "string", "enum": ["lead", "prospect", "customer", "churned"] },
         "value": { "type": "number" },
+        "currency": { "type": "string", "enum": ["USD", "PKR"] },
+        "phone": { "type": "string", "maxLength": 32 },
+        "notes": { "type": "string", "maxLength": 2048 },
+        "assignedAgent": { "type": "string", "maxLength": 64 },
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["orgId", "name", "email", "status"]
+    },
+    "inventoryItem": {
+      "title": "Inventory Item",
+      "description": "Product catalogue and inventory stock tracking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orgId": { "type": "string", "maxLength": 128 },
+        "sku": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 128 },
+        "category": { "type": "string", "maxLength": 64 },
+        "stockQuantity": { "type": "number" },
+        "minThreshold": { "type": "number" },
+        "unitPrice": { "type": "number" },
+        "currency": { "type": "string", "enum": ["USD", "PKR"] },
+        "supplier": { "type": "string", "maxLength": 128 },
+        "status": { "type": "string", "enum": ["in_stock", "low_stock", "out_of_stock"] }
+      },
+      "required": ["orgId", "sku", "name", "stockQuantity", "unitPrice"]
+    },
+    "invoice": {
+      "title": "Invoice",
+      "description": "Sales invoice and financial billing document",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orgId": { "type": "string", "maxLength": 128 },
+        "invoiceNumber": { "type": "string", "maxLength": 64 },
+        "customerId": { "type": "string", "maxLength": 128 },
+        "customerName": { "type": "string", "maxLength": 128 },
+        "amount": { "type": "number" },
+        "currency": { "type": "string", "enum": ["USD", "PKR"] },
+        "status": { "type": "string", "enum": ["draft", "sent", "paid", "overdue"] },
+        "dueDate": { "type": "string", "maxLength": 32 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orgId", "invoiceNumber", "customerName", "amount", "status"]
+    },
+    "expense": {
+      "title": "Expense",
+      "description": "Business expense or operational disbursement",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orgId": { "type": "string", "maxLength": 128 },
+        "category": { "type": "string", "maxLength": 64 },
+        "description": { "type": "string", "maxLength": 256 },
+        "amount": { "type": "number" },
+        "currency": { "type": "string", "enum": ["USD", "PKR"] },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "submittedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orgId", "category", "description", "amount", "status"]
+    },
+    "project": {
+      "title": "Project",
+      "description": "Cross-functional business project with milestone progress",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orgId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 256 },
+        "description": { "type": "string", "maxLength": 2048 },
+        "status": { "type": "string", "enum": ["active", "planning", "completed", "paused"] },
+        "progress": { "type": "number" },
+        "deadline": { "type": "string", "maxLength": 32 },
+        "tasksCount": { "type": "number" },
+        "completedTasksCount": { "type": "number" },
+        "leadAgentId": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["orgId", "title", "status"]
+    },
+    "documentItem": {
+      "title": "Document Item",
+      "description": "Corporate knowledge base item and corporate asset",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orgId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 256 },
+        "size": { "type": "string", "maxLength": 32 },
+        "type": { "type": "string", "maxLength": 32 },
+        "category": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "enum": ["indexing", "indexed", "error"] },
+        "summary": { "type": "string", "maxLength": 4096 },
+        "uploadedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orgId", "name", "category", "status"]
     },
     "workflow": {
       "title": "Automation Workflow",
@@ -93,15 +207,38 @@
         "trigger": { "type": "string", "maxLength": 128 },
         "status": { "type": "string", "enum": ["active", "paused", "draft"] },
         "stepsCount": { "type": "number" },
+        "executionsCount": { "type": "number" },
+        "lastRunAt": { "type": "string", "format": "date-time" },
+        "requiresApproval": { "type": "boolean" },
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["orgId", "name", "trigger", "status"]
+    },
+    "auditLog": {
+      "title": "Security Audit Log",
+      "description": "Security and compliance audit event record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orgId": { "type": "string", "maxLength": 128 },
+        "action": { "type": "string", "maxLength": 128 },
+        "actor": { "type": "string", "maxLength": 128 },
+        "resource": { "type": "string", "maxLength": 256 },
+        "ipAddress": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "enum": ["success", "warning", "blocked"] },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orgId", "action", "actor", "status", "timestamp"]
     }
   },
   "firestore": {
     "/organizations/{orgId}": {
       "schema": { "$ref": "#/entities/organization" },
-      "description": "Organization records"
+      "description": "Organization workspaces"
+    },
+    "/organizations/{orgId}/members/{memberId}": {
+      "schema": { "$ref": "#/entities/organizationMember" },
+      "description": "Organization membership and RBAC roles"
     },
     "/users/{userId}/profile": {
       "schema": { "$ref": "#/entities/userProfile" },
@@ -119,9 +256,33 @@
       "schema": { "$ref": "#/entities/customer" },
       "description": "CRM customers and leads within an organization"
     },
+    "/organizations/{orgId}/inventory/{itemId}": {
+      "schema": { "$ref": "#/entities/inventoryItem" },
+      "description": "Inventory product records within an organization"
+    },
+    "/organizations/{orgId}/invoices/{invoiceId}": {
+      "schema": { "$ref": "#/entities/invoice" },
+      "description": "Invoices within an organization"
+    },
+    "/organizations/{orgId}/expenses/{expenseId}": {
+      "schema": { "$ref": "#/entities/expense" },
+      "description": "Expenses within an organization"
+    },
+    "/organizations/{orgId}/projects/{projectId}": {
+      "schema": { "$ref": "#/entities/project" },
+      "description": "Projects within an organization"
+    },
+    "/organizations/{orgId}/documents/{docId}": {
+      "schema": { "$ref": "#/entities/documentItem" },
+      "description": "Knowledge documents within an organization"
+    },
     "/organizations/{orgId}/workflows/{workflowId}": {
       "schema": { "$ref": "#/entities/workflow" },
       "description": "Automation workflows within an organization"
+    },
+    "/organizations/{orgId}/auditLogs/{logId}": {
+      "schema": { "$ref": "#/entities/auditLog" },
+      "description": "Audit trail records within an organization"
     }
   }
 }

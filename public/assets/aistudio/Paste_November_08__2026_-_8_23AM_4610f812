@@ -1,0 +1,1039 @@
+# TEAMORA AI — MASTER CONTINUATION COMMAND
+## PHASE 21–40: COMPLETE IMPLEMENTATION, SECURITY, TESTING & PRODUCTION READINESS
+
+**Product:** TEAMORA AI — Your AI Team. One Smart Workspace.
+
+**GitHub:** https://github.com/mali123456-del/Teamora-AI
+
+**Existing project:** Continue the imported repository. Do not create a second application.
+
+**Current reported runtime:** Port 3000.
+
+**Mission:** Continue the existing greenfield build, repair all identified weaknesses, complete all remaining product systems, test the entire application, and prepare a reliable production release.
+
+---
+
+# 0. NON-NEGOTIABLE EXECUTION RULES
+
+Act as a senior full-stack engineer, security engineer, AI systems architect, database engineer, QA engineer and SaaS product designer.
+
+## Token efficiency
+
+USE FEWER TOKENS, NOT FEWER FEATURES.
+
+- Keep explanations and repeated planning concise.
+- Prioritize actual implementation over long progress descriptions.
+- Reuse components and services.
+- Avoid unnecessary dependencies and duplicate code.
+- Never skip security, testing or verification to save tokens.
+- Do not stop after creating UI mockups.
+
+## Existing project preservation
+
+Before changing anything:
+
+1. Inspect the latest GitHub repository and current workspace.
+2. Read package.json, README, BUILD_STATUS.md, source structure and configuration.
+3. Inspect all existing services, routes, components, database rules and environment variables.
+4. Identify existing working features and preserve them.
+5. Create a written implementation checklist.
+6. Record the initial state and known issues.
+
+Do not:
+- Delete working features.
+- Replace the existing design without a compelling reason.
+- Create duplicate pages or duplicate services.
+- Perform blind rewrites.
+- Delete user data.
+- Run destructive database migrations without review.
+- Use force push, reset --hard or blind cleanup.
+- Commit, push, publish or deploy without my explicit permission.
+
+Preserve the existing TEAMORA brand:
+- Deep Ink #211B2C
+- Dark Surface #2C2438
+- Warm Ivory #F5F1E9
+- Muted Lavender #A78BFA
+- Electric Lime #C7F36B
+- Soft Coral #FF806E
+
+Preserve the original SVG logo, Manrope/Inter typography, responsive UI, dark/light themes, Urdu RTL and Three.js Neural Workforce Canvas.
+
+---
+
+# 1. CURRENT AUDIT FINDINGS — MUST BE RECHECKED
+
+A previous GitHub source inspection identified these issues. Verify every finding against the current source before changing it.
+
+### A. Firestore security
+
+Previously inspected `firestore.rules` showed potentially unsafe organization and subcollection access, insufficient membership verification and overly broad role assignment.
+
+Required outcome:
+- Strict organization membership verification.
+- Server-enforced authorization.
+- Correct owner/admin/manager/member/viewer permissions.
+- Secure subcollection rules.
+- No privilege escalation.
+- Tests for unauthorized reads and writes.
+
+### B. Authentication
+
+Previously inspected `src/context/AppContext.tsx` contained a hardcoded demo owner identity and a fallback that could present a workspace as authenticated when Firebase sign-in failed.
+
+Required outcome:
+- Remove production demo authentication fallback.
+- Use real Firebase Authentication state.
+- No automatic owner assignment.
+- No access without a verified authenticated session.
+- Clear login, logout, loading and error states.
+- Demo mode must be explicitly isolated and never grant production permissions.
+
+### C. Persistent business data
+
+Several modules previously used React `useState` and hardcoded demo records.
+
+Required outcome:
+- Real persistent database operations.
+- Server-side authorization.
+- Organization-scoped data.
+- Correct relationships.
+- Loading, error, success and empty states.
+- Refresh-safe records.
+
+### D. Approval Center
+
+Previously, approving a record could mark its task completed without proving the requested external action actually executed.
+
+Required outcome:
+- Approval and execution must be separate states.
+- Approve does not mean executed.
+- External actions require an authorized server-side executor.
+- Record actual results, failures and execution IDs.
+
+### E. Orchestration
+
+Previously generated subtasks could be marked complete without independent execution.
+
+Required outcome:
+- Persisted task execution.
+- Actual agent invocation.
+- Dependency tracking.
+- Tool execution results.
+- Error handling and retry limits.
+- Honest task statuses.
+
+### F. Gemini endpoints
+
+Previously inspected `/api/gemini/*` endpoints did not show sufficient authentication and rate-limiting controls.
+
+Required outcome:
+- Authenticated requests.
+- Server-side organization and role verification.
+- Per-user and per-organization quotas.
+- Rate limits.
+- Input validation.
+- Timeouts.
+- Safe error handling.
+- Secret protection.
+
+### G. Google Keep
+
+Previously inspected integration code did not establish actual Google Keep note synchronization.
+
+Required outcome:
+- Verify current official API availability and permissions.
+- Implement actual supported synchronization only.
+- Never display Connected unless authorization and a real connection test succeed.
+- If an API capability is unavailable for the user's account, explain the limitation and offer a truthful alternative.
+
+---
+
+# PHASE 21 — COMPLETE SECURITY AUDIT AND REPAIR
+
+Conduct a complete security review before expanding functionality.
+
+Inspect:
+- Authentication.
+- Authorization.
+- Firestore rules.
+- Organization membership.
+- API endpoints.
+- Server middleware.
+- File upload handling.
+- Secret management.
+- Agent tool permissions.
+- Approval actions.
+- Audit logs.
+- OAuth connections.
+
+Implement:
+
+1. Centralized authentication middleware.
+2. Centralized authorization middleware.
+3. Organization membership verification.
+4. Role-based access control.
+5. Permission checks on every protected operation.
+6. Input validation using Zod.
+7. Rate limiting.
+8. Secure error handling.
+9. Security event logging.
+10. Safe session handling.
+
+Create a permission matrix for:
+
+- Owner
+- Admin
+- Manager
+- Member
+- Viewer
+
+A user must never be able to grant themselves a higher role.
+
+Never trust a role supplied by the frontend.
+
+Create Firestore security rules that enforce access at the database layer.
+
+Do not use broad authenticated-user access as a substitute for organization membership.
+
+Create automated security tests for:
+- Anonymous access.
+- Cross-organization reads.
+- Cross-organization writes.
+- Unauthorized role changes.
+- Unauthorized approvals.
+- Unauthorized document downloads.
+- Unauthorized API requests.
+
+Acceptance criteria:
+All unauthorized access tests must fail safely. All permitted operations must work.
+
+# PHASE 22 — REAL AUTHENTICATION AND ORGANIZATION MANAGEMENT
+
+Implement a complete authentication experience:
+
+- Registration.
+- Login.
+- Logout.
+- Password reset.
+- Email verification.
+- Session restoration.
+- Protected routes.
+- User profile.
+- Organization creation.
+- Organization switching.
+- Invitations.
+- Invitation acceptance.
+- Member removal.
+- Role changes.
+- Account settings.
+
+Rules:
+- The first organization creator may become its owner through a verified server-side creation flow.
+- No client-controlled owner assignment.
+- Organization membership must be stored and validated.
+- Users may belong to multiple organizations.
+- A user must never access another organization's records.
+
+Build complete loading, empty, success and error states.
+
+# PHASE 23 — DATABASE PERSISTENCE AND DATA ARCHITECTURE
+
+Use the existing Firebase/Firestore architecture unless a documented technical limitation justifies a proposed migration.
+
+Do not migrate to Supabase or another database without my approval.
+
+Create or improve a centralized data access layer.
+
+Use organization-scoped collections and consistent data models.
+
+Required business collections:
+
+- organizations
+- organizationMembers
+- invitations
+- profiles
+- customers
+- leads
+- deals
+- products
+- inventoryMovements
+- purchaseOrders
+- orders
+- invoices
+- expenses
+- projects
+- projectTasks
+- documents
+- knowledgeSources
+- agents
+- agentConfigurations
+- tasks
+- taskSteps
+- agentRuns
+- approvals
+- workflows
+- workflowRuns
+- notifications
+- integrations
+- usageRecords
+- subscriptions
+- auditLogs
+
+Requirements:
+- Consistent document IDs.
+- Created and updated timestamps.
+- Organization IDs.
+- Appropriate indexes.
+- Pagination.
+- Query limits.
+- Data validation.
+- Soft deletion where appropriate.
+- Referential integrity checks.
+- Database migration/version documentation.
+
+Replace hardcoded demo data in production workflows with database-backed records.
+
+Provide clearly labeled demo data only in a separate demo environment.
+
+Acceptance criteria:
+Create, update and delete a permitted test record, refresh the application and confirm the correct data remains available.
+
+# PHASE 24 — BUSINESS MODULE COMPLETION
+
+Complete and integrate all business modules.
+
+### CRM
+- Customers.
+- Contacts.
+- Leads.
+- Deals.
+- Pipeline stages.
+- Follow-ups.
+- Activity history.
+- Search and filtering.
+
+### Sales
+- Deal tracking.
+- Revenue summaries.
+- Sales targets.
+- Follow-up reminders.
+- Conversion reports.
+
+### Inventory
+- Product catalogue.
+- SKU management.
+- Stock movements.
+- Minimum stock levels.
+- Low-stock alerts.
+- Purchase order drafts.
+
+### Finance
+- Invoices.
+- Expenses.
+- Payment status.
+- Tax fields configurable by jurisdiction.
+- Cash-flow summaries.
+- Financial reports.
+
+### Projects
+- Project creation.
+- Kanban boards.
+- Task assignment.
+- Priorities.
+- Deadlines.
+- Milestones.
+- Activity tracking.
+
+### Documents
+- Document upload.
+- Metadata.
+- Categories.
+- Search.
+- Access controls.
+- Download.
+- Version information where supported.
+
+Every module must have real data operations and appropriate validation.
+
+Never generate fake financial transactions or present demo metrics as real business performance.
+
+# PHASE 25 — REAL 15-AGENT EXECUTION FRAMEWORK
+
+Complete the existing 15 employees:
+
+1. Atlas — Workforce Manager.
+2. Echo — Customer Support.
+3. Vanguard — Sales.
+4. Pulse — Marketing.
+5. Ledger — Finance.
+6. Prism — Analytics.
+7. Stockwell — Inventory.
+8. Nexus — Operations.
+9. Scout — Research.
+10. Harmony — HR.
+11. Quill — Content.
+12. Courier — Email.
+13. Chronos — Project Management.
+14. Scribe — Documents.
+15. Synapse — Workflow Automation.
+
+Every agent must have:
+
+- Unique system instructions.
+- Defined department.
+- Defined capabilities.
+- Allowed tools.
+- Restricted tools.
+- Input/output schemas.
+- Execution status.
+- Usage tracking.
+- Error handling.
+- Retry limits.
+- Task history.
+- Human approval requirements.
+
+Build a reusable AgentService interface.
+
+Implement actual execution through the server-side Gemini provider layer.
+
+Do not create 15 copies of the same generic chatbot.
+
+Do not claim an agent completed a task until its execution result has been persisted and verified.
+
+Create test cases for every agent's core responsibility.
+
+# PHASE 26 — WORKFORCE ORCHESTRATION ENGINE
+
+Complete Atlas and the orchestration service.
+
+Required workflow:
+
+1. Receive a request.
+2. Authenticate the user.
+3. Identify the organization.
+4. Validate permissions and usage limits.
+5. Classify the request.
+6. Build an execution plan.
+7. Select agents.
+8. Create persistent task records.
+9. Resolve dependencies.
+10. Execute each eligible step.
+11. Store actual outputs.
+12. Handle errors and retries.
+13. Request human approval where needed.
+14. Aggregate successful outputs.
+15. Return an honest final report.
+
+Task statuses must include:
+
+- Queued
+- Planning
+- Running
+- Waiting for Approval
+- Completed
+- Failed
+- Cancelled
+
+Implement:
+- Maximum execution depth.
+- Maximum tool calls.
+- Maximum retry count.
+- Execution timeout.
+- Duplicate-task protection.
+- Idempotency where appropriate.
+- Cancellation.
+- Recovery after server restart.
+- Detailed execution logs.
+
+A generated plan must never automatically be represented as a completed task.
+
+# PHASE 27 — GEMINI PROVIDER AND AI INTELLIGENCE
+
+Inspect the existing Gemini implementation and validate all model IDs against current official Google documentation.
+
+Official documentation:
+https://ai.google.dev/gemini-api/docs
+
+Model documentation:
+https://ai.google.dev/gemini-api/docs/models
+
+API reference:
+https://ai.google.dev/api
+
+Implement a provider-independent service layer.
+
+Required:
+- Server-only API key.
+- Authenticated endpoints.
+- Organization authorization.
+- Model capability validation.
+- Configurable model routing.
+- Token/usage tracking where available.
+- Timeouts.
+- Limited retries.
+- Rate limits.
+- Error handling.
+- Safe fallback models.
+- Structured outputs.
+- Request logging without exposing secrets.
+
+Validate current support for:
+- Reasoning/thinking settings.
+- Search grounding.
+- Structured JSON responses.
+- Function/tool calling.
+- Streaming.
+
+Do not assume a model ID or API parameter works because it appeared in an earlier report.
+
+If a model is deprecated, unavailable or incompatible, choose a currently supported alternative and document the decision.
+
+Never expose API keys in frontend bundles, browser storage, source maps, logs or GitHub.
+
+When no valid API key exists, display a clear setup message and keep non-AI features usable.
+
+Do not claim unlimited free AI access.
+
+# PHASE 28 — APPROVAL CENTER AND SAFE EXTERNAL ACTIONS
+
+Create a reliable human-in-the-loop execution architecture.
+
+Actions requiring approval include:
+- External emails.
+- Financial disbursements.
+- Refunds.
+- Purchases.
+- Contracts.
+- Important data deletion.
+- Billing changes.
+- Sensitive account operations.
+
+Implement:
+
+1. Approval request creation.
+2. Requester identity.
+3. Target action and parameters.
+4. Risk classification.
+5. Authorized reviewer selection.
+6. Approval/rejection.
+7. Execution authorization.
+8. Actual server-side execution.
+9. Result verification.
+10. Audit record.
+
+Use separate states:
+
+- Pending
+- Approved
+- Rejected
+- Executing
+- Executed
+- Execution Failed
+- Cancelled
+
+Important:
+Approval must not directly mark an external action as completed.
+
+Verify permissions again immediately before execution.
+
+Use idempotency protection to prevent duplicate financial or external actions.
+
+If no real integration exists, keep the action safely pending and report that execution is unavailable.
+
+# PHASE 29 — AUTOMATION STUDIO
+
+Complete the visual trigger-condition-action workflow builder.
+
+Implement:
+- Workflow creation.
+- Trigger configuration.
+- Conditions.
+- Branches.
+- Actions.
+- Scheduling.
+- Manual execution.
+- Dry-run preview.
+- Execution logs.
+- Enable/disable.
+- Failure handling.
+- Retries.
+- Approval gates.
+- Workflow templates.
+
+Create a safe execution engine.
+
+Never execute arbitrary user-provided code.
+
+Validate each action against the organization's permissions and available integrations.
+
+A dry run must not perform real external actions.
+
+Show the exact outcome of each workflow step.
+
+# PHASE 30 — KNOWLEDGE HUB AND DOCUMENT INTELLIGENCE
+
+Implement:
+- File upload.
+- Supported file types.
+- File-size limits.
+- Metadata extraction.
+- Processing status.
+- Search.
+- Document categorization.
+- Organization access control.
+- Agent-specific permissions.
+- Download.
+- Deletion with confirmation.
+- Processing errors.
+
+Add text extraction and retrieval only for supported formats.
+
+If semantic embeddings or vector search are implemented, document:
+- Embedding provider.
+- Storage.
+- Indexing process.
+- Search behavior.
+- Usage/cost implications.
+
+Do not claim a document has been indexed or analyzed before successful processing.
+
+Protect document contents from cross-organization access.
+
+# PHASE 31 — GOOGLE WORKSPACE AND EXTERNAL INTEGRATIONS
+
+Inspect every integration and distinguish between:
+
+- UI prototype.
+- OAuth authorized.
+- Connected.
+- Successfully tested.
+- Fully synchronized.
+
+Never show a false Connected status.
+
+For Google Workspace Keep:
+- Verify official API access and scope requirements.
+- Verify whether the user's account type is eligible.
+- Implement only supported API operations.
+- Handle token expiry and revocation.
+- Provide reconnect and disconnect actions.
+- Test actual note retrieval and synchronization if supported.
+
+Official references:
+https://developers.google.com/workspace
+
+For future integrations, create a reusable integration framework with:
+- OAuth flow.
+- Secure token storage.
+- Permission scopes.
+- Connection health.
+- Sync history.
+- Error handling.
+- Disconnect and revoke.
+
+Do not invent successful integrations.
+
+# PHASE 32 — ANALYTICS, REPORTS AND NOTIFICATIONS
+
+Build real analytics using persisted organization data.
+
+Dashboard:
+- Active agents.
+- Tasks completed.
+- Tasks in progress.
+- Failed tasks.
+- Approval requests.
+- Business activity.
+- Usage.
+- Revenue summaries where actual records exist.
+
+Analytics:
+- Agent performance.
+- Task completion.
+- Execution time.
+- Usage trends.
+- Sales performance.
+- Inventory status.
+- Project progress.
+- Financial summaries.
+
+Notifications:
+- In-app notifications.
+- Read/unread status.
+- Organization scoping.
+- Relevant links.
+- User preferences.
+
+Charts must use real queried data.
+
+Never use hardcoded numbers in production analytics.
+
+Provide meaningful empty states for new organizations.
+
+# PHASE 33 — SUBSCRIPTIONS, BILLING AND USAGE LIMITS
+
+Implement subscription infrastructure:
+
+- Free
+- Starter
+- Pro
+- Business
+- Enterprise
+
+Implement:
+- Plan entitlements.
+- Usage counters.
+- Agent limits.
+- Task limits.
+- AI usage limits.
+- Organization limits.
+- Usage warnings.
+- Upgrade screens.
+- Subscription status.
+- Billing history architecture.
+
+Research payment providers using official sources.
+
+Check:
+- Pakistan merchant eligibility.
+- Payout availability.
+- Supported currencies.
+- Recurring billing.
+- Webhook verification.
+- Fees.
+- Required business documentation.
+
+Do not invent final pricing.
+
+Do not simulate successful payments.
+
+Do not store card details directly.
+
+If payment credentials are unavailable, finish the billing architecture and clearly mark live payment processing as awaiting configuration.
+
+# PHASE 34 — 3D WORKFORCE AND PERFORMANCE OPTIMIZATION
+
+Preserve the existing Three.js neural workforce experience.
+
+Inspect:
+- Scene construction.
+- Geometry.
+- Materials.
+- Textures.
+- Lighting.
+- Render loop.
+- Camera controls.
+- Resize handling.
+- Disposal.
+- WebGL failure handling.
+
+Optimize:
+- Render workload.
+- Frame pacing.
+- Unnecessary object creation.
+- Geometry reuse.
+- Material reuse.
+- Texture memory.
+- Event listener cleanup.
+- Component lifecycle.
+
+Provide:
+- WebGL supported mode.
+- Graceful unsupported mode.
+- Reduced-motion mode.
+- Low-performance fallback.
+- Responsive canvas.
+- Accessible alternative navigation.
+
+Do not make WebGL a requirement for the rest of the application.
+
+Benchmark on modest hardware.
+
+The 3D canvas must not freeze the dashboard or prevent normal business operations.
+
+# PHASE 35 — RESPONSIVE DESIGN, RTL AND ACCESSIBILITY
+
+Audit every existing page.
+
+Test:
+- Desktop.
+- Tablet.
+- Mobile.
+- Warm light mode.
+- Dark mode.
+- English.
+- Urdu RTL.
+
+Fix:
+- Overflow.
+- Misaligned panels.
+- Broken tables.
+- Mobile sidebar.
+- Dialog dimensions.
+- Forms.
+- Navigation.
+- Chart resizing.
+- Text wrapping.
+- Keyboard accessibility.
+
+Maintain the original TEAMORA design identity.
+
+Use accessible labels, keyboard navigation, semantic HTML, focus indicators and reduced-motion preferences.
+
+Do not introduce generic blue design elements.
+
+# PHASE 36 — TESTING INFRASTRUCTURE
+
+Add a suitable automated test setup after inspecting existing dependencies.
+
+Preferred:
+- Vitest for unit tests.
+- React Testing Library for UI tests.
+- Playwright for end-to-end tests.
+- Firebase Emulator Suite where practical for rules and integration testing.
+
+Test:
+- Authentication.
+- Organization isolation.
+- RBAC.
+- Firestore rules.
+- Database persistence.
+- Agent execution.
+- Orchestration.
+- Gemini errors.
+- Approval enforcement.
+- Business CRUD.
+- Automation.
+- Documents.
+- Integrations.
+- Billing limits.
+- Notifications.
+- RTL.
+- Responsive UI.
+
+Do not disable tests to achieve a passing result.
+
+Do not invent test results.
+
+Report the actual test count, pass count, failures and skipped tests.
+
+# PHASE 37 — SECURITY HARDENING AND PRIVACY
+
+Perform a second independent security audit after implementation.
+
+Check:
+- Broken access control.
+- Privilege escalation.
+- Cross-tenant data leakage.
+- API abuse.
+- Injection risks.
+- Unsafe file uploads.
+- Secret exposure.
+- OAuth token handling.
+- Session handling.
+- Rate-limit bypass.
+- Approval bypass.
+- Duplicate external execution.
+- Insecure logging.
+- Dependency vulnerabilities.
+
+Create:
+- SECURITY.md.
+- Data handling documentation.
+- Access control matrix.
+- Environment variable documentation.
+- Incident/error handling notes.
+
+Do not claim compliance with any certification or legal standard without an actual assessment.
+
+# PHASE 38 — PERFORMANCE AND RELIABILITY
+
+Optimize:
+- Bundle size.
+- Lazy loading.
+- React rendering.
+- Network requests.
+- Database query patterns.
+- Pagination.
+- Error recovery.
+- Loading states.
+- Caching where safe.
+- AI request handling.
+
+Set practical limits for:
+- AI request timeouts.
+- Agent task duration.
+- Retry counts.
+- Workflow execution.
+- Upload sizes.
+- Pagination sizes.
+
+Add structured logging and health checks.
+
+Do not log credentials, private document contents or unnecessary personal information.
+
+# PHASE 39 — COMPLETE END-TO-END ACCEPTANCE AUDIT
+
+Test the complete real user journey:
+
+1. New user registration.
+2. Email verification.
+3. Organization creation.
+4. Invite another user.
+5. Assign roles.
+6. Create a customer.
+7. Create a lead and deal.
+8. Create products and inventory.
+9. Create an invoice.
+10. Create a project.
+11. Upload a document.
+12. Ask an AI agent to perform an authorized task.
+13. Route a multi-agent task through Atlas.
+14. Request approval for a sensitive action.
+15. Approve it using an authorized reviewer.
+16. Verify actual execution or accurately report unavailable integration.
+17. Inspect audit logs.
+18. Check analytics.
+19. Refresh and verify data persistence.
+20. Sign in as a second organization and verify data isolation.
+
+Also test failure cases:
+- Invalid credentials.
+- Expired sessions.
+- Missing API key.
+- Gemini quota exceeded.
+- Unauthorized user.
+- Network failure.
+- Database failure.
+- Failed document processing.
+- Failed agent execution.
+- Rejected approval.
+- Duplicate action request.
+
+Fix all critical and high-priority defects before release.
+
+# PHASE 40 — FINAL RELEASE PREPARATION
+
+Prepare the application for deployment.
+
+Required:
+- Production build.
+- TypeScript check.
+- Lint.
+- Unit tests.
+- Integration tests.
+- E2E tests.
+- Security rules verification.
+- Environment configuration.
+- Hosting configuration.
+- Database setup instructions.
+- Authentication domain configuration.
+- Error monitoring readiness.
+- Backup and recovery documentation.
+- Deployment instructions.
+- Rollback instructions.
+
+Create or update:
+
+README.md
+BUILD_STATUS.md
+ARCHITECTURE.md
+DATABASE_SCHEMA.md
+SECURITY.md
+DESIGN_SYSTEM.md
+ENVIRONMENT_SETUP.md
+TESTING.md
+ROADMAP.md
+CHANGELOG.md
+DEPLOYMENT.md
+
+Do not deploy, publish or push without explicit approval.
+
+---
+
+# 2. FINAL PRODUCT ACCEPTANCE STANDARD
+
+TEAMORA AI is considered complete only when:
+
+1. The original visual identity is preserved.
+2. All major pages work.
+3. Authentication is real.
+4. Organization isolation is verified.
+5. Roles and permissions are enforced server-side.
+6. Business records persist.
+7. All 15 agents have distinct real execution paths.
+8. Atlas orchestrates persisted task execution.
+9. Gemini endpoints are protected.
+10. Approval and execution are separate.
+11. Automation executes supported workflows safely.
+12. Documents are stored and permission-checked.
+13. Analytics use real records.
+14. Integrations report truthful connection status.
+15. Usage limits are enforced.
+16. Mobile and RTL layouts work.
+17. Tests pass with recorded evidence.
+18. Production configuration is documented.
+
+A visually complete screen does not count as a completed feature.
+
+A generated AI response does not count as an executed business action.
+
+A successful build does not count as a security audit.
+
+A connected OAuth account does not automatically mean synchronization works.
+
+---
+
+# 3. EXECUTION STRATEGY
+
+Work sequentially from Phase 21 to Phase 40.
+
+For each phase:
+
+1. Inspect relevant existing code.
+2. Identify gaps.
+3. Implement the complete solution.
+4. Run relevant tests.
+5. Fix failures.
+6. Update documentation.
+7. Record actual completion status.
+8. Continue to the next phase.
+
+Do not stop after writing an architecture plan.
+
+Do not ask me to approve every ordinary implementation decision.
+
+Ask only when an irreversible operation, destructive migration, external payment setup, credential, account authorization or deployment approval is required.
+
+If the context window or execution limit is reached:
+- Save the exact completed phase.
+- Record unfinished work.
+- Record modified files.
+- Record failing tests.
+- Update BUILD_STATUS.md.
+- Provide a concise continuation checkpoint.
+
+Continue from the last verified checkpoint in the next session.
+
+# 4. FINAL REPORT
+
+At completion, provide:
+
+- Phases completed.
+- Phases pending.
+- Major files created or modified.
+- Security fixes.
+- Database implementation.
+- Authentication status.
+- Agent execution status.
+- Integration status.
+- Test results.
+- Production build result.
+- Remaining configuration requirements.
+- Known limitations.
+- Exact next action.
+
+Be truthful. Never claim 100% completion if anything remains unimplemented or unverified.
+
+**FINAL MISSION: Turn the existing TEAMORA AI project into a secure, fully functional, maintainable, responsive and production-prepared AI Workforce SaaS without destroying its existing design or working features.**
