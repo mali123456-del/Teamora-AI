@@ -1,0 +1,1420 @@
+# TEAMORA AI — ULTIMATE MASTER IMPLEMENTATION COMMAND
+## PHASES 301–340
+### AI Intelligence, Scientific Benchmarking, Model Optimization, Fine-Tuning & Autonomous Model Selection
+
+**Product:** TEAMORA AI  
+**Tagline:** Your AI Team. One Smart Workspace.  
+**GitHub:** https://github.com/mali123456-del/Teamora-AI  
+**Local Workspace:** `G:\Temp\My projects\TEAMORA AI`  
+**Development URL:** `http://localhost:3000`
+
+---
+
+# PART 1 — YOUR ROLE
+
+Act as TEAMORA AI's:
+
+- Principal AI Research Architect.
+- Senior Machine Learning Engineer.
+- LLM Evaluation Specialist.
+- AI Benchmarking Scientist.
+- Model Optimization Engineer.
+- Data Scientist.
+- AI Agent Architect.
+- Firebase Backend Architect.
+- Enterprise Security Engineer.
+- Senior UI/UX Designer.
+- QA and Reliability Engineer.
+
+Your responsibility is to lead the next evolution of TEAMORA AI's AI ecosystem.
+
+You must inspect, research, verify, improve and extend the existing implementation.
+
+Do not merely create additional dashboard panels.
+
+Build a genuinely functional AI intelligence platform capable of determining which model is suitable for which job, proving its performance through repeatable experiments, identifying weaknesses and recommending safe improvements.
+
+# PART 2 — EXISTING PROJECT BASELINE
+
+The latest user-reported checkpoint includes:
+
+## Product and infrastructure
+
+- React, TypeScript, Vite and Tailwind.
+- Express backend.
+- Firebase Authentication.
+- Cloud Firestore.
+- IndexedDB and offline synchronization.
+- Existing AI orchestration infrastructure.
+- Circuit breaker and provider fallback architecture.
+- AI governance.
+- Enterprise RAG and Knowledge Hub.
+- 15 canonical AI employees.
+- Three.js Neural Core.
+- Notification Center.
+- Global Search.
+- Quick Create.
+- Contextual Detail Drawer.
+- Executive Command Center.
+- Personal Work Inbox.
+- Task and Project Management.
+- Team Calendar.
+- Resource Planning.
+
+## Existing AI benchmarking implementation
+
+Reported files:
+
+- `server/benchmarkDataset.ts`
+- `server/benchmarkRunner.ts`
+- `src/components/views/BenchmarkingLabView.tsx`
+
+Reported APIs:
+
+- `GET /api/benchmarks/registry`
+- `GET /api/benchmarks/datasets`
+- `GET /api/benchmarks/history`
+- `GET /api/benchmarks/recommendations`
+- `POST /api/benchmarks/run`
+
+Reported model registry:
+
+- `gemini-3.8-flash`
+- `gemini-3.1-flash-lite`
+- `gemini-4-argon`
+- `gemini-3.1-pro`
+- `gemini-2.5-flash`
+
+Reported evaluation dataset: 11 golden test cases.
+
+Reported automated tests: 85/85 passing.
+
+IMPORTANT: These are reported implementation details. Independently inspect the actual repository before treating them as verified.
+
+# PART 3 — STRICT PRE-IMPLEMENTATION RULES
+
+## A. Inspect before modifying
+
+Inspect:
+
+- Git branch and working tree.
+- `package.json`.
+- `src/`.
+- `server/`.
+- `tests/`.
+- `docs/`.
+- Firebase configuration.
+- Firestore rules.
+- Model provider adapters.
+- Model registry.
+- Agent definitions.
+- Agent assignment records.
+- Benchmark engine.
+- Benchmark dataset.
+- Benchmark API routes.
+- Benchmark UI.
+- Existing model recommendations.
+- Existing training and optimization services.
+
+Inspect these documents:
+
+- `README.md`
+- `BUILD_STATUS.md`
+- `docs/PHASE_191_300_ROADMAP.md`
+- `docs/AI_MODEL_ECOSYSTEM_AUDIT.md`
+- `docs/AI_BENCHMARKING_METHODOLOGY.md`
+- `docs/AI_MODEL_SCORING_SYSTEM.md`
+- `docs/AI_MODEL_TRAINING_STRATEGY.md`
+- `docs/AI_EMPLOYEE_MODEL_MATRIX.md`
+- `docs/AI_BENCHMARK_RESULTS.md`
+- `docs/ui/AI_MODEL_BENCHMARKING_LAB.md`
+- `docs/TEAMORA_PHASE_231_260_FINAL_REPORT.md`
+
+## B. Reconcile existing phase history
+
+Before starting new phases:
+
+1. Verify whether Phases 241–250 were completed.
+2. Verify whether Phases 261–270 were completed.
+3. Verify whether Phases 271–280 were completed.
+4. Verify whether Phases 281–290 were completed.
+5. Verify whether Phases 291–300 were completed.
+6. Compare source code with the roadmap.
+7. Identify incomplete, missing, duplicated and broken functionality.
+
+Do not assume Phases 261–300 are complete merely because Phases 231–260 were reported complete.
+
+If existing roadmap phases are incomplete, finish them in their original order before beginning Phase 301.
+
+Do not renumber existing phases.
+
+Create:
+
+`docs/PHASE_191_300_FINAL_RECONCILIATION.md`
+
+# PART 4 — CRITICAL MODEL REGISTRY RECONCILIATION
+
+The latest report contains inconsistencies between:
+
+- Registered model assignments.
+- AI employee compatibility matrix.
+- Number of employees assigned to each model.
+- Actual agent definitions.
+
+Resolve these discrepancies before conducting new comparisons.
+
+For all 15 canonical employees, retrieve the actual model assignment from the authoritative source.
+
+Do not infer assignments from documentation.
+
+Verify:
+
+- Employee ID.
+- Employee name.
+- Current model ID.
+- Provider.
+- Fallback model.
+- Actual execution model.
+- Model version.
+- Configuration.
+- Model assignment source.
+- Last assignment update.
+
+Produce a single authoritative employee-to-model mapping.
+
+Canonical employees:
+
+1. Atlas
+2. Echo
+3. Vanguard
+4. Pulse
+5. Ledger
+6. Prism
+7. Stockwell
+8. Nexus
+9. Scout
+10. Harmony
+11. Quill
+12. Courier
+13. Chronos
+14. Scribe
+15. Synapse
+
+Ensure exactly 15 unique employee identities.
+
+Create:
+
+`docs/AI_MODEL_ASSIGNMENT_RECONCILIATION.md`
+
+# PART 5 — MODEL IDENTITY & PROVIDER VERIFICATION
+
+Verify every model using its provider's current official documentation and actual API availability.
+
+For each registered model, establish:
+
+- Exact model ID.
+- Provider.
+- Official model name.
+- Model version.
+- API endpoint.
+- Availability.
+- Context limits.
+- Input token limits.
+- Output token limits.
+- Supported modalities.
+- Tool calling.
+- Structured output.
+- Streaming.
+- Thinking configuration.
+- Fine-tuning eligibility.
+- Pricing.
+- Deprecation status.
+- Regional restrictions.
+- Rate limits.
+
+Do not trust hardcoded model information without verification.
+
+Use provider model-list APIs where available.
+
+If model information cannot be verified, label it UNVERIFIED.
+
+Store:
+
+- Verification source.
+- Source URL.
+- Verification date.
+- Provider response.
+- Last verified status.
+
+Never invent context windows, prices or model capabilities.
+
+# PART 6 — RESEARCH-BASED EVALUATION METHODOLOGY
+
+Use the following research as methodological references:
+
+1. MLCommons benchmarking and MLPerf inference rules.
+2. Task-specific LLM evaluation practices.
+3. Reproducible evaluation and statistical analysis.
+4. Human-calibrated evaluation.
+5. Provider-specific model tuning documentation.
+6. Firebase Security Rules and Firestore best practices.
+
+Reference links:
+
+- https://mlcommons.org/benchmarks/
+- https://github.com/mlcommons/inference_policies/blob/master/inference_rules.adoc
+- https://developers.openai.com/api/docs/guides/evaluation-best-practices
+- https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/tuning/supervised-tuning
+- https://docs.cloud.google.com/gemini-enterprise-agent-platform/reference/models/tuning
+- https://firebase.google.com/docs/rules
+- https://firebase.google.com/docs/firestore/best-practices
+- https://github.com/stanford-crfm/helm
+
+Use HELM as a research reference only; do not make it a mandatory production dependency.
+
+Research additional relevant benchmarks, datasets, evaluation frameworks and current provider capabilities before implementing each relevant subsystem.
+
+Do not copy a benchmark's name or claim compliance unless its actual rules have been followed.
+
+# PART 7 — PHASE 301–310: SCIENTIFIC BENCHMARK FOUNDATION
+
+## Phase 301 — Complete AI Ecosystem Reconciliation
+
+Audit all AI models, providers, agents, assignments and evaluation infrastructure.
+
+Resolve inconsistencies.
+
+Deliver:
+
+`docs/AI_ECOSYSTEM_RECONCILIATION.md`
+
+## Phase 302 — Verified Model Registry
+
+Create a single authoritative model registry.
+
+Include:
+
+- Provider.
+- Exact model ID.
+- Version.
+- Capabilities.
+- Availability.
+- Pricing.
+- Limits.
+- Tuning support.
+- Verification evidence.
+
+Support model availability checks.
+
+Never confuse a provider alias with a verified model ID.
+
+## Phase 303 — Benchmark Methodology Engine
+
+Create a standardized methodology for comparing models.
+
+Define:
+
+- Test objectives.
+- Dataset versions.
+- Evaluation metrics.
+- Run configuration.
+- Random seeds where supported.
+- Temperature and generation settings.
+- Model versions.
+- Provider versions.
+- Test timestamps.
+- Evaluation environment.
+
+Ensure comparisons are fair and reproducible.
+
+## Phase 304 — Advanced Evaluation Dataset
+
+Expand the existing 11 golden cases into a structured evaluation dataset.
+
+Include:
+
+- General intelligence.
+- Reasoning.
+- Mathematics.
+- Coding.
+- Software debugging.
+- Structured outputs.
+- Research.
+- RAG.
+- Tool calling.
+- Business intelligence.
+- Data analysis.
+- Urdu.
+- Roman Urdu.
+- Multilingual instructions.
+- Long-context retrieval.
+- Safety and instruction compliance.
+- Agent workflow execution.
+
+Use representative, reviewed test cases.
+
+Start with a cost-controlled pilot.
+
+Expand each category based on actual coverage gaps and available budget.
+
+Do not claim statistical representativeness merely because a dataset has many questions.
+
+## Phase 305 — Dataset Versioning & Contamination Protection
+
+Implement:
+
+- Dataset versions.
+- Test case IDs.
+- Source attribution.
+- Answer keys.
+- Evaluation criteria.
+- Difficulty levels.
+- Dataset licensing metadata.
+- Training/validation/holdout splits.
+
+Prevent benchmark holdout leakage.
+
+Keep final evaluation cases separate from prompt optimization and training data.
+
+## Phase 306 — Repeated Benchmark Execution
+
+Implement repeated evaluation runs.
+
+Support:
+
+- Configurable repetitions.
+- Controlled concurrency.
+- Retry limits.
+- Run cancellation.
+- Resume after interruption.
+- Partial result persistence.
+- Provider error classification.
+
+Record the number of attempts for every model and test case.
+
+Do not silently discard failed attempts.
+
+## Phase 307 — Statistical Evaluation
+
+Add:
+
+- Mean.
+- Median.
+- Standard deviation.
+- P50.
+- P90.
+- P95.
+- Confidence intervals.
+- Sample counts.
+- Effect sizes.
+- Paired model comparisons.
+
+Use suitable statistical methods for the actual data distribution.
+
+Consider bootstrap intervals and paired comparisons where appropriate.
+
+Do not present small score differences as meaningful superiority without sufficient evidence.
+
+## Phase 308 — Evaluation Judge Calibration
+
+Create a controlled evaluation system.
+
+Use:
+
+- Deterministic exact-match scoring.
+- Mathematical answer checking.
+- Schema validation.
+- Unit tests.
+- Citation verification.
+- Human-reviewed samples.
+- Calibrated LLM-as-judge evaluation where appropriate.
+
+For pairwise evaluations:
+
+- Hide model identity from judges where feasible.
+- Randomize response order.
+- Record judge instructions.
+- Record disagreement.
+- Calibrate against human judgments.
+
+Never allow a model to be the sole judge of its own performance.
+
+## Phase 309 — Cost & Latency Measurement
+
+Measure:
+
+- Input tokens.
+- Output tokens.
+- Total tokens.
+- Provider-reported usage.
+- Estimated usage where exact data is unavailable.
+- Request cost.
+- Cost per successful task.
+- Average latency.
+- P50/P90/P95 latency.
+- Time to first token.
+- Retry overhead.
+
+Distinguish measured costs from estimated costs.
+
+Use pricing verified from official provider documentation.
+
+## Phase 310 — Benchmark Engine Verification
+
+Verify:
+
+- Dataset integrity.
+- Reproducibility.
+- Run isolation.
+- Scoring calculations.
+- Error handling.
+- Statistical calculations.
+- Cost calculation.
+- Latency calculation.
+- Cancellation.
+- Resume.
+- Persistence.
+
+Deliver:
+
+`docs/AI_BENCHMARK_ENGINE_VERIFICATION.md`
+
+---
+
+# PART 8 — PHASE 311–320: DEEP MODEL EVALUATION
+
+## Phase 311 — Advanced Reasoning Benchmark
+
+Evaluate:
+
+- Multi-step reasoning.
+- Logical consistency.
+- Constraint satisfaction.
+- Mathematical reasoning.
+- Planning.
+- Contradiction detection.
+
+Use deterministic answer verification wherever possible.
+
+## Phase 312 — Coding & Engineering Benchmark
+
+Evaluate:
+
+- Code generation.
+- Debugging.
+- Refactoring.
+- Type safety.
+- Unit tests.
+- API implementation.
+- SQL safety.
+- React and TypeScript.
+- Error handling.
+
+Run generated code in an isolated environment.
+
+Never execute untrusted generated code directly on the developer's machine or production server.
+
+## Phase 313 — RAG & Knowledge Evaluation
+
+Measure separately:
+
+Retrieval:
+
+- Recall@K.
+- Precision@K.
+- Mean Reciprocal Rank.
+- NDCG where appropriate.
+- Retrieval relevance.
+
+Generation:
+
+- Answer correctness.
+- Citation correctness.
+- Groundedness.
+- Unsupported claims.
+- Completeness.
+
+Compare:
+
+- Retrieval quality.
+- Generation quality.
+- Combined end-to-end quality.
+
+## Phase 314 — Agent & Tool Execution Evaluation
+
+Measure:
+
+- Correct tool selection.
+- Correct parameters.
+- Schema validity.
+- Successful tool execution.
+- Task completion.
+- Recovery behavior.
+- Approval compliance.
+- Tool-call efficiency.
+
+A model must never receive credit for claiming an action succeeded when the underlying tool did not execute successfully.
+
+## Phase 315 — Urdu & Multilingual Evaluation
+
+Create a reviewed dataset covering:
+
+- English.
+- Urdu.
+- Roman Urdu.
+- Mixed Urdu-English.
+- Business terminology.
+- Translation.
+- Entity extraction.
+- Instruction following.
+
+Measure:
+
+- Semantic accuracy.
+- Language consistency.
+- Entity preservation.
+- Instruction compliance.
+- Formatting.
+- Human-reviewed quality.
+
+Use appropriate language-aware evaluation rather than relying only on English-oriented similarity metrics.
+
+## Phase 316 — Business Intelligence Evaluation
+
+Test:
+
+- CRM analysis.
+- Inventory calculations.
+- Sales analysis.
+- Expense classification.
+- Financial summaries.
+- Forecast interpretation.
+- Spreadsheet reasoning.
+- Business recommendations.
+
+Use controlled synthetic or approved anonymized datasets.
+
+## Phase 317 — Long-Context Evaluation
+
+Test:
+
+- Long document retrieval.
+- Multi-document synthesis.
+- Needle-in-a-haystack retrieval.
+- Contradiction detection.
+- Cross-document consistency.
+- Context retention.
+
+Only compare equivalent context conditions that each model supports.
+
+## Phase 318 — Reliability & Resilience Evaluation
+
+Measure:
+
+- Provider availability.
+- Timeouts.
+- Rate-limit handling.
+- Retry success.
+- Circuit breaker behavior.
+- Fallback correctness.
+- Invalid responses.
+- Partial responses.
+- Recovery time.
+
+Separate model quality from provider infrastructure reliability.
+
+## Phase 319 — Safety & Governance Evaluation
+
+Test:
+
+- Instruction hierarchy compliance.
+- Sensitive data handling.
+- Prompt injection resistance.
+- Tool authorization.
+- Tenant isolation.
+- Human approval compliance.
+- Unsafe output handling.
+- Secret leakage prevention.
+
+Use safe, controlled test scenarios.
+
+## Phase 320 — Model Evaluation Report
+
+Generate task-specific results and comparison reports.
+
+Deliver:
+
+`docs/AI_ADVANCED_BENCHMARK_RESULTS.md`
+
+---
+
+# PART 9 — PHASE 321–330: OPTIMIZATION & TRAINING
+
+## Phase 321 — Model Weakness Diagnosis
+
+Identify weaknesses for each model.
+
+Classify:
+
+- Reasoning weakness.
+- Knowledge weakness.
+- Retrieval weakness.
+- Instruction weakness.
+- Formatting weakness.
+- Tool-selection weakness.
+- Reliability weakness.
+- Language weakness.
+- Cost inefficiency.
+
+Link each finding to actual benchmark evidence.
+
+## Phase 322 — Prompt Optimization
+
+Implement controlled prompt optimization.
+
+Compare:
+
+- Original prompt.
+- Optimized prompt.
+- Revised system instructions.
+- Task-specific instructions.
+
+Evaluate every change against:
+
+- Validation dataset.
+- Holdout dataset.
+- Regression suite.
+
+Never optimize only against the benchmark cases used for training.
+
+## Phase 323 — Context & Retrieval Optimization
+
+Improve:
+
+- Context construction.
+- Chunking.
+- Retrieval.
+- Reranking.
+- Context prioritization.
+- Citation handling.
+- Token allocation.
+
+Measure whether each optimization improves actual answer quality.
+
+## Phase 324 — Tool & Orchestration Optimization
+
+Improve:
+
+- Tool descriptions.
+- Tool schemas.
+- Tool selection.
+- Task decomposition.
+- Retry policies.
+- Agent handoffs.
+- Approval gates.
+
+Use execution evidence.
+
+## Phase 325 — Model Configuration Optimization
+
+Evaluate supported configurations:
+
+- Temperature.
+- Top-p.
+- Output limits.
+- Thinking level.
+- Structured output mode.
+- Tool configuration.
+- Timeout.
+- Retry settings.
+
+Respect provider-specific parameter support.
+
+Do not blindly apply identical parameters to incompatible models.
+
+## Phase 326 — Fine-Tuning Eligibility & Training Lab
+
+Create a genuine training eligibility system.
+
+For each model verify:
+
+- Official provider support.
+- Exact model ID eligibility.
+- Training endpoint.
+- Fine-tuning method.
+- Required dataset format.
+- Minimum dataset requirements.
+- Validation requirements.
+- Region restrictions.
+- Training cost.
+- Serving cost.
+- Model version restrictions.
+
+Distinguish:
+
+1. Prompt optimization.
+2. Context optimization.
+3. Retrieval optimization.
+4. Supervised fine-tuning.
+5. Preference tuning.
+6. Reinforcement learning fine-tuning.
+7. Training separate models.
+
+Do not label prompt optimization as model training.
+
+Do not claim a model was fine-tuned when only its prompt was modified.
+
+Do not launch a paid training job without explicit human approval.
+
+## Phase 327 — Training Dataset Governance
+
+Implement:
+
+- Training data validation.
+- Dataset provenance.
+- Consent and authorization checks.
+- PII detection.
+- Secret scanning.
+- Data deduplication.
+- Quality checks.
+- Train/validation/holdout separation.
+- Dataset versioning.
+- Retention controls.
+
+Do not use confidential customer information or another tenant's data without explicit authorization.
+
+## Phase 328 — Before & After Evaluation
+
+For every optimization or training experiment compare:
+
+- Baseline.
+- Optimized.
+- Fine-tuned, if applicable.
+
+Measure:
+
+- Accuracy change.
+- Error change.
+- Latency change.
+- Cost change.
+- Reliability change.
+- Regression rate.
+- Statistical uncertainty.
+
+Report improvements and regressions.
+
+## Phase 329 — Model Versioning & Rollback
+
+Maintain:
+
+- Original model.
+- Previous model.
+- New model.
+- Model version.
+- Prompt version.
+- Configuration version.
+- Dataset version.
+- Benchmark result.
+- Assignment history.
+
+Provide safe rollback.
+
+Never replace production assignments automatically.
+
+## Phase 330 — Optimization & Training Verification
+
+Verify:
+
+- Optimization reproducibility.
+- Training eligibility.
+- Dataset isolation.
+- Fine-tuning job lifecycle.
+- Job cancellation.
+- Job failure handling.
+- Before/after comparisons.
+- Rollback.
+
+Deliver:
+
+`docs/AI_OPTIMIZATION_AND_TRAINING_REPORT.md`
+
+---
+
+# PART 10 — PHASE 331–340: INTELLIGENT WORKFORCE & PRODUCTION
+
+## Phase 331 — AI Employee Compatibility Engine
+
+Build a capability-based compatibility system.
+
+Evaluate every canonical employee against eligible models.
+
+For each employee consider:
+
+- Job responsibilities.
+- Actual task distribution.
+- Required capabilities.
+- Accuracy.
+- Reliability.
+- Tool success.
+- Latency.
+- Cost.
+- Context requirements.
+- Language requirements.
+- Permissions.
+
+Generate a model suitability score per employee.
+
+Do not use one universal model ranking.
+
+## Phase 332 — Task-Specific Model Recommendation
+
+Recommend models for:
+
+- Strategic reasoning.
+- General orchestration.
+- Coding.
+- Research.
+- Document analysis.
+- CRM.
+- Finance.
+- Inventory.
+- Customer support.
+- Notifications.
+- Urdu communication.
+- RAG.
+- Tool execution.
+
+Recommendations must be backed by relevant benchmark results.
+
+## Phase 333 — Model Routing Intelligence
+
+Improve the model routing architecture.
+
+Support:
+
+- Task-based routing.
+- Capability-based routing.
+- Cost-aware routing.
+- Latency-aware routing.
+- Reliability-aware fallback.
+- Context-aware selection.
+
+Preserve existing provider adapters and circuit breaker architecture.
+
+## Phase 334 — Model Assignment Approval Workflow
+
+Create an approval process for changing employee model assignments.
+
+Show:
+
+- Current model.
+- Recommended model.
+- Reason.
+- Benchmark evidence.
+- Expected cost difference.
+- Expected quality difference.
+- Potential risks.
+- Rollback plan.
+
+Require human approval before production assignment changes.
+
+## Phase 335 — Benchmarking Lab UX Upgrade
+
+Improve the existing Benchmarking Lab.
+
+Recommended sections:
+
+1. Executive Overview.
+2. Verified Model Registry.
+3. Overall Leaderboard.
+4. Domain Leaderboards.
+5. Statistical Comparison.
+6. Benchmark Run Manager.
+7. AI Employee Compatibility.
+8. Error Analysis.
+9. Cost & Latency.
+10. Training Lab.
+11. Optimization Experiments.
+12. Model Routing.
+13. History & Audit.
+
+Every displayed number must come from real persisted data.
+
+## Phase 336 — Continuous Evaluation
+
+Implement controlled continuous evaluation.
+
+Trigger evaluations after:
+
+- Model version changes.
+- Prompt changes.
+- Tool changes.
+- Retrieval changes.
+- Agent configuration changes.
+- Important application releases.
+
+Track regression trends.
+
+Do not run expensive benchmarks automatically without configured budgets and authorization.
+
+## Phase 337 — Production Model Observability
+
+Implement:
+
+- Model request telemetry.
+- Actual model identity.
+- Fallback telemetry.
+- Latency.
+- Token usage.
+- Cost.
+- Error types.
+- Execution success.
+- Task quality feedback.
+
+Do not log secrets or unnecessary personal data.
+
+## Phase 338 — Enterprise Security & Multi-Tenant Isolation
+
+Verify:
+
+- Organization ownership.
+- User permissions.
+- Role-based access.
+- Benchmark dataset isolation.
+- Result isolation.
+- Training job isolation.
+- Model assignment authorization.
+- API rate limits.
+- Audit history.
+- Secret management.
+
+Use Firebase security rules and server-side authorization.
+
+Never trust client-supplied organization IDs without validating membership.
+
+## Phase 339 — Full-System Regression & Performance
+
+Test the entire TEAMORA platform.
+
+Include:
+
+- Existing AI employees.
+- Orchestration.
+- Benchmarking.
+- Model registry.
+- Training.
+- RAG.
+- Offline synchronization.
+- Notifications.
+- Approval workflows.
+- Business modules.
+- Security.
+- Mobile responsiveness.
+
+Test on the actual supported development environment.
+
+Do not claim a fixed memory ceiling unless it is measured and clearly scoped to a specific process.
+
+## Phase 340 — Final AI Intelligence Release
+
+Produce:
+
+`docs/TEAMORA_PHASE_301_340_FINAL_REPORT.md`
+
+Include:
+
+- Completed features.
+- Verified models.
+- Benchmark methodology.
+- Dataset sizes.
+- Test counts.
+- Model scores.
+- Error rates.
+- Statistical confidence.
+- Cost analysis.
+- Latency analysis.
+- Optimization results.
+- Fine-tuning jobs actually completed.
+- Employee-model recommendations.
+- Production routing status.
+- Security verification.
+- Known limitations.
+- Next roadmap.
+
+---
+
+# PART 11 — BENCHMARK METRICS & SCORING
+
+Use task-specific evaluation profiles.
+
+Do not force one universal score on all workloads.
+
+## Required metrics
+
+### Quality
+
+- Exact accuracy.
+- Semantic correctness.
+- Precision.
+- Recall.
+- F1.
+- Reasoning score.
+- Instruction compliance.
+- Citation accuracy.
+- Groundedness.
+
+### Errors
+
+Separate:
+
+- Logic errors.
+- Factual errors.
+- Hallucinations.
+- Formatting errors.
+- Schema errors.
+- Tool-selection errors.
+- Tool-execution errors.
+- Timeout errors.
+- Provider errors.
+- Safety violations.
+
+### Performance
+
+- Average latency.
+- Median latency.
+- P50.
+- P90.
+- P95.
+- Time to first token.
+- Throughput.
+- Tokens per second where measurable.
+
+### Cost
+
+- Input tokens.
+- Output tokens.
+- Cost per request.
+- Cost per successful task.
+- Estimated cost per 1,000 tasks.
+- Retry overhead.
+- Fallback overhead.
+
+### Reliability
+
+- Request success rate.
+- Provider availability.
+- Retry success.
+- Timeout rate.
+- Fallback frequency.
+- Invalid output percentage.
+
+### Statistical reporting
+
+For each result report:
+
+- Number of test cases.
+- Number of runs.
+- Mean.
+- Median.
+- Standard deviation.
+- Confidence interval.
+- Evaluation date.
+- Dataset version.
+
+If a category has insufficient samples, label its ranking LOW CONFIDENCE or INSUFFICIENT DATA.
+
+## Overall score
+
+Keep the existing scoring weights as a versioned initial scoring profile, not a universal truth.
+
+Allow separate scoring profiles for coding, reasoning, RAG, Urdu, business analysis and agent execution.
+
+Never hide component scores behind one attractive total.
+
+---
+
+# PART 12 — HARDWARE & COST CONTROL
+
+Development computer:
+
+- Dell Latitude 3340.
+- Intel Core i5-4200U.
+- 2 cores / 4 threads.
+- 8 GB RAM.
+- 477 GB SSD.
+- Intel HD integrated graphics.
+- Windows 10 Pro 64-bit.
+
+Requirements:
+
+- No GPU requirement.
+- No automatic large model downloads.
+- No heavy local fine-tuning.
+- Low concurrency by default.
+- Small batch processing.
+- Incremental result persistence.
+- Resumable jobs.
+- Configurable CPU and memory limits.
+- Avoid unnecessary background workers.
+
+Prefer existing provider APIs and lightweight evaluation processes.
+
+Before any expensive benchmark or training run:
+
+1. Estimate token consumption.
+2. Estimate provider cost.
+3. Display the estimate.
+4. Apply configured budget limits.
+5. Require human approval.
+6. Provide cancellation.
+
+Never assume external API usage is free.
+
+---
+
+# PART 13 — SECURITY & DATA GOVERNANCE
+
+Mandatory:
+
+- Server-side authorization.
+- Firebase tenant isolation.
+- Role-based access.
+- Input validation.
+- Rate limiting.
+- Secret protection.
+- Audit logging.
+- Dataset provenance.
+- Training data authorization.
+- Retention policy.
+- Safe model execution.
+- Secure output handling.
+
+Never expose API keys.
+
+Never use production customer records as benchmark or training data without appropriate authorization.
+
+Never execute generated code in the production environment.
+
+Never expose hidden chain-of-thought.
+
+Store concise evaluation summaries, tool execution evidence and auditable results instead.
+
+---
+
+# PART 14 — UI/UX & FEATURE PLACEMENT
+
+Preserve TEAMORA's design identity:
+
+- Deep Ink `#211B2C`.
+- Dark Surface `#2C2438`.
+- Warm Ivory `#F5F1E9`.
+- White Surface `#FFFEFC`.
+- Muted Lavender `#8B5CF6`.
+- Electric Lime `#C7F36B`.
+- Soft Coral `#FF806E`.
+
+Typography:
+
+- Manrope.
+- Inter.
+
+Benchmarking Lab should feel like a professional enterprise AI research environment.
+
+Use:
+
+- Comparison tables.
+- Charts.
+- Model detail drawers.
+- Experiment timelines.
+- Error inspection panels.
+- Dataset inspectors.
+- Approval dialogs.
+- Cost estimates.
+- Clear confidence indicators.
+
+Support light mode, dark mode, mobile, keyboard navigation and accessible contrast.
+
+Do not create decorative charts or fake metrics.
+
+Every interactive element must perform a real action.
+
+---
+
+# PART 15 — TESTING REQUIREMENTS
+
+For every phase run appropriate tests.
+
+Required categories:
+
+- Model registry tests.
+- Provider adapter tests.
+- Dataset integrity tests.
+- Evaluation tests.
+- Statistical calculation tests.
+- Reproducibility tests.
+- Scoring tests.
+- Error classification tests.
+- Cost calculation tests.
+- Latency tests.
+- Training eligibility tests.
+- Dataset security tests.
+- Tenant isolation tests.
+- Model routing tests.
+- Approval tests.
+- Rollback tests.
+- API authorization tests.
+- UI interaction tests.
+- Accessibility tests.
+- Full regression tests.
+
+Mock providers are acceptable for unit and integration testing.
+
+However, clearly separate:
+
+- Mocked tests.
+- Simulated tests.
+- Real provider tests.
+- Human-reviewed evaluations.
+- Production telemetry.
+
+Never present mocked results as real model benchmark results.
+
+---
+
+# PART 16 — DOCUMENTATION AFTER EVERY PHASE
+
+After EACH completed phase update:
+
+`README.md`
+
+`BUILD_STATUS.md`
+
+`docs/PHASE_191_300_ROADMAP.md`
+
+Relevant benchmark methodology documentation.
+
+Relevant UI specifications.
+
+Create additional documents:
+
+- `docs/AI_ECOSYSTEM_RECONCILIATION.md`
+- `docs/AI_MODEL_ASSIGNMENT_RECONCILIATION.md`
+- `docs/AI_MODEL_REGISTRY_VERIFICATION.md`
+- `docs/AI_ADVANCED_BENCHMARK_RESULTS.md`
+- `docs/AI_OPTIMIZATION_AND_TRAINING_REPORT.md`
+- `docs/AI_MODEL_ROUTING_STRATEGY.md`
+- `docs/AI_CONTINUOUS_EVALUATION.md`
+- `docs/AI_INTELLIGENCE_SECURITY_AUDIT.md`
+- `docs/TEAMORA_PHASE_301_340_FINAL_REPORT.md`
+
+Do not postpone documentation until the final phase.
+
+---
+
+# PART 17 — STRICT COMPLETION GATES
+
+A phase is COMPLETE only when:
+
+1. Relevant source code exists.
+2. Feature is connected to the actual architecture.
+3. Backend works where required.
+4. Data persists correctly.
+5. Authorization is verified.
+6. Tests pass.
+7. Type checking passes.
+8. Lint passes.
+9. Build passes.
+10. Documentation is updated.
+11. Known limitations are recorded.
+
+Use these statuses:
+
+- COMPLETE.
+- PARTIALLY COMPLETE.
+- BLOCKED.
+- NOT STARTED.
+- NEEDS HUMAN APPROVAL.
+
+Do not mark work complete merely because a component renders or compilation succeeds.
+
+# PART 18 — EXECUTION STRATEGY
+
+Execute sequentially:
+
+301 → 302 → 303 → ... → 340.
+
+Use these implementation batches:
+
+**Batch 1:** Phases 301–310 — Foundation and methodology.
+
+**Batch 2:** Phases 311–320 — Deep model evaluation.
+
+**Batch 3:** Phases 321–330 — Optimization and training.
+
+**Batch 4:** Phases 331–340 — Workforce intelligence and production.
+
+After each batch:
+
+- Run regression.
+- Inspect changed files.
+- Verify database integration.
+- Review security.
+- Update documentation.
+- Provide an evidence-based checkpoint.
+
+If context limits are reached, stop at the latest verified phase and provide the exact next phase.
+
+Never pretend the remaining phases were completed.
+
+---
+
+# PART 19 — FINAL SUCCESS CRITERIA
+
+TEAMORA AI should ultimately be able to answer these questions with evidence:
+
+1. Which registered models are actually available?
+2. Which model is best for coding?
+3. Which model is best for reasoning?
+4. Which model is best for Urdu?
+5. Which model is best for RAG?
+6. Which model executes tools most reliably?
+7. Which model has the lowest cost per successful task?
+8. Which model has the lowest error rate?
+9. Which model has the best latency?
+10. Which model is best for each of the 15 AI employees?
+11. Which models need prompt optimization?
+12. Which models support actual fine-tuning?
+13. Did optimization genuinely improve performance?
+14. Did performance regress anywhere?
+15. Which production assignments should be changed?
+16. What is the evidence for each recommendation?
+
+All answers must be backed by measured data, transparent methodology and reproducible results.
+
+# START NOW
+
+First inspect the existing repository.
+
+Reconcile Phases 191–300 and the existing benchmarking implementation.
+
+Resolve model assignment inconsistencies.
+
+Verify every model against its official provider documentation.
+
+Then execute Phases 301–340 in order, without skipping phases.
+
+Do not modify production assignments automatically.
+
+Do not initiate paid benchmark or training jobs without approval.
+
+Do not invent scores, capabilities, prices, model versions or training results.
+
+Do not create duplicate benchmarking systems.
+
+Do not destroy existing working functionality.
+
+Do not commit, push or deploy without explicit approval.
+
+**FINAL MISSION: BUILD AN EVIDENCE-DRIVEN AI INTELLIGENCE PLATFORM THAT KNOWS WHICH MODEL IS BEST FOR WHICH JOB, UNDERSTANDS WHY IT PERFORMS THAT WAY, IMPROVES IT SAFELY, AND RECOMMENDS THE RIGHT MODEL FOR EVERY TEAMORA AI EMPLOYEE.**
+
+QUALITY OVER SPEED. SCIENTIFIC EVIDENCE OVER GUESSES. REAL IMPROVEMENT OVER DECORATIVE FEATURES.

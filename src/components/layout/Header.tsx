@@ -17,10 +17,15 @@ import {
   Wifi,
   WifiOff,
   RefreshCw,
+  Search,
+  Menu,
 } from 'lucide-react';
 import { CurrencyCode } from '../../types/index.ts';
 import { VoiceCommandModal } from '../common/VoiceCommandModal.tsx';
 import { syncEngine, SyncEngineStatus } from '../../lib/syncEngine.ts';
+import { NotificationBell } from '../common/NotificationBell.tsx';
+import { GlobalSearchModal } from '../common/GlobalSearchModal.tsx';
+import { QuickCreateModal } from '../common/QuickCreateModal.tsx';
 
 interface HeaderProps {
   onOpenAuthModal?: () => void;
@@ -47,6 +52,8 @@ export const Header: React.FC<HeaderProps> = ({ isPublicView = false }) => {
     createOrganization,
     approvals,
     setActiveTab,
+    isMobileNavOpen,
+    setIsMobileNavOpen,
   } = useApp();
 
   const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false);
@@ -54,7 +61,21 @@ export const Header: React.FC<HeaderProps> = ({ isPublicView = false }) => {
   const [newOrgName, setNewOrgName] = useState('');
   const [newOrgCurrency, setNewOrgCurrency] = useState<CurrencyCode>('USD');
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [isQuickCreateOpen, setIsQuickCreateOpen] = useState(false);
   const [syncStatus, setSyncStatus] = useState<SyncEngineStatus>(syncEngine.getStatus());
+
+  // Global Cmd+K / Ctrl+K listener for instant search access
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchModalOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
 
   useEffect(() => {
     const unsubscribe = syncEngine.subscribe((status) => {
@@ -94,7 +115,17 @@ export const Header: React.FC<HeaderProps> = ({ isPublicView = false }) => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Left: Brand or Org Selector */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
+          {!isPublicView && (
+            <button
+              onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+              className="md:hidden p-1.5 rounded-lg text-[#211B2C] dark:text-[#F5F1E9] hover:bg-[#EBE5DB] dark:hover:bg-[#2C2438] transition-colors cursor-pointer"
+              aria-label="Toggle navigation menu"
+            >
+              <Menu className="w-5 h-5 text-[#8B5CF6]" />
+            </button>
+          )}
+
           <button
             onClick={() => setActiveTab(isPublicView ? 'landing' : 'dashboard')}
             className="flex items-center gap-2 cursor-pointer focus:outline-none"
@@ -198,6 +229,33 @@ export const Header: React.FC<HeaderProps> = ({ isPublicView = false }) => {
             </button>
           )}
 
+          {/* Global Omnibar Search (Cmd+K) */}
+          {!isPublicView && (
+            <button
+              onClick={() => setIsSearchModalOpen(true)}
+              className="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-[#E2DBD0] dark:border-[#382F47] bg-[#EBE5DB]/40 dark:bg-[#2C2438] text-xs text-[#77717D] dark:text-[#AFA8B8] hover:text-[#211B2C] dark:hover:text-[#F5F1E9] transition-colors cursor-pointer"
+              title="Global Omnibar Search (Cmd+K)"
+            >
+              <Search className="w-3.5 h-3.5 text-[#8B5CF6]" />
+              <span className="text-[11px]">Search...</span>
+              <kbd className="hidden lg:inline-block px-1.5 py-0.2 text-[9px] font-mono bg-[#FFFEFC] dark:bg-[#211B2C] rounded border border-[#E2DBD0] dark:border-[#382F47]">
+                ⌘K
+              </kbd>
+            </button>
+          )}
+
+          {/* Quick Create Button */}
+          {!isPublicView && (
+            <button
+              onClick={() => setIsQuickCreateOpen(true)}
+              className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-[#8B5CF6] text-white text-xs font-semibold hover:bg-[#7C3AED] transition-colors cursor-pointer flex items-center gap-1 shadow-xs"
+              title="Quick Create (Task, Customer, Invoice, Document)"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">New</span>
+            </button>
+          )}
+
           {/* Voice Intelligence Command Trigger Button */}
           {!isPublicView && (
             <button
@@ -208,6 +266,11 @@ export const Header: React.FC<HeaderProps> = ({ isPublicView = false }) => {
               <Mic className="w-4 h-4" />
               <span className="sr-only">Voice Commands</span>
             </button>
+          )}
+
+          {/* Activity Alerts & Notification Center */}
+          {!isPublicView && (
+            <NotificationBell orgId={currentOrg.id} onNavigate={setActiveTab} />
           )}
 
           {/* Pending Approvals Badge (Safe Execution Gate) */}
@@ -398,6 +461,18 @@ export const Header: React.FC<HeaderProps> = ({ isPublicView = false }) => {
       <VoiceCommandModal
         isOpen={isVoiceModalOpen}
         onClose={() => setIsVoiceModalOpen(false)}
+      />
+
+      {/* Global Omnibar Search Modal (Cmd+K) */}
+      <GlobalSearchModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+      />
+
+      {/* Quick Create Modal */}
+      <QuickCreateModal
+        isOpen={isQuickCreateOpen}
+        onClose={() => setIsQuickCreateOpen(false)}
       />
     </header>
   );

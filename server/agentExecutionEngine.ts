@@ -117,32 +117,90 @@ export function addOrgMemory(orgId: string, category: string, content: string, t
 // Agent Tool Schemas & Dispatch Table
 // ==========================================
 export const AgentToolSchemas = {
-  // Atlas (Workforce Manager)
+  // 1. Atlas (Workforce Manager)
   orchestrate_pipeline: z.object({
     goal: z.string().min(1),
     involvedAgents: z.array(z.string()).min(1),
   }),
-  // Echo (Customer Support)
+  // 2. Echo (Customer Support)
   draft_reply: z.object({
     ticketId: z.string(),
     customerEmail: z.string().email(),
     inquiry: z.string(),
   }),
-  // Vanguard (Sales)
+  // 3. Vanguard (Enterprise Sales)
   score_lead: z.object({
     companyName: z.string(),
     teamSize: z.number().positive(),
     budgetUsd: z.number().positive(),
   }),
-  // Ledger (Finance)
-  calculate_tax: z.object({
-    amount: z.number().positive(),
-    region: z.enum(['US', 'EU', 'PK', 'GLOBAL']),
+  // 4. Pulse (Growth Marketing)
+  plan_campaign: z.object({
+    campaignName: z.string(),
+    targetAudience: z.string(),
+    channels: z.array(z.string()).min(1),
   }),
-  // Justitia (Legal)
-  review_contract: z.object({
+  // 5. Ledger (Finance & Compliance)
+  reconcile_invoices: z.object({
+    invoiceId: z.string(),
+    amount: z.number().positive(),
+    currency: z.enum(['USD', 'PKR']),
+  }),
+  // 6. Prism (Analytics & Data Scientist)
+  query_metrics: z.object({
+    metricName: z.string(),
+    timeRangeDays: z.number().int().positive(),
+  }),
+  // 7. Stockwell (Inventory Controller)
+  track_sku: z.object({
+    skuCode: z.string(),
+    location: z.string().optional(),
+  }),
+  // 8. Nexus (Operations Director)
+  create_sop: z.object({
+    procedureTitle: z.string(),
+    department: z.string(),
+    stepsCount: z.number().int().positive().optional(),
+  }),
+  // 9. Scout (Deep Research & Market Intelligence)
+  benchmark_competitor: z.object({
+    competitorName: z.string(),
+    focusAreas: z.array(z.string()).min(1),
+  }),
+  // 10. Harmony (People Operations)
+  onboarding_flow: z.object({
+    employeeName: z.string(),
+    roleTitle: z.string(),
+    department: z.string(),
+  }),
+  // 11. Quill (Editorial & Content)
+  draft_article: z.object({
+    topic: z.string(),
+    targetWordCount: z.number().int().positive().optional(),
+    keywords: z.array(z.string()).optional(),
+  }),
+  // 12. Courier (Email & Communications)
+  classify_email: z.object({
+    sender: z.string().email(),
+    subject: z.string(),
+    bodySnippet: z.string(),
+  }),
+  // 13. Chronos (Agile Project Manager)
+  create_sprint: z.object({
+    sprintName: z.string(),
+    durationWeeks: z.number().int().positive(),
+    milestones: z.array(z.string()).min(1),
+  }),
+  // 14. Scribe (Document Intelligence)
+  parse_document: z.object({
     documentTitle: z.string(),
-    contractType: z.enum(['NDA', 'SaaS Agreement', 'Employment', 'Vendor Agreement']),
+    documentType: z.enum(['contract', 'nda', 'invoice', 'report', 'sop']),
+  }),
+  // 15. Synapse (Workflow Automation)
+  build_workflow: z.object({
+    workflowName: z.string(),
+    triggerEvent: z.string(),
+    actionsCount: z.number().int().positive(),
   }),
 };
 
@@ -393,4 +451,106 @@ export function cancelTask(orgId: string, taskId: string, context: VerifiedSecur
   task.updatedAt = new Date().toISOString();
   recordAuditLog(context, 'agent_task_cancelled', taskId, 'executed', {});
   return true;
+}
+
+export interface PipelineStep {
+  stepIndex: number;
+  agentId: string;
+  actionTitle: string;
+  prompt: string;
+  dependsOnStepIndex?: number;
+}
+
+export interface PipelineExecutionResult {
+  pipelineId: string;
+  goal: string;
+  orgId: string;
+  totalSteps: number;
+  completedSteps: number;
+  status: 'completed' | 'halted_for_approval' | 'failed';
+  stepResults: {
+    stepIndex: number;
+    taskId: string;
+    agentId: string;
+    status: TaskStatus;
+    result?: string;
+    receiptId?: string;
+    approvalId?: string;
+  }[];
+}
+
+/**
+ * Orchestrates a multi-agent sequential/dependent pipeline across autonomous employees
+ */
+export async function orchestrateMultiAgentPipeline(
+  ai: GoogleGenAI,
+  context: VerifiedSecurityContext,
+  goal: string,
+  steps: PipelineStep[]
+): Promise<PipelineExecutionResult> {
+  const pipelineId = `pipe-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`;
+  const stepResults: PipelineExecutionResult['stepResults'] = [];
+  let previousOutput = '';
+
+  for (const step of steps) {
+    const contextualPrompt = previousOutput
+      ? `${step.prompt}\n\n[INPUT FROM PREVIOUS AGENT DELIVERABLE]:\n${previousOutput}`
+      : step.prompt;
+
+    const task = await executeAgentTask(
+      ai,
+      context,
+      step.agentId,
+      step.actionTitle,
+      contextualPrompt,
+      'high',
+      { pipelineId, stepIndex: step.stepIndex }
+    );
+
+    stepResults.push({
+      stepIndex: step.stepIndex,
+      taskId: task.id,
+      agentId: step.agentId,
+      status: task.status,
+      result: task.result,
+      receiptId: task.receipt?.receiptId,
+      approvalId: task.approvalId,
+    });
+
+    if (task.status === 'needs_approval') {
+      return {
+        pipelineId,
+        goal,
+        orgId: context.orgId,
+        totalSteps: steps.length,
+        completedSteps: stepResults.filter((s) => s.status === 'completed').length,
+        status: 'halted_for_approval',
+        stepResults,
+      };
+    }
+
+    if (task.status === 'failed') {
+      return {
+        pipelineId,
+        goal,
+        orgId: context.orgId,
+        totalSteps: steps.length,
+        completedSteps: stepResults.filter((s) => s.status === 'completed').length,
+        status: 'failed',
+        stepResults,
+      };
+    }
+
+    previousOutput = task.result || '';
+  }
+
+  return {
+    pipelineId,
+    goal,
+    orgId: context.orgId,
+    totalSteps: steps.length,
+    completedSteps: stepResults.length,
+    status: 'completed',
+    stepResults,
+  };
 }

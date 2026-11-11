@@ -29,6 +29,26 @@ import {
   PlanTier,
   Currency,
 } from './saasEngine.ts';
+import {
+  ingestDocument,
+  queryKnowledgeHub,
+  listOrgDocuments,
+  deleteOrgDocument,
+} from './ragEngine.ts';
+import {
+  executeCrawl,
+  validateUrlForSsrf,
+} from './crawlerEngine.ts';
+import {
+  MODEL_REGISTRY,
+  STANDARDIZED_BENCHMARK_DATASET,
+  executeModelBenchmark,
+  getBenchmarkHistory,
+  generateEmployeeRecommendations,
+  getAssignmentApprovals,
+  requestAssignmentApproval,
+  reviewAssignmentApproval,
+} from './benchmarkRunner.ts';
 
 // ==========================================
 // 1. In-Memory Rate Limiter (Sliding Window)
@@ -158,6 +178,27 @@ export const UpdateSubscriptionSchema = z.object({
   targetPlan: z.enum(['free', 'starter', 'pro', 'business', 'enterprise']),
   currency: z.enum(['USD', 'PKR']).optional(),
   paymentProvider: z.enum(['safepay', 'payfast_1link', 'sadabiz', 'lemonsqueezy', 'simulated_test']).optional(),
+  orgId: z.string().max(128).optional(),
+});
+
+export const IngestDocSchema = z.object({
+  title: z.string().min(1).max(256),
+  rawText: z.string().min(1).max(1000000),
+  sourceType: z.enum(['pdf', 'docx', 'txt', 'csv', 'web', 'manual']).optional(),
+  sourceUrl: z.string().max(2048).optional(),
+  tags: z.array(z.string().max(64)).max(20).optional(),
+  orgId: z.string().max(128).optional(),
+});
+
+export const QueryRagSchema = z.object({
+  query: z.string().min(1).max(1024),
+  topK: z.number().int().min(1).max(20).optional(),
+  orgId: z.string().max(128).optional(),
+});
+
+export const CrawlTargetSchema = z.object({
+  url: z.string().max(2048),
+  tags: z.array(z.string().max(64)).max(20).optional(),
   orgId: z.string().max(128).optional(),
 });
 
@@ -301,6 +342,7 @@ export async function handleApiRequest(req: IncomingMessage, res: ServerResponse
     !url.startsWith('/api/agent') &&
     !url.startsWith('/api/saas') &&
     !url.startsWith('/api/security') &&
+    !url.startsWith('/api/benchmarks') &&
     !url.startsWith('/status') &&
     !url.startsWith('/api/status')
   ) {
@@ -397,7 +439,80 @@ export async function handleApiRequest(req: IncomingMessage, res: ServerResponse
       return true;
     }
 
+    // 3F. RAG Documents Query
+    if (url.includes('/api/rag/documents')) {
+      try {
+        const parsedUrl = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
+        const orgId = parsedUrl.searchParams.get('orgId') || undefined;
+
+        const authResult = await authenticateAndAuthorize(req, orgId, 'member');
+        if (!authResult.success) {
+          sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+          return true;
+        }
+
+        const documents = listOrgDocuments(authResult.context.orgId);
+        sendJson(res, 200, { success: true, documents, count: documents.length });
+        return true;
+      } catch (err: any) {
+        sendJson(res, 500, { error: err.message || 'Failed to retrieve RAG documents' });
+        return true;
+      }
+    }
+
+    // 3F. Benchmark Registry, Datasets, History & Recommendations
+    if (url.includes('/api/benchmarks/registry')) {
+      sendJson(res, 200, { success: true, models: MODEL_REGISTRY });
+      return true;
+    }
+    if (url.includes('/api/benchmarks/datasets')) {
+      sendJson(res, 200, { success: true, datasets: STANDARDIZED_BENCHMARK_DATASET });
+      return true;
+    }
+    if (url.includes('/api/benchmarks/history')) {
+      const history = getBenchmarkHistory();
+      sendJson(res, 200, { success: true, history });
+      return true;
+    }
+    if (url.includes('/api/benchmarks/recommendations')) {
+      const history = getBenchmarkHistory();
+      const recommendations = generateEmployeeRecommendations(history);
+      sendJson(res, 200, { success: true, recommendations });
+      return true;
+    }
+    if (url.includes('/api/benchmarks/approvals')) {
+      const approvals = getAssignmentApprovals();
+      sendJson(res, 200, { success: true, approvals });
+      return true;
+    }
+
     sendJson(res, 405, { error: 'Method Not Allowed. Use POST for mutations.' });
+    return true;
+  }
+
+  // Handle DELETE operations
+  if (req.method === 'DELETE') {
+    if (url.includes('/api/rag/document')) {
+      try {
+        const parsedUrl = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
+        const docId = parsedUrl.searchParams.get('docId') || '';
+        const orgId = parsedUrl.searchParams.get('orgId') || undefined;
+
+        const authResult = await authenticateAndAuthorize(req, orgId, 'manager');
+        if (!authResult.success) {
+          sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+          return true;
+        }
+
+        const deleted = deleteOrgDocument(authResult.context.orgId, docId);
+        sendJson(res, deleted ? 200 : 404, { success: deleted, docId });
+        return true;
+      } catch (err: any) {
+        sendJson(res, 500, { error: err.message || 'Failed to delete RAG document' });
+        return true;
+      }
+    }
+    sendJson(res, 405, { error: 'Method Not Allowed.' });
     return true;
   }
 
@@ -736,6 +851,60 @@ export async function handleApiRequest(req: IncomingMessage, res: ServerResponse
   try {
     const rawBody = await readBody(req);
 
+    // 5AA. Model Benchmarking Execution
+    if (url.includes('/api/benchmarks/run')) {
+      try {
+        const modelId = rawBody.modelId || 'gemini-3.8-flash';
+        const isPilot = Boolean(rawBody.isPilot);
+        const repetitions = Number(rawBody.repetitions) || 1;
+
+        const ai = getAiClient();
+        const summary = await executeModelBenchmark(modelId, isPilot, ai || undefined, repetitions);
+
+        sendJson(res, 200, { success: true, summary });
+        return true;
+      } catch (err: any) {
+        sendJson(res, 500, { error: err.message || 'Benchmark evaluation failed' });
+        return true;
+      }
+    }
+
+    if (url.includes('/api/benchmarks/approvals/request')) {
+      try {
+        const { agentId, proposedModel, reason, fitScore } = rawBody;
+        if (!agentId || !proposedModel) {
+          sendJson(res, 400, { error: 'agentId and proposedModel are required' });
+          return true;
+        }
+        const record = requestAssignmentApproval(agentId, proposedModel, reason || 'Performance optimization', fitScore);
+        sendJson(res, 200, { success: true, approval: record });
+        return true;
+      } catch (err: any) {
+        sendJson(res, 500, { error: err.message });
+        return true;
+      }
+    }
+
+    if (url.includes('/api/benchmarks/approvals/review')) {
+      try {
+        const { approvalId, decision, reviewer } = rawBody;
+        if (!approvalId || !decision) {
+          sendJson(res, 400, { error: 'approvalId and decision (approved|rejected) are required' });
+          return true;
+        }
+        const record = reviewAssignmentApproval(approvalId, decision, reviewer);
+        if (!record) {
+          sendJson(res, 404, { error: 'Approval record not found' });
+          return true;
+        }
+        sendJson(res, 200, { success: true, approval: record });
+        return true;
+      } catch (err: any) {
+        sendJson(res, 500, { error: err.message });
+        return true;
+      }
+    }
+
     // 5A. Single Generation / Analysis / Tool Execution
     if (url.includes('/generate')) {
       const parsed = GenerateSchema.safeParse(rawBody);
@@ -874,6 +1043,104 @@ Output a clean JSON object with:
         model: actualModel,
       });
       return true;
+    }
+
+    // 8. Advanced Enterprise RAG Engine (Phases 81–94)
+    if (url.includes('/api/rag/ingest') && req.method === 'POST') {
+      try {
+        const rawBody = await readBody(req);
+        const parsed = IngestDocSchema.safeParse(rawBody);
+        if (!parsed.success) {
+          sendJson(res, 400, { error: 'Validation error', details: parsed.error.issues });
+          return true;
+        }
+
+        const authResult = await authenticateAndAuthorize(req, parsed.data.orgId, 'member');
+        if (!authResult.success) {
+          sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+          return true;
+        }
+
+        const { document, chunks } = await ingestDocument(
+          authResult.context.orgId,
+          parsed.data.title,
+          parsed.data.rawText,
+          parsed.data.sourceType || 'manual',
+          parsed.data.sourceUrl,
+          parsed.data.tags || []
+        );
+
+        sendJson(res, 200, {
+          success: true,
+          document,
+          chunksCount: chunks.length,
+          message: `Document '${document.title}' successfully ingested into tenant Knowledge Base with ${chunks.length} semantic chunks.`,
+        });
+        return true;
+      } catch (err: any) {
+        sendJson(res, 500, { error: err.message || 'Failed to ingest document into RAG' });
+        return true;
+      }
+    }
+
+    if (url.includes('/api/rag/query') && req.method === 'POST') {
+      try {
+        const rawBody = await readBody(req);
+        const parsed = QueryRagSchema.safeParse(rawBody);
+        if (!parsed.success) {
+          sendJson(res, 400, { error: 'Validation error', details: parsed.error.issues });
+          return true;
+        }
+
+        const authResult = await authenticateAndAuthorize(req, parsed.data.orgId, 'member');
+        if (!authResult.success) {
+          sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+          return true;
+        }
+
+        const results = await queryKnowledgeHub(
+          authResult.context.orgId,
+          parsed.data.query,
+          parsed.data.topK || 5
+        );
+
+        sendJson(res, 200, { success: true, ...results });
+        return true;
+      } catch (err: any) {
+        sendJson(res, 500, { error: err.message || 'RAG query failed' });
+        return true;
+      }
+    }
+
+    // 9. Autonomous Web Crawler with SSRF Defense (Phases 95–106)
+    if (url.includes('/api/crawler/crawl') && req.method === 'POST') {
+      try {
+        const rawBody = await readBody(req);
+        const parsed = CrawlTargetSchema.safeParse(rawBody);
+        if (!parsed.success) {
+          sendJson(res, 400, { error: 'Validation error', details: parsed.error.issues });
+          return true;
+        }
+
+        const authResult = await authenticateAndAuthorize(req, parsed.data.orgId, 'member');
+        if (!authResult.success) {
+          sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+          return true;
+        }
+
+        const result = await executeCrawl({
+          url: parsed.data.url,
+          orgId: authResult.context.orgId,
+          tags: parsed.data.tags,
+        });
+
+        const statusCode = result.status === 'failed' ? 400 : result.status === 'blocked_by_robots' ? 403 : 200;
+        sendJson(res, statusCode, { success: result.status === 'completed', ...result });
+        return true;
+      } catch (err: any) {
+        sendJson(res, 500, { error: err.message || 'Crawl execution failed' });
+        return true;
+      }
     }
 
     sendJson(res, 404, { error: 'Endpoint not found' });

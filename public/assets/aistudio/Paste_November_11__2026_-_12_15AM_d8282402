@@ -1,0 +1,925 @@
+# TEAMORA AI — MASTER PRODUCT ARCHITECTURE, UX LEADERSHIP & COMPLETE ROADMAP EXECUTION
+## PHASES 191–300 | PRODUCT DESIGN, FEATURE PLACEMENT, NEW PANELS, BUSINESS INTELLIGENCE & ENTERPRISE EXPANSION
+
+PROJECT: TEAMORA AI
+TAGLINE: Your AI Team. One Smart Workspace.
+GITHUB: https://github.com/mali123456-del/Teamora-AI
+LOCAL: G:\Temp\My projects\TEAMORA AI
+DEV SERVER: http://localhost:3000
+
+CURRENT REPORTED CHECKPOINT:
+- Phases 1–190 reported implemented.
+- Notification Center reported implemented.
+- Circuit Breaker reported implemented.
+- AI Governance reported implemented.
+- Webhook Engine reported implemented.
+- Vitest: 71/71 reported passing.
+- TypeScript and app compilation: 0 reported errors.
+
+IMPORTANT: These are user-reported checkpoints, not independently verified results. Inspect the actual repository before relying on them.
+
+==================================================
+PART 1 — YOUR ROLE
+==================================================
+
+You are now TEAMORA AI's:
+
+1. Principal Product Architect.
+2. Senior UX/UI Designer.
+3. SaaS Product Strategist.
+4. Frontend Architecture Lead.
+5. Backend Architecture Lead.
+6. AI Workforce Engineer.
+7. Security and Reliability Engineer.
+8. QA and Testing Lead.
+
+You must make informed product decisions.
+
+Do not merely follow a list of feature names.
+
+For every feature, determine:
+
+- Why it is needed.
+- Who uses it.
+- Where it belongs.
+- Which page or panel should contain it.
+- Whether it belongs in Header, Sidebar, Dashboard, Workspace, Drawer, Modal or Settings.
+- What its exact UI should look like.
+- Which theme tokens it should use.
+- What its actual functionality should be.
+- Which APIs and services it requires.
+- Which data structures it requires.
+- Which AI employee can use it.
+- Which permissions it requires.
+- How it will be tested.
+- What measurable result defines completion.
+
+You have authority to propose the best product structure, but preserve existing working functionality and ask for approval before high-impact architecture changes.
+
+==================================================
+PART 2 — EXISTING PROJECT AND HARDWARE
+==================================================
+
+Inspect the actual TEAMORA repository.
+
+Preserve:
+
+- React.
+- TypeScript.
+- Vite.
+- Tailwind CSS.
+- Express.
+- Firebase Authentication.
+- Cloud Firestore.
+- IndexedDB.
+- Existing Gemini integration.
+- Existing AI provider abstraction.
+- Existing 15 AI employees.
+- Existing RAG engine.
+- Existing crawler.
+- Existing notification system.
+- Existing Three.js Neural Core.
+
+Do not migrate Firebase to another database without explicit approval.
+
+PC constraints:
+
+Dell Latitude 3340
+Intel Core i5-4200U
+2 cores / 4 threads
+8 GB RAM
+477 GB TEAM SSD
+Intel HD integrated graphics
+Windows 10 Pro 64-bit
+
+Keep the product optimized for low-end hardware.
+
+Avoid unnecessary dependencies, expensive animations, background processes and heavyweight models.
+
+==================================================
+PART 3 — MANDATORY INITIAL AUDIT
+==================================================
+
+Before development:
+
+1. Inspect all files.
+2. Inspect Git status and recent history.
+3. Inspect README.md and BUILD_STATUS.md.
+4. Inspect all reports for Phases 151–190.
+5. Determine the actual completion status of Phases 191–220 from the previous roadmap.
+6. Inspect all existing feature panels.
+7. Inspect Header, Sidebar and responsive navigation.
+8. Inspect the Notification Center.
+9. Inspect existing design tokens and theme configuration.
+10. Inspect the 15 employee identities and IDs.
+11. Inspect Firestore schemas and security rules.
+12. Inspect API routes and integrations.
+13. Run the existing tests.
+14. Open http://localhost:3000 and explore the actual application.
+15. Capture screenshots at desktop, tablet and mobile widths.
+
+Create:
+
+docs/PRODUCT_ARCHITECTURE_AUDIT.md
+docs/UX_INFORMATION_ARCHITECTURE.md
+docs/FEATURE_PLACEMENT_MATRIX.md
+docs/DESIGN_SYSTEM_AUDIT.md
+docs/PHASE_191_300_ROADMAP.md
+
+Do not duplicate features that already exist.
+
+If Phases 191–220 are incomplete, complete their remaining acceptance criteria before proceeding to Phase 221.
+
+==================================================
+PART 4 — REQUIRED RESEARCH LINKS
+==================================================
+
+Visit and inspect these official references.
+
+PROJECT:
+
+https://github.com/mali123456-del/Teamora-AI
+https://github.com/mali123456-del/Teamora-AI/issues
+https://github.com/mali123456-del/Teamora-AI/pulls
+http://localhost:3000
+
+PRODUCT DESIGN AND NAVIGATION:
+
+https://m3.material.io/
+https://developer.android.com/develop/ui/views/layout/build-responsive-navigation
+https://developer.android.com/design/ui/mobile/guides/layout-and-content/layout-and-nav-patterns
+https://www.w3.org/WAI/standards-guidelines/wcag/
+https://www.w3.org/TR/WCAG22/
+
+FRONTEND:
+
+https://react.dev/
+https://www.typescriptlang.org/docs/
+https://vite.dev/guide/
+https://tailwindcss.com/docs
+https://lucide.dev/
+https://motion.dev/
+
+BACKEND AND DATA:
+
+https://firebase.google.com/docs
+https://firebase.google.com/docs/firestore
+https://firebase.google.com/docs/firestore/best-practices
+https://firebase.google.com/docs/rules/basics
+https://firebase.google.com/docs/cloud-messaging
+https://firebase.google.com/docs/app-check
+
+AI SECURITY:
+
+https://genai.owasp.org/
+https://owasp.org/www-project-application-security-verification-standard/
+https://github.com/GenAI-Security-Project/GenAI-LLM-Top10
+
+OBSERVABILITY:
+
+https://opentelemetry.io/docs/
+https://opentelemetry.io/docs/concepts/signals/
+
+TESTING:
+
+https://vitest.dev/guide/
+https://playwright.dev/docs/intro
+https://testing-library.com/docs/
+https://developer.chrome.com/docs/lighthouse/
+https://web.dev/articles/vitals
+
+AI AND RAG:
+
+https://ai.google.dev/gemini-api/docs
+https://docs.ollama.com/
+https://huggingface.co/docs
+https://sbert.net/
+https://docs.ragas.io/
+
+Research rules:
+
+- Prefer official documentation.
+- Verify current APIs.
+- Record relevant findings.
+- Respect robots.txt and website terms.
+- Never bypass authentication.
+- Never scrape restricted content.
+- Never expose credentials.
+- Never copy proprietary code.
+- Do not add dependencies without evaluating their cost and compatibility.
+- If a link is inaccessible, report it honestly.
+
+==================================================
+PART 5 — PRODUCT INFORMATION ARCHITECTURE
+==================================================
+
+Use the following recommended structure as the starting design.
+
+A. OVERVIEW
+- Dashboard
+- Command Center
+
+B. AI WORKFORCE
+- Workforce Overview
+- All Employees
+- Employee Workspace
+- Agent Command Center
+- Agent Runs
+- AI Evaluations
+- Workforce Analytics
+
+C. WORK MANAGEMENT
+- Tasks
+- Projects
+- Approvals
+- Workflow Builder
+- Automations
+- Calendar
+- Team Activity
+
+D. BUSINESS OPERATIONS
+- CRM
+- Sales
+- Finance
+- Inventory
+- Procurement
+- Operations
+- Customer Support
+- Documents
+
+E. INTELLIGENCE
+- Knowledge Hub
+- RAG Studio
+- Research Workspace
+- Analytics
+- Reports
+- Data Explorer
+- Knowledge Graph
+
+F. PLATFORM
+- Integration Marketplace
+- API Control Center
+- Webhooks
+- Notifications
+- Audit & Compliance
+- System Health
+- AI Governance
+
+G. ADMINISTRATION
+- Organization
+- Members & Roles
+- Subscription & Billing
+- Usage & Costs
+- Security Settings
+- Workspace Settings
+
+This is a logical grouping, not an instruction to create every item blindly.
+
+For each proposed page, verify whether equivalent functionality already exists.
+
+SIDEBAR RULES:
+
+- Keep the main navigation concise.
+- Group related destinations.
+- Use collapsible sections when necessary.
+- Show current selection clearly.
+- Respect user permissions.
+- Do not show inaccessible pages as active.
+- Add tooltips for collapsed navigation.
+- Preserve navigation state across responsive changes.
+
+HEADER RULES:
+
+Left:
+- Logo.
+- Workspace selector.
+- Current page context.
+
+Right:
+- Global search.
+- Quick Create.
+- Voice.
+- Notifications.
+- Help.
+- Profile.
+
+Do not overload the Header with every application feature.
+
+RESPONSIVE RULES:
+
+Desktop:
+- Persistent sidebar.
+- Full workspace.
+- Contextual right panel when needed.
+
+Tablet:
+- Collapsible sidebar or navigation rail.
+- Responsive content grids.
+
+Mobile:
+- Compact top bar.
+- Bottom navigation for a small number of primary destinations.
+- More drawer for remaining destinations.
+- Full-screen workflows when necessary.
+
+==================================================
+PART 6 — DESIGN SYSTEM AND THEME
+==================================================
+
+Preserve existing brand identity:
+
+Deep Ink: #211B2C
+Dark Surface: #2C2438
+Warm Ivory: #F5F1E9
+White Surface: #FFFEFC
+Muted Lavender: #A78BFA
+Electric Lime: #C7F36B
+Soft Coral: #FF806E
+
+Typography:
+- Manrope for headings.
+- Inter for body.
+- Tabular numerals for metrics.
+- Readable Urdu RTL fallback.
+
+Design direction:
+
+- Premium enterprise SaaS.
+- Clear hierarchy.
+- Clean surfaces.
+- Controlled spacing.
+- Consistent component sizing.
+- Restrained animation.
+- No unnecessary gradients.
+- No excessive glass effects.
+- No decorative-only cards.
+- No unnecessary colored badges.
+- Clear empty, loading, error and success states.
+
+Build a reusable design system.
+
+Every component must have documented:
+
+- Purpose.
+- Variants.
+- States.
+- Accessibility behavior.
+- Responsive behavior.
+- Theme tokens.
+- Usage guidelines.
+
+==================================================
+PHASES 191–200 — PREVIOUS ROADMAP VERIFICATION
+==================================================
+
+191. Subscription architecture verification.
+192. Plan entitlement verification.
+193. Usage metering verification.
+194. Cost intelligence verification.
+195. Billing workflow verification.
+196. Organization onboarding verification.
+197. Team collaboration verification.
+198. Customer support verification.
+199. Product analytics verification.
+200. Customer experience audit.
+
+For each phase:
+- Inspect actual code.
+- Test real workflows.
+- Fix missing functionality.
+- Document verified and unverified areas.
+
+==================================================
+PHASES 201–210 — BUSINESS INTELLIGENCE VERIFICATION
+==================================================
+
+201. Unified business data layer audit.
+202. Global search verification.
+203. Advanced analytics verification.
+204. Report builder verification.
+205. Scheduled reports verification.
+206. Data quality center verification.
+207. Knowledge graph verification.
+208. Document intelligence verification.
+209. AI research workspace verification.
+210. Business intelligence regression testing.
+
+Do not rebuild already working functionality.
+
+==================================================
+PHASES 211–220 — EXPERIENCE AND RELEASE VERIFICATION
+==================================================
+
+211. Design system verification.
+212. WCAG 2.2 AA accessibility verification.
+213. PWA verification.
+214. Cross-browser verification.
+215. Bundle optimization verification.
+216. Three.js Neural Core verification.
+217. Security assessment verification.
+218. Full regression verification.
+219. Release readiness verification.
+220. Final previous-roadmap status report.
+
+At the end, create:
+
+docs/PHASE_191_220_VERIFICATION.md
+
+==================================================
+PHASES 221–230 — PRODUCT ARCHITECTURE AND UX TRANSFORMATION
+==================================================
+
+221. Product Information Architecture
+Define the complete navigation hierarchy and page relationships.
+
+222. Feature Placement Matrix
+For every existing and proposed feature, define its exact destination.
+
+223. Navigation System Upgrade
+Implement concise, permission-aware and responsive navigation.
+
+224. Header Architecture
+Organize search, quick actions, voice, notifications, help and profile.
+
+225. Workspace Shell
+Build a consistent content layout across all major destinations.
+
+226. Global Search Experience
+Design search results, filters, keyboard interaction and navigation.
+
+227. Quick Create System
+Create contextual task, project, document and workflow creation.
+
+228. Contextual Detail Drawers
+Build reusable detail drawers for records, employees, tasks and notifications.
+
+229. Page Layout Templates
+Build reusable overview, listing, detail, analytics and settings templates.
+
+230. UX Quality Audit
+Test the complete navigation and user journeys.
+
+==================================================
+PHASES 231–240 — COMMAND CENTER AND WORK MANAGEMENT
+==================================================
+
+231. Executive Command Center
+Provide a real overview of organization activity and operational status.
+
+232. Personal Work Inbox
+Unify assigned tasks, approvals, mentions and important alerts.
+
+233. Advanced Task Workspace
+Improve task views, ownership, status, priority and history.
+
+234. Project Portfolio Center
+Provide project health, milestones, dependencies and progress.
+
+235. Team Calendar
+Create a timezone-aware calendar for tasks, projects and scheduled jobs.
+
+236. Resource Planning
+Display team workload and employee availability.
+
+237. Workload Balancing
+Provide suggestions for task distribution without automatically changing assignments.
+
+238. Collaboration Timeline
+Show relevant comments, mentions and activity history.
+
+239. Meeting and Notes Workspace
+Provide structured notes and action items.
+
+240. Work Management Regression Suite
+Test permissions, task transitions, collaboration and scheduling.
+
+==================================================
+PHASES 241–250 — BUSINESS OPERATIONS EXPANSION
+==================================================
+
+241. Sales Pipeline Center
+Manage real CRM sales stages and opportunity history.
+
+242. Customer Success Workspace
+Track customer health, support activity and follow-up tasks.
+
+243. Procurement Center
+Manage supplier records, purchase requests and approval workflows.
+
+244. Vendor Management
+Store vendor profiles, authorized contacts and service records.
+
+245. Order Management
+Track orders and fulfillment states.
+
+246. Customer Support Workspace
+Manage support tickets, assignment, status and response history.
+
+247. SLA and Escalation Center
+Track configurable service-level targets and overdue cases.
+
+248. Business Documents Center
+Manage document metadata, access, versions and review status.
+
+249. Operations Dashboard
+Display actual operational data from existing business services.
+
+250. Business Operations Testing
+Test data integrity, authorization and workflow transitions.
+
+==================================================
+PHASES 251–260 — AI WORKFORCE EXPERIENCE
+==================================================
+
+251. Unified Workforce Overview
+Provide a clear overview of all 15 canonical employees.
+
+252. Employee Profile Experience
+Show responsibilities, capabilities, permissions and actual execution history.
+
+253. Employee Workspace Templates
+Create reusable task, knowledge and activity layouts.
+
+254. Agent Task Inbox
+Display pending assignments and execution states.
+
+255. Agent Execution Timeline
+Show verified tool calls, results, failures and approvals.
+
+256. Agent Collaboration Viewer
+Visualize actual multi-agent dependencies and context handoffs.
+
+257. Agent Memory Inspector
+Display authorized memory references and retention controls.
+
+258. Workforce Quality Dashboard
+Compare measured evaluation results.
+
+259. Agent Configuration Manager
+Provide controlled configuration and version history.
+
+260. Workforce Regression Suite
+Test all employee IDs, permissions, tools and execution workflows.
+
+==================================================
+PHASES 261–270 — INTELLIGENCE AND KNOWLEDGE EXPANSION
+==================================================
+
+261. Knowledge Hub Redesign
+Create a clear knowledge library with document status and permissions.
+
+262. RAG Studio Improvements
+Provide retrieval inspection, relevance diagnostics and source tracing.
+
+263. Research Project Manager
+Organize research objectives, evidence and final findings.
+
+264. Citation Verification Center
+Check whether references resolve to actual source content.
+
+265. Data Explorer
+Provide safe, permission-aware exploration of structured business data.
+
+266. Report Builder Improvements
+Support reusable report definitions and export.
+
+267. Forecasting Workspace
+Provide forecasts only where reliable data and validated models exist.
+
+268. Scenario Analysis
+Allow users to compare hypothetical business scenarios without modifying live records.
+
+269. Knowledge Graph Explorer
+Show verified entities, relationships and source provenance.
+
+270. Intelligence Evaluation Suite
+Measure accuracy, relevance, citation quality and data correctness.
+
+==================================================
+PHASES 271–280 — PLATFORM AND DEVELOPER ECOSYSTEM
+==================================================
+
+271. Integration Marketplace Improvements
+Provide searchable, categorized integrations and clear connection requirements.
+
+272. Integration Connection Wizard
+Implement safe, permission-aware setup flows.
+
+273. API Developer Portal
+Document available endpoints, authentication and rate limits.
+
+274. API Key Management
+Provide secure creation, revocation and usage visibility.
+
+275. Webhook Management Center
+Provide event subscriptions, signatures, retries and delivery history.
+
+276. Event Subscription Center
+Let authorized users select supported platform events.
+
+277. Workflow Template Marketplace
+Provide reusable, tested workflow templates.
+
+278. Automation Version Control
+Record versions, changes and rollback information.
+
+279. Sandbox Workspace
+Provide safe test data and isolated integration testing where supported.
+
+280. Developer Experience Regression
+Test API documentation, credentials, webhooks and sandbox boundaries.
+
+==================================================
+PHASES 281–290 — ENTERPRISE ADMINISTRATION AND GOVERNANCE
+==================================================
+
+281. Organization Overview
+Show organization settings, members and operational configuration.
+
+282. Team and Role Manager
+Provide clear role assignment and permission visibility.
+
+283. Custom Role Management
+Support validated least-privilege custom roles.
+
+284. Security Center
+Centralize relevant security status and security-related alerts.
+
+285. Audit and Compliance Center
+Provide searchable, permission-aware audit records.
+
+286. Data Governance Center
+Manage retention, export, deletion and document access policies.
+
+287. AI Governance Dashboard
+Show model policies, employee permissions and approval rules.
+
+288. Usage and Cost Center
+Show measured usage and clearly labelled cost estimates.
+
+289. Subscription Administration
+Provide subscription state, plan entitlements and billing history.
+
+290. Enterprise Administration Testing
+Test roles, organization boundaries and sensitive operations.
+
+==================================================
+PHASES 291–300 — PRODUCT POLISH AND FINAL RELEASE
+==================================================
+
+291. Universal Design System Completion
+Ensure every page uses shared design tokens and components.
+
+292. Global Empty, Loading and Error States
+Standardize states across all workflows.
+
+293. Accessibility Completion
+Test keyboard navigation, focus, screen readers and RTL.
+
+294. Mobile Experience Completion
+Test all major journeys on compact and medium screens.
+
+295. Performance Optimization
+Measure bundle size, memory, CPU and page responsiveness.
+
+296. Security Regression
+Re-test authentication, Firestore rules, API access and AI governance.
+
+297. Full End-to-End Testing
+Test actual business workflows from start to completion.
+
+298. Documentation and Onboarding
+Complete setup guides, user guides and developer documentation.
+
+299. Release Candidate Preparation
+Prepare a verified release candidate without automatically deploying it.
+
+300. Final Master Report
+Create docs/TEAMORA_PHASE_191_300_FINAL_REPORT.md.
+
+==================================================
+PART 7 — FEATURE PLACEMENT REQUIREMENTS
+==================================================
+
+Create:
+
+docs/FEATURE_PLACEMENT_MATRIX.md
+
+For every existing and new feature, use these fields:
+
+1. Feature name.
+2. User problem solved.
+3. Target user.
+4. Primary navigation group.
+5. Exact page or panel.
+6. Header/Sidebar/Dashboard/Workspace placement.
+7. UI layout.
+8. Light theme appearance.
+9. Dark theme appearance.
+10. Mobile behavior.
+11. Main user actions.
+12. Backend service.
+13. Database collections.
+14. API endpoints.
+15. AI employee connection.
+16. Required permissions.
+17. Human approval requirements.
+18. Test cases.
+19. Implementation status.
+
+Do not leave feature placement decisions implicit.
+
+==================================================
+PART 8 — UI/UX DESIGN DELIVERABLES
+==================================================
+
+Before implementing a large new panel, prepare its UI specification.
+
+For each new panel create:
+
+docs/ui/<panel-name>.md
+
+Include:
+
+- Purpose.
+- User journey.
+- Page hierarchy.
+- Wireframe description.
+- Layout regions.
+- Main components.
+- Interaction states.
+- Responsive behavior.
+- Theme tokens.
+- Accessibility requirements.
+- Data dependencies.
+- API dependencies.
+- Acceptance tests.
+
+Build the real application UI after the specification is reviewed.
+
+Do not create disconnected mockups.
+
+==================================================
+PART 9 — TESTING AND QUALITY GATES
+==================================================
+
+Test:
+
+- Every route.
+- Every sidebar item.
+- Every header action.
+- Every form.
+- Every modal.
+- Every filter.
+- Every major workflow.
+- Every API integration.
+- Every permission boundary.
+- Every AI employee.
+- Notification delivery and read state.
+- Offline synchronization.
+- Mobile responsiveness.
+- Dark and light themes.
+- Urdu RTL.
+- Accessibility.
+
+Use the existing Vitest and Playwright setup where possible.
+
+Report:
+
+- Passed.
+- Failed.
+- Skipped.
+- Blocked.
+- Not tested.
+
+Do not hide failures.
+
+Do not claim 99% quality without measured evidence.
+
+==================================================
+PART 10 — DOCUMENTATION AFTER EVERY PHASE
+==================================================
+
+After every completed phase, update:
+
+README.md
+BUILD_STATUS.md
+docs/PHASE_191_300_ROADMAP.md
+docs/FEATURE_PLACEMENT_MATRIX.md
+Relevant panel documentation.
+Relevant testing documentation.
+
+Document:
+
+- What changed.
+- Why it changed.
+- Files changed.
+- Features implemented.
+- Tests run.
+- Test results.
+- Remaining issues.
+- Dependencies and configuration.
+- Next phase.
+
+==================================================
+PART 11 — NON-NEGOTIABLE RULES
+==================================================
+
+1. Inspect before editing.
+2. Preserve working functionality.
+3. Preserve user data.
+4. Do not duplicate existing pages.
+5. Do not invent fake data.
+6. Do not use mock services in production.
+7. Do not invent AI execution results.
+8. Do not rename canonical employees.
+9. Do not change existing employee IDs.
+10. Do not replace Firebase without approval.
+11. Do not expose secrets.
+12. Do not bypass permissions.
+13. Do not run destructive tests on production.
+14. Do not make real payments during testing.
+15. Do not automatically send external communications.
+16. Do not deploy without approval.
+17. Do not automatically commit or push.
+18. Do not use git reset --hard.
+19. Do not force push.
+20. Do not blindly delete files.
+
+If a feature is already complete, verify it instead of rebuilding it.
+
+If a feature is unnecessary, document the decision and reason.
+
+If external credentials are unavailable, report the exact blocker.
+
+==================================================
+PART 12 — FINAL REPORT
+==================================================
+
+The final report must include:
+
+A. Executive summary.
+
+B. Actual completion status of Phases 191–300.
+
+C. Product architecture and navigation changes.
+
+D. Feature placement matrix.
+
+E. UI/UX design decisions.
+
+F. List of new panels and their functionality.
+
+G. Existing panels improved.
+
+H. Backend and database changes.
+
+I. AI workforce improvements.
+
+J. Security findings.
+
+K. Performance measurements.
+
+L. Accessibility results.
+
+M. Desktop, tablet and mobile test results.
+
+N. Complete test counts.
+
+O. Documentation files updated.
+
+P. Remaining blockers.
+
+Q. Production readiness assessment.
+
+R. Release readiness assessment.
+
+Do not claim every phase is complete if any acceptance criterion remains unmet.
+
+==================================================
+FINAL INSTRUCTION
+==================================================
+
+Lead TEAMORA AI as a real product architect and UX leader.
+
+You must decide what belongs where, what it should look like, how it should work, which services it should use, and how it should be tested.
+
+Make the product coherent.
+
+Do not create feature panels just to increase the number of pages.
+
+Every panel must solve a real user problem.
+
+Every button must perform a real action.
+
+Every metric must come from real data.
+
+Every AI employee must use its actual identity and permissions.
+
+Every sensitive operation must have the appropriate approval.
+
+Every completed phase must have evidence.
+
+Inspect. Research. Design. Implement. Test. Document. Improve.
+
+Complete all applicable phases through Phase 300 and deliver the detailed final report.

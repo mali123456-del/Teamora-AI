@@ -44,6 +44,8 @@ export const VOICE_ROUTE_ALLOWLIST: Record<string, string[]> = {
   workforce: ['workforce', 'team', 'agents', 'directory', 'افرادی قوت', 'ٹیم'],
   subscription: ['subscription', 'billing', 'plan', 'سبسکرپشن', 'بلنگ'],
   settings: ['settings', 'team settings', 'organization', 'سیٹنگز'],
+  'rag-studio': ['rag studio', 'rag', 'crawler', 'vector store', 'آر اے جی'],
+  health: ['health', 'system health', 'telemetry', 'performance', 'سسٹم ہیلتھ'],
 };
 
 // Canonical 15 AI Employee synonyms in English and Urdu

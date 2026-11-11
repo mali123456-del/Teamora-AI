@@ -1,0 +1,1407 @@
+# TEAMORA AI — ULTIMATE NEXT-GENERATION MASTER COMMAND
+## PHASES 151–220 | NOTIFICATION CENTER, ENTERPRISE FEATURES, AI GOVERNANCE, RELIABILITY & COMMERCIAL READINESS
+
+**Product:** TEAMORA AI  
+**Tagline:** Your AI Team. One Smart Workspace.  
+**GitHub:** https://github.com/mali123456-del/Teamora-AI  
+**Local project:** `G:\Temp\My projects\TEAMORA AI`  
+**Development URL:** http://localhost:3000  
+**Current reported checkpoint:** Phases 1–150  
+**Reported tests:** 53/53 passing  
+**Next roadmap:** Phases 151–220
+
+---
+
+# 1. YOUR MISSION
+
+You are continuing an existing, advanced TEAMORA AI SaaS application.
+
+Your mission is to transform the existing platform into a dependable, intelligent, secure, scalable and commercially competitive AI workforce and business operating system.
+
+This is NOT a greenfield project.
+
+Do not create another application.
+
+Do not replace existing working systems just to introduce new technologies.
+
+Your responsibilities:
+
+1. Audit the reported completion of Phases 1–150.
+2. Verify the actual implementation in the repository.
+3. Finish the previously cancelled Header Notification Bell task.
+4. Implement all applicable Phases 151–220.
+5. Improve existing features where measurable improvements are necessary.
+6. Build genuinely functional new features.
+7. Test everything.
+8. Maintain complete documentation.
+9. Produce a detailed final technical report.
+
+Do not stop after producing a roadmap. Implement the phases.
+
+# 2. PROJECT ARCHITECTURE — PRESERVE EXISTING SYSTEMS
+
+The reported architecture includes:
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Express
+- Firebase Authentication
+- Cloud Firestore
+- IndexedDB
+- Gemini model integration
+- AI employee execution engine
+- RAG engine
+- Autonomous crawler
+- Three.js Neural Core
+- Voice Intelligence
+- Offline synchronization
+
+Before changing architecture, inspect the actual repository.
+
+**Mandatory architecture rules:**
+
+- Keep Firebase and Firestore as the existing primary backend architecture.
+- Do not migrate to Supabase, PostgreSQL or another database without my explicit approval.
+- Reuse existing authentication and organization systems.
+- Reuse existing API envelopes and security middleware.
+- Reuse existing AI provider abstractions.
+- Reuse existing employee IDs.
+- Reuse existing design tokens.
+- Reuse existing testing infrastructure.
+- Introduce dependencies only when their value justifies their cost.
+
+# 3. USER HARDWARE — PERFORMANCE CONSTRAINTS
+
+My development machine:
+
+- Dell Latitude 3340
+- Intel Core i5-4200U
+- 2 cores / 4 threads
+- 8 GB RAM
+- 477 GB TEAM SSD
+- Intel HD integrated graphics
+- Windows 10 Pro 64-bit
+
+Optimization requirements:
+
+- ECO mode as the safe default.
+- Low CPU and RAM consumption.
+- Lazy-loaded modules.
+- Efficient Firestore queries.
+- Minimal unnecessary background tasks.
+- No GPU requirement for normal operations.
+- Three.js performance safeguards.
+- Efficient caching.
+- Proper cleanup of event listeners and subscriptions.
+- Responsive mobile experience.
+- Graceful degradation for unsupported browser APIs.
+
+Avoid heavyweight dependencies and unnecessary local AI models.
+
+# 4. MANDATORY FIRST STEP — AUDIT PHASES 1–150
+
+Do not trust old reports without inspecting the current code.
+
+Inspect:
+
+- Git repository and working tree.
+- README.md.
+- BUILD_STATUS.md.
+- docs/TEAMORA_FINAL_MASTER_REPORT.md.
+- docs/MASTER_PROJECT_AUDIT.md.
+- docs/COMPONENT_QUALITY_SCORECARD.md.
+- docs/TESTING_STRATEGY.md.
+- docs/REMAINING_GAPS.md.
+- docs/CHECKPOINT_VALIDATION.md.
+- package.json.
+- Firebase configuration.
+- Firestore rules.
+- Agent execution engine.
+- RAG engine.
+- Crawler engine.
+- Notification-related existing code.
+- Header and Sidebar components.
+- IndexedDB and synchronization services.
+- Existing tests.
+
+Create:
+
+- `docs/PHASE_151_220_AUDIT.md`
+- `docs/PHASE_151_220_IMPLEMENTATION_PLAN.md`
+- `docs/PHASE_151_220_TEST_MATRIX.md`
+
+Identify:
+
+1. Fully implemented features.
+2. Partially implemented features.
+3. Broken features.
+4. Duplicate functionality.
+5. Mock implementations.
+6. Missing integration points.
+7. Security weaknesses.
+8. Performance problems.
+9. Missing tests.
+10. Features that do not need further modification.
+
+Do not rewrite already-working features without evidence.
+
+# 5. RESEARCH — VISIT AND STUDY THESE REFERENCES
+
+You must visit the following technical documentation and research relevant implementation approaches.
+
+## A. TEAMORA AI
+
+1. GitHub:
+   https://github.com/mali123456-del/Teamora-AI
+
+2. Issues:
+   https://github.com/mali123456-del/Teamora-AI/issues
+
+3. Pull requests:
+   https://github.com/mali123456-del/Teamora-AI/pulls
+
+4. Local application:
+   http://localhost:3000
+
+Inspect all accessible source files, existing project documentation, open issues and application screens.
+
+## B. Firebase and notifications
+
+5. Firebase:
+   https://firebase.google.com/docs
+
+6. Firestore:
+   https://firebase.google.com/docs/firestore
+
+7. Firestore best practices:
+   https://firebase.google.com/docs/firestore/best-practices
+
+8. Firestore security:
+   https://firebase.google.com/docs/firestore/security/get-started
+
+9. Firebase Cloud Messaging:
+   https://firebase.google.com/docs/cloud-messaging
+
+10. FCM Web setup:
+    https://firebase.google.com/docs/cloud-messaging/web/get-started
+
+11. Firebase App Check:
+    https://firebase.google.com/docs/app-check
+
+12. Firebase security checklist:
+    https://firebase.google.com/support/guides/security-checklist
+
+## C. AI security and governance
+
+13. OWASP LLM Top 10:
+    https://owasp.org/www-project-top-10-for-large-language-model-applications/
+
+14. OWASP GenAI Security:
+    https://genai.owasp.org/
+
+15. OWASP ASVS:
+    https://owasp.org/www-project-application-security-verification-standard/
+
+16. Google Cloud multi-tenant agentic AI architecture:
+    https://docs.cloud.google.com/architecture/multi-tenant-agentic-ai-system
+
+17. Secure multi-tenant RAG:
+    https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/secure-multitenant-rag
+
+## D. Observability and testing
+
+18. OpenTelemetry:
+    https://opentelemetry.io/docs/
+
+19. OpenTelemetry signals:
+    https://opentelemetry.io/docs/concepts/signals/
+
+20. Vitest:
+    https://vitest.dev/guide/
+
+21. Playwright:
+    https://playwright.dev/docs/intro
+
+22. Playwright Trace Viewer:
+    https://playwright.dev/docs/trace-viewer-intro
+
+23. Testing Library:
+    https://testing-library.com/docs/
+
+24. Lighthouse:
+    https://developer.chrome.com/docs/lighthouse/
+
+25. Web Vitals:
+    https://web.dev/articles/vitals
+
+## E. Frontend and accessibility
+
+26. React:
+    https://react.dev/
+
+27. TypeScript:
+    https://www.typescriptlang.org/docs/
+
+28. Vite:
+    https://vite.dev/guide/
+
+29. Tailwind:
+    https://tailwindcss.com/docs
+
+30. WCAG:
+    https://www.w3.org/WAI/standards-guidelines/wcag/
+
+31. MDN Web APIs:
+    https://developer.mozilla.org/
+
+## F. AI and model providers
+
+32. Gemini:
+    https://ai.google.dev/gemini-api/docs
+
+33. Ollama:
+    https://docs.ollama.com/
+
+34. Hugging Face:
+    https://huggingface.co/docs
+
+35. OpenAI API:
+    https://platform.openai.com/docs/
+
+Research rules:
+
+- Prefer official documentation.
+- Verify current APIs and supported versions.
+- Use publicly accessible information only.
+- Respect website terms, robots.txt and rate limits.
+- Do not bypass authentication or paywalls.
+- Do not scrape private or personal information.
+- Do not copy proprietary code.
+- Do not expose credentials.
+- Record the reference URL and why it influenced the implementation.
+
+If a URL cannot be opened, record it as inaccessible. Never pretend it was visited.
+
+# PHASE 151–160: PERSISTENT NOTIFICATION CENTER
+
+This is the first implementation priority.
+
+The previously cancelled notification task must now be completed properly.
+
+## Phase 151 — Notification Architecture Audit
+
+Inspect the Header, Firestore schema, user identities, organization membership, task events and agent execution events.
+
+Design a reusable notification service.
+
+Create:
+
+`src/lib/notificationService.ts`
+
+Use existing service conventions if a suitable service already exists.
+
+## Phase 152 — Persistent Header Notification Bell
+
+Implement a notification bell in the existing Header.
+
+Features:
+
+- Notification bell icon.
+- Unread count badge.
+- Live unread count.
+- Click-to-open notification dropdown.
+- Accessible keyboard navigation.
+- Loading state.
+- Empty state.
+- Error state.
+- Responsive mobile layout.
+- Dark and light themes.
+
+Do not create a duplicate Header.
+
+## Phase 153 — Firestore Notification Persistence
+
+Create a notification schema compatible with the existing organization and user architecture.
+
+Suggested fields:
+
+- notificationId
+- organizationId
+- recipientUserId
+- eventId
+- type
+- title
+- message
+- createdAt
+- readAt
+- isRead
+- priority
+- entityType
+- entityId
+- actionUrl
+- metadata
+
+Validate the schema against existing conventions.
+
+All reads and writes must be properly scoped.
+
+## Phase 154 — Task Activity Notifications
+
+Generate notifications for:
+
+- Task created.
+- Task assigned.
+- Task updated.
+- Task started.
+- Task completed.
+- Task failed.
+- Task awaiting approval.
+- Task cancelled.
+
+Generate events from actual successful backend operations.
+
+Do not create completion notifications merely because the frontend button was clicked.
+
+## Phase 155 — AI Employee Notifications
+
+Support notifications for:
+
+- Employee started working.
+- Employee completed a task.
+- Employee encountered an error.
+- Employee requires additional information.
+- Employee is awaiting human approval.
+- Multi-agent pipeline completed.
+- Multi-agent pipeline failed.
+
+Use actual execution events and receipts.
+
+## Phase 156 — Notification Read Management
+
+Implement:
+
+- Mark as read.
+- Mark as unread.
+- Mark all as read.
+- Delete notification.
+- Clear read history.
+- Unread-only filter.
+- All-notifications filter.
+
+Deletion must respect the user's authorization.
+
+## Phase 157 — Notification History and Search
+
+Add:
+
+- Notification history.
+- Date filters.
+- Event-type filters.
+- Priority filters.
+- Search.
+- Pagination or cursor-based loading.
+- Efficient queries.
+
+Avoid downloading the entire notification collection.
+
+## Phase 158 — Notification Preferences
+
+Create user-configurable preferences:
+
+- Task alerts.
+- Agent alerts.
+- Approval alerts.
+- System alerts.
+- Security alerts.
+- Email alerts, if an email provider is configured.
+- Browser push alerts.
+- Quiet hours.
+- Notification sound preference.
+
+Preferences must be respected by the notification delivery service.
+
+## Phase 159 — Optional Browser Push Notifications
+
+Integrate Firebase Cloud Messaging only where compatible.
+
+Requirements:
+
+- HTTPS support.
+- Explicit user permission.
+- Service worker.
+- Token registration.
+- Token rotation and cleanup.
+- Foreground message handling.
+- Background message handling.
+- Device-level preference.
+- Permission-denied fallback.
+
+In-app Firestore notifications must continue working even if browser push is unavailable.
+
+Never repeatedly request denied notification permission.
+
+Do not place FCM server credentials in frontend code.
+
+## Phase 160 — Notification Regression and Reliability
+
+Test:
+
+- Duplicate event prevention.
+- Concurrent notifications.
+- Unread count accuracy.
+- Organization isolation.
+- User isolation.
+- Offline state.
+- Reconnection.
+- Deleted notifications.
+- Invalid notification payloads.
+- Push permission denial.
+- Service worker failures.
+- Pagination.
+
+Create:
+
+`docs/NOTIFICATION_CENTER.md`
+
+# PHASE 161–170: PLATFORM RELIABILITY AND OBSERVABILITY
+
+## Phase 161 — Centralized Error Monitoring
+
+Create a unified error reporting service.
+
+Capture:
+
+- Correlation ID.
+- Route.
+- Component.
+- Timestamp.
+- Error category.
+- Relevant operation ID.
+- Safe diagnostic context.
+
+Never expose secrets or sensitive user content in logs.
+
+## Phase 162 — Distributed Request Tracing
+
+Add request correlation across:
+
+Frontend → API Gateway → Agent Engine → AI Provider → Firestore.
+
+Use OpenTelemetry where practical and compatible.
+
+Avoid introducing a heavyweight observability stack unnecessarily.
+
+## Phase 163 — Metrics and Performance Telemetry
+
+Track:
+
+- API latency.
+- Request failures.
+- AI response latency.
+- Agent execution duration.
+- RAG retrieval duration.
+- Notification delivery.
+- Firestore operation errors.
+- Queue backlog.
+- Memory and CPU measurements.
+
+## Phase 164 — Health Check Architecture
+
+Implement separate health states for:
+
+- Frontend.
+- Backend.
+- Firebase.
+- AI provider.
+- RAG.
+- Crawler.
+- Agent runtime.
+- Notification service.
+- Offline synchronization.
+
+Distinguish liveness from readiness.
+
+## Phase 165 — Resilient Background Jobs
+
+Inspect existing queue architecture.
+
+Add, where necessary:
+
+- Durable jobs.
+- Retry policies.
+- Exponential backoff.
+- Maximum retry limits.
+- Dead-letter handling.
+- Job cancellation.
+- Execution receipts.
+- Recovery after restart.
+
+## Phase 166 — Circuit Breakers
+
+Protect provider and external service integrations against repeated failures.
+
+Implement safe fallback behavior and recovery testing.
+
+## Phase 167 — Rate Limiting and Abuse Protection
+
+Add appropriate limits at:
+
+- User level.
+- Organization level.
+- API route level.
+- AI provider level.
+- Expensive task level.
+
+Never rely exclusively on frontend rate limiting.
+
+## Phase 168 — Data Backup and Recovery
+
+Design safe backup and recovery procedures for supported Firestore data.
+
+Include:
+
+- Backup configuration.
+- Retention policy.
+- Restore procedure.
+- Restore validation.
+- Recovery documentation.
+
+Do not run destructive restore operations on production.
+
+## Phase 169 — Data Lifecycle Management
+
+Implement configurable retention and lifecycle policies.
+
+Include:
+
+- Notification retention.
+- Audit log retention.
+- Agent execution history.
+- Uploaded document lifecycle.
+- Temporary files.
+- User data export.
+- Authorized deletion workflows.
+
+Preserve audit integrity and applicable retention obligations.
+
+## Phase 170 — Reliability Testing
+
+Test:
+
+- Network interruption.
+- Firebase temporary failure.
+- AI provider timeout.
+- Server restart.
+- Duplicate jobs.
+- Retry storms.
+- Queue recovery.
+- Partial execution.
+- Unknown execution outcome.
+
+# PHASE 171–180: ADVANCED AI GOVERNANCE AND WORKFORCE INTELLIGENCE
+
+## Phase 171 — AI Governance Center
+
+Create a centralized governance interface for AI operations.
+
+Display:
+
+- Active employees.
+- Permissions.
+- Allowed tools.
+- Approval policies.
+- Model configuration.
+- Usage.
+- Risk events.
+- Execution history.
+
+## Phase 172 — Prompt Injection Protection
+
+Harden user prompts, retrieved documents, crawler content and external tool outputs.
+
+Treat external content as untrusted data.
+
+Test direct and indirect prompt injection.
+
+Do not rely on system prompts alone as a security boundary.
+
+## Phase 173 — AI Output Validation
+
+Validate structured outputs using existing Zod schemas.
+
+Reject malformed, incomplete or unauthorized tool instructions.
+
+Never directly execute unvalidated model output.
+
+## Phase 174 — Agent Permission Profiles
+
+Create least-privilege tool profiles for all 15 employees.
+
+Ensure agents receive only the permissions necessary for their responsibilities.
+
+## Phase 175 — Agent Sandboxing and Execution Limits
+
+Add controlled limits for:
+
+- Execution time.
+- Maximum tool calls.
+- Maximum pipeline depth.
+- Context size.
+- Retry count.
+- Model token usage.
+- Resource consumption.
+
+Never execute arbitrary model-generated shell commands on the user's computer.
+
+## Phase 176 — Human Approval Center
+
+Improve approval workflows.
+
+Include:
+
+- Pending approvals.
+- Request details.
+- Risk explanation.
+- Requesting employee.
+- Approval history.
+- Reject reason.
+- Expiration.
+- Cancellation.
+
+Sensitive actions must remain blocked until approval.
+
+## Phase 177 — AI Evaluation Center
+
+Build reusable evaluation datasets.
+
+Evaluate:
+
+- Accuracy.
+- Instruction following.
+- Groundedness.
+- Tool selection.
+- Tool execution correctness.
+- Citation accuracy.
+- Hallucination rate.
+- Refusal behavior.
+- Latency.
+- Cost.
+
+## Phase 178 — Agent Benchmarking
+
+Benchmark all 15 canonical employees on representative tasks.
+
+Use identical test datasets where appropriate.
+
+Report actual measured outcomes, not invented intelligence rankings.
+
+## Phase 179 — Multi-Agent Collaboration Improvements
+
+Improve:
+
+- Task decomposition.
+- Employee selection.
+- Context passing.
+- Dependency management.
+- Conflict resolution.
+- Failure recovery.
+- Human review.
+- Final output synthesis.
+
+## Phase 180 — Workforce Learning and Feedback
+
+Implement a controlled feedback system.
+
+Store approved task feedback and quality assessments.
+
+Do not automatically turn private customer data into model training data.
+
+# PHASE 181–190: INTEGRATION AND AUTOMATION ECOSYSTEM
+
+## Phase 181 — Integration Architecture Audit
+
+Inspect all existing integrations.
+
+Create an integration registry with:
+
+- Provider.
+- Connection state.
+- Permissions.
+- Configuration.
+- Health.
+- Last synchronization.
+- Supported actions.
+
+## Phase 182 — API Key and Secret Management
+
+Harden secret handling.
+
+Requirements:
+
+- Server-side secrets.
+- Redaction.
+- Environment validation.
+- Rotation guidance.
+- No secret exposure in frontend bundles.
+- No secret logging.
+
+## Phase 183 — Webhook Management Center
+
+Build:
+
+- Webhook registration.
+- Event subscriptions.
+- Signature verification.
+- Retry handling.
+- Delivery history.
+- Failure diagnostics.
+- Secret rotation.
+
+## Phase 184 — Webhook Event Reliability
+
+Add:
+
+- Event IDs.
+- Idempotency.
+- Replay protection.
+- Duplicate detection.
+- Durable delivery state.
+- Dead-letter handling.
+
+## Phase 185 — Integration Marketplace Improvements
+
+Provide:
+
+- Search.
+- Categories.
+- Provider information.
+- Connection requirements.
+- Permission explanation.
+- Setup guides.
+- Health indicators.
+- Disconnect workflow.
+
+Do not advertise unavailable integrations as functional.
+
+## Phase 186 — Import and Export Center
+
+Support relevant formats for existing modules.
+
+Add:
+
+- Validation.
+- Preview.
+- Duplicate detection.
+- Error reporting.
+- Export permissions.
+- Safe file handling.
+
+## Phase 187 — Automation Templates
+
+Create reusable templates for legitimate business workflows.
+
+Each template must have actual execution logic, configuration validation and test coverage.
+
+## Phase 188 — Automation Scheduling
+
+Add timezone-aware scheduling where needed.
+
+Support:
+
+- One-time jobs.
+- Recurring jobs.
+- Pause.
+- Resume.
+- Cancellation.
+- Missed-run handling.
+- Execution history.
+
+## Phase 189 — Automation Monitoring
+
+Display:
+
+- Upcoming runs.
+- Completed runs.
+- Failed runs.
+- Retry status.
+- Execution duration.
+- Resource consumption.
+
+## Phase 190 — Integration Regression Testing
+
+Test external provider failures, missing credentials, expired credentials, rate limits, duplicate webhooks and permission changes.
+
+# PHASE 191–200: COMMERCIAL SAAS AND CUSTOMER EXPERIENCE
+
+## Phase 191 — Subscription Architecture Audit
+
+Inspect the existing Free, Starter, Pro, Business and Enterprise architecture.
+
+Preserve existing pricing decisions unless explicitly approved.
+
+## Phase 192 — Plan Entitlement Enforcement
+
+Enforce subscription limits on the backend.
+
+Do not rely on frontend visibility to enforce paid features.
+
+## Phase 193 — Usage Metering
+
+Track:
+
+- AI requests.
+- Tokens.
+- Employee executions.
+- Document storage.
+- RAG usage.
+- Automation runs.
+- API calls.
+- Seats.
+
+## Phase 194 — Cost Intelligence
+
+Provide organization-level usage and estimated cost reporting.
+
+Clearly distinguish estimated costs from actual provider billing.
+
+## Phase 195 — Billing Workflow Hardening
+
+Test subscription states:
+
+- Trial.
+- Active.
+- Past due.
+- Cancelled.
+- Expired.
+- Suspended.
+
+Use sandbox/test mode for payment integrations.
+
+Never execute a real payment during development testing.
+
+## Phase 196 — Organization Onboarding
+
+Improve:
+
+- Workspace creation.
+- Employee invitation.
+- Organization configuration.
+- Initial setup.
+- Guided walkthrough.
+- Permission setup.
+
+## Phase 197 — Team Collaboration
+
+Improve:
+
+- Shared workspaces.
+- Task ownership.
+- Comments.
+- Activity history.
+- Mentions.
+- Collaboration permissions.
+
+## Phase 198 — Customer Support Center
+
+Add:
+
+- Help center.
+- Searchable documentation.
+- Support request submission.
+- Issue tracking.
+- Diagnostics export.
+- Feedback.
+
+Do not expose private diagnostic data to unauthorized support users.
+
+## Phase 199 — Product Analytics
+
+Track privacy-conscious product events.
+
+Support organization-level insights and opt-out controls where appropriate.
+
+Do not collect unnecessary sensitive information.
+
+## Phase 200 — Customer Experience Audit
+
+Evaluate onboarding, navigation, usability, empty states, loading states, errors and mobile workflows.
+
+# PHASE 201–210: ADVANCED BUSINESS INTELLIGENCE AND DATA INTELLIGENCE
+
+## Phase 201 — Unified Business Data Layer
+
+Audit existing business module data structures.
+
+Create reusable data access patterns without breaking existing schemas.
+
+## Phase 202 — Global Search Improvements
+
+Implement permission-aware search across applicable modules.
+
+Support relevant filters and navigation.
+
+## Phase 203 — Advanced Analytics
+
+Build useful analytics for:
+
+- Tasks.
+- Workforce.
+- Projects.
+- Automation.
+- Finance.
+- CRM.
+- Inventory.
+- Knowledge.
+- AI usage.
+
+Use real underlying data.
+
+## Phase 204 — Report Builder
+
+Provide configurable reports with:
+
+- Filters.
+- Date ranges.
+- Grouping.
+- Summaries.
+- Export.
+
+## Phase 205 — Scheduled Reports
+
+Add authorized recurring report generation.
+
+Include delivery history and error handling.
+
+## Phase 206 — Data Quality Center
+
+Identify:
+
+- Missing fields.
+- Duplicate records.
+- Invalid records.
+- Stale records.
+- Inconsistent references.
+
+Never silently modify user data.
+
+## Phase 207 — Knowledge Graph Improvements
+
+Inspect existing Knowledge Graph functionality.
+
+Improve entity relationships, source traceability and permission-aware retrieval where applicable.
+
+## Phase 208 — Document Intelligence
+
+Improve document extraction, classification, metadata and structured information extraction.
+
+Always preserve source references.
+
+## Phase 209 — AI Research Workspace
+
+Create a workspace for structured research tasks with:
+
+- Research objectives.
+- Source records.
+- Evidence.
+- Citations.
+- Findings.
+- Review status.
+- Final report.
+
+## Phase 210 — Business Intelligence Regression
+
+Test data correctness, tenant boundaries, export permissions, report calculations and source traceability.
+
+# PHASE 211–220: FINAL EXPERIENCE, SECURITY AND RELEASE READINESS
+
+## Phase 211 — Universal Design System Audit
+
+Inspect every shared UI component.
+
+Standardize:
+
+- Typography.
+- Spacing.
+- Colors.
+- Buttons.
+- Inputs.
+- Modals.
+- Tables.
+- Navigation.
+- Icons.
+- Loading states.
+- Error states.
+
+Preserve TEAMORA's existing brand identity.
+
+## Phase 212 — Accessibility Improvements
+
+Target WCAG 2.2 AA where applicable.
+
+Test:
+
+- Keyboard navigation.
+- Focus visibility.
+- Screen readers.
+- Contrast.
+- Accessible labels.
+- Modal focus management.
+- Reduced motion.
+- RTL layouts.
+
+## Phase 213 — Mobile and PWA Improvements
+
+Audit the mobile web experience.
+
+Implement a Progressive Web App only if compatible with the current architecture.
+
+Include:
+
+- Installability.
+- App icons.
+- Service worker.
+- Offline fallback.
+- Update lifecycle.
+- Cache invalidation.
+- Safe offline data handling.
+
+Do not cache sensitive user information indiscriminately.
+
+## Phase 214 — Cross-Browser Testing
+
+Test supported versions of:
+
+- Chrome.
+- Edge.
+- Firefox.
+- Safari where available.
+
+Document unsupported browser capabilities.
+
+## Phase 215 — Bundle and Loading Optimization
+
+Measure:
+
+- JavaScript bundle size.
+- CSS bundle size.
+- Lazy-loading effectiveness.
+- Initial page load.
+- Route transitions.
+- API request count.
+
+Reduce unnecessary dependencies and expensive startup work.
+
+## Phase 216 — Three.js Neural Core Final Optimization
+
+Audit the 3D scene on integrated graphics.
+
+Test:
+
+- ECO mode.
+- STANDARD mode.
+- HIGH mode.
+- 2D fallback.
+- Memory cleanup.
+- Device pixel ratio.
+- FPS.
+- Reduced motion.
+- Keyboard accessibility.
+
+Do not enable expensive effects by default.
+
+## Phase 217 — Full Security Assessment
+
+Perform a defensive application security audit.
+
+Include:
+
+- Authentication.
+- Authorization.
+- Firestore rules.
+- Organization isolation.
+- API validation.
+- Secrets.
+- SSRF.
+- XSS.
+- CSRF where relevant.
+- Prompt injection.
+- Insecure output handling.
+- Excessive agent permissions.
+- Dependency vulnerabilities.
+- Audit integrity.
+
+Use isolated test environments.
+
+## Phase 218 — Full Regression and End-to-End Testing
+
+Run the complete test matrix.
+
+Include:
+
+- Unit tests.
+- Integration tests.
+- Browser tests.
+- Notification tests.
+- Firebase emulator tests.
+- Agent execution tests.
+- RAG tests.
+- Crawler tests.
+- Offline tests.
+- Responsive tests.
+- Accessibility tests.
+- Security tests.
+
+Record passed, failed, skipped and blocked counts separately.
+
+## Phase 219 — Release Readiness and Packaging Audit
+
+Prepare:
+
+- Production build.
+- Environment configuration guide.
+- Deployment checklist.
+- Database and backup documentation.
+- Monitoring configuration.
+- Rollback procedure.
+- Release notes.
+- Known issues.
+
+Do not deploy without my explicit approval.
+
+Do not build a desktop application unless the existing product scope and repository architecture call for it.
+
+## Phase 220 — Final Master Verification
+
+Create:
+
+`docs/TEAMORA_PHASE_151_220_FINAL_REPORT.md`
+
+Also update:
+
+- README.md
+- BUILD_STATUS.md
+- docs/TEAMORA_FINAL_MASTER_REPORT.md
+- docs/REMAINING_GAPS.md
+- docs/COMPONENT_QUALITY_SCORECARD.md
+
+Provide the final quality and release assessment.
+
+# 6. QUALITY TARGETS
+
+Use measurable engineering targets.
+
+| Category | Target |
+|---|---:|
+| Critical business workflow correctness | 99% |
+| Critical security controls | 100% of defined controls |
+| Critical workflow test coverage | 99% |
+| Accessibility | WCAG 2.2 AA |
+| Organization data isolation | 100% of defined tests |
+| Notification delivery correctness | 99% |
+| Duplicate event prevention | 100% of defined idempotency tests |
+| Critical error handling | 100% of defined scenarios |
+| Performance budgets | Meet measured budgets |
+| Documentation accuracy | 99% |
+
+Do not fabricate a platform-wide quality score.
+
+Calculate scores from defined test results and inspection evidence.
+
+A passing unit test suite does not prove that every user workflow is production-ready.
+
+# 7. DOCUMENTATION AFTER EVERY PHASE
+
+After every completed phase:
+
+1. Update README.md.
+2. Update BUILD_STATUS.md.
+3. Update relevant technical documentation.
+4. Update relevant test documentation.
+5. Record actual test commands.
+6. Record passed and failed results.
+7. Record unresolved blockers.
+8. Continue to the next phase.
+
+Do not postpone documentation until the end.
+
+# 8. NON-NEGOTIABLE SAFETY AND DEVELOPMENT RULES
+
+- Inspect before editing.
+- Preserve existing working code.
+- Preserve user data.
+- Do not silently rename employees.
+- Do not replace employee IDs.
+- Do not replace Firebase.
+- Do not invent API capabilities.
+- Do not create fake success notifications.
+- Do not mark tasks completed without verified execution.
+- Do not expose API keys.
+- Do not log private user data.
+- Do not bypass security controls.
+- Do not scrape restricted websites.
+- Do not run destructive tests against production.
+- Do not run real payments during tests.
+- Do not automatically send external messages.
+- Do not execute sensitive financial, legal or destructive operations without approval.
+- Do not use `git reset --hard`.
+- Do not force push.
+- Do not blindly delete files.
+- Do not automatically commit or push.
+- Do not deploy without approval.
+
+If credentials or external services are unavailable, implement the safe integration boundary and document the missing configuration.
+
+# 9. FINAL REPORT REQUIREMENTS
+
+Your final report must include:
+
+## A. Project overview
+
+- Initial audited condition.
+- Work completed.
+- Major architectural changes.
+- Overall project status.
+
+## B. Phase-by-phase report
+
+For all 70 phases:
+
+- Phase number.
+- Phase name.
+- Implementation status.
+- Files changed.
+- Tests executed.
+- Test results.
+- Remaining limitations.
+
+## C. Notification Center report
+
+Include:
+
+- Header integration.
+- Firestore schema.
+- Realtime subscription.
+- Unread count.
+- Read management.
+- Event sources.
+- Duplicate prevention.
+- Push notification status.
+- Browser compatibility.
+- Offline behavior.
+- Security tests.
+
+## D. AI workforce report
+
+For all 15 employees:
+
+- Employee ID.
+- Role.
+- Permissions.
+- Tools.
+- Evaluation results.
+- Execution status.
+- Approval policies.
+
+## E. Security report
+
+Include discovered issues, remediation, remaining vulnerabilities and verification evidence.
+
+## F. Reliability report
+
+Include retries, durable queues, error recovery, health checks and observability.
+
+## G. Performance report
+
+Include measured memory, CPU, FPS, bundle size, loading time and relevant comparisons.
+
+## H. Test report
+
+Exact counts:
+
+- Passed.
+- Failed.
+- Skipped.
+- Blocked.
+- Total.
+
+Include test commands and environment.
+
+## I. Documentation report
+
+List every modified documentation file.
+
+## J. Remaining work
+
+List unfinished functionality and missing external configuration.
+
+## K. Final release readiness
+
+Provide separate ratings for:
+
+- Development readiness.
+- Functional readiness.
+- Testing readiness.
+- Security readiness.
+- Performance readiness.
+- Production readiness.
+- Deployment readiness.
+
+# 10. EXECUTION ORDER
+
+Follow this order:
+
+**Stage A:** Inspect and validate Phases 1–150.
+
+**Stage B:** Complete Phases 151–160 first. Notification Center is the immediate priority.
+
+**Stage C:** Implement Phases 161–170.
+
+**Stage D:** Implement Phases 171–180.
+
+**Stage E:** Implement Phases 181–190.
+
+**Stage F:** Implement Phases 191–200.
+
+**Stage G:** Implement Phases 201–210.
+
+**Stage H:** Implement Phases 211–220.
+
+**Stage I:** Full regression testing and final report.
+
+Do not skip a stage because a previous test suite passed.
+
+Do not mark a phase complete until its acceptance criteria are satisfied.
+
+If a phase is already fully implemented, verify it and record it as verified instead of rebuilding it.
+
+If a phase is partially implemented, finish the missing parts.
+
+If a phase cannot be completed because of missing credentials, unavailable APIs or external restrictions, document the exact blocker.
+
+# FINAL COMMAND
+
+Continue the actual TEAMORA AI repository.
+
+Inspect first.
+
+Research official documentation.
+
+Complete the persistent Notification Center.
+
+Implement every applicable phase from 151 through 220.
+
+Make existing features more reliable.
+
+Add useful functionality, not decorative panels.
+
+Test real workflows.
+
+Preserve data and architecture.
+
+Update documentation after every phase.
+
+Produce a detailed final report with verifiable evidence.
+
+**Your goal is to make TEAMORA AI a genuinely dependable AI Workforce & Business Automation SaaS platform — not merely a large application with many feature names.**

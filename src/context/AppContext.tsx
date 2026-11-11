@@ -37,6 +37,7 @@ import {
   createNewOrganization,
   ensureOrganizationSynced,
 } from '../lib/firestoreService.ts';
+import { notificationService } from '../lib/notificationService.ts';
 
 interface AppContextType {
   // Theme & Locale
@@ -66,6 +67,8 @@ interface AppContextType {
   setActiveTab: (tab: string) => void;
   selectedAgentId: string | null;
   setSelectedAgentId: (id: string | null) => void;
+  isMobileNavOpen: boolean;
+  setIsMobileNavOpen: (open: boolean) => void;
 
   // Domain State & Persistence
   tasks: AgentTask[];
@@ -140,6 +143,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [currency, setCurrencyState] = useState<CurrencyCode>(() => getStoredTenantData('currency', 'USD'));
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState<boolean>(false);
 
   // Authentication State
   const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
@@ -800,6 +804,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setTasks((prev) => [newTask, ...prev]);
     persistTask(currentOrg.id, newTask).catch(() => {});
     logAuditAction('AGENT_TASK_CREATE', `Agent ${taskData.agentName}: ${taskData.title}`, 'success');
+
+    // Dispatch real-time notification
+    if (newTask.requiresApproval || newTask.status === 'needs_approval') {
+      notificationService.dispatchNotification({
+        orgId: currentOrg.id,
+        eventId: `evt-appr-req-${newTask.id}`,
+        type: 'agent_approval_needed',
+        title: `Approval Required: ${newTask.title}`,
+        message: `Agent ${newTask.agentName} drafted an action requiring executive authorization.`,
+        priority: 'urgent',
+        entityType: 'approval',
+        actionUrl: 'approvals',
+        entityId: newTask.approvalId,
+      });
+    }
+
     return newTask;
   };
 
@@ -809,6 +829,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (t.id === id) {
           const updated = { ...t, ...updates, updatedAt: new Date().toISOString() };
           persistTask(currentOrg.id, updated).catch(() => {});
+
+          // Dispatch status transition alerts
+          if (updates.status === 'completed' && t.status !== 'completed') {
+            notificationService.dispatchNotification({
+              orgId: currentOrg.id,
+              eventId: `evt-task-done-${id}`,
+              type: 'task_completed',
+              title: `Task Completed: ${updated.title}`,
+              message: `Agent ${updated.agentName} finished execution successfully.`,
+              priority: 'medium',
+              entityType: 'task',
+              actionUrl: 'tasks',
+              entityId: id,
+            });
+          } else if (updates.status === 'failed' && t.status !== 'failed') {
+            notificationService.dispatchNotification({
+              orgId: currentOrg.id,
+              eventId: `evt-task-fail-${id}`,
+              type: 'task_failed',
+              title: `Task Failed: ${updated.title}`,
+              message: `Agent ${updated.agentName} encountered an execution error.`,
+              priority: 'high',
+              entityType: 'task',
+              actionUrl: 'tasks',
+              entityId: id,
+            });
+          }
+
           return updated;
         }
         return t;
@@ -929,6 +977,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       });
       logAuditAction('APPROVAL_EXECUTED', `Execution ID: ${data.executionId} (${target.title})`, 'success');
 
+      notificationService.dispatchNotification({
+        orgId: currentOrg.id,
+        eventId: `evt-appr-exec-${id}`,
+        type: 'agent_action_executed',
+        title: `Executed: ${target.title}`,
+        message: `High-impact action verified and executed with cryptographic receipt ${data.executionId}.`,
+        priority: 'medium',
+        entityType: 'approval',
+        actionUrl: 'approvals',
+        entityId: id,
+      });
+
       return { success: true, result: data.result };
     } catch (err: any) {
       const failedApproval: ApprovalRequest = {
@@ -938,6 +998,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       };
       setApprovals((prev) => prev.map((a) => (a.id === id ? failedApproval : a)));
       persistApproval(currentOrg.id, failedApproval).catch(() => {});
+
+      notificationService.dispatchNotification({
+        orgId: currentOrg.id,
+        eventId: `evt-appr-failed-${id}`,
+        type: 'agent_approval_needed',
+        title: `Execution Failed: ${target.title}`,
+        message: err.message || 'Server execution returned an error.',
+        priority: 'urgent',
+        entityType: 'approval',
+        actionUrl: 'approvals',
+        entityId: id,
+      });
 
       setBannerMessage({
         title: `Execution Failed: ${err.message}`,
@@ -1101,6 +1173,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setActiveTab,
         selectedAgentId,
         setSelectedAgentId,
+        isMobileNavOpen,
+        setIsMobileNavOpen,
         tasks,
         addTask,
         updateTask,

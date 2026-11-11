@@ -18,10 +18,25 @@ import {
   Sliders,
   Sparkles,
   Plug,
+  Database,
+  Activity,
+  Inbox,
+  Calendar,
+  Layers,
+  Gauge,
+  X,
 } from 'lucide-react';
+import { TeamoraLogo } from '../common/TeamoraLogo.tsx';
 
 export const Sidebar: React.FC = () => {
-  const { activeTab, setActiveTab, approvals, setSelectedAgentId } = useApp();
+  const {
+    activeTab,
+    setActiveTab,
+    approvals,
+    setSelectedAgentId,
+    isMobileNavOpen,
+    setIsMobileNavOpen,
+  } = useApp();
   const pendingApprovalsCount = approvals.filter((a) => a.status === 'pending').length;
 
   const navSections = [
@@ -29,6 +44,8 @@ export const Sidebar: React.FC = () => {
       title: 'Workforce Core',
       items: [
         { id: 'dashboard', label: 'Main Dashboard', icon: LayoutDashboard },
+        { id: 'command-center', label: 'Command Center', icon: Activity, badge: 'Live' },
+        { id: 'inbox', label: 'Personal Inbox', icon: Inbox },
         { id: 'workforce', label: '15 AI Employees', icon: UsersRound, badge: '15 Active' },
         { id: 'orchestrator', label: 'Orchestrator (3D)', icon: Workflow, isNew: true },
         { id: 'tasks', label: 'Task Center', icon: ListTodo },
@@ -47,14 +64,19 @@ export const Sidebar: React.FC = () => {
         { id: 'inventory', label: 'Inventory & SKUs', icon: Package },
         { id: 'finance', label: 'Invoices & Expenses', icon: Receipt },
         { id: 'projects', label: 'Projects & Kanban', icon: FolderKanban },
+        { id: 'calendar', label: 'Team Calendar', icon: Calendar },
+        { id: 'resources', label: 'Resource Planning', icon: Layers },
         { id: 'knowledge', label: 'Knowledge Hub', icon: Files },
+        { id: 'rag-studio', label: 'RAG Studio & Crawler', icon: Database, badge: 'RAG' },
         { id: 'automation', label: 'Automation Studio', icon: GitBranch },
       ],
     },
     {
       title: 'Governance & Growth',
       items: [
+        { id: 'benchmarks', label: 'AI Model Benchmarking', icon: Gauge, badge: 'AI Lab' },
         { id: 'analytics', label: 'Analytics & Insights', icon: ChartNoAxesCombined },
+        { id: 'health', label: 'System Health & Metrics', icon: Activity },
         { id: 'team', label: 'Team & Permissions', icon: UsersRound },
         { id: 'integrations', label: 'Integrations & Keep', icon: Plug },
         { id: 'subscriptions', label: 'Subscription & Plans', icon: CreditCard },
@@ -68,10 +90,11 @@ export const Sidebar: React.FC = () => {
     if (id !== 'agent-workspace') {
       setSelectedAgentId(null);
     }
+    setIsMobileNavOpen(false);
   };
 
-  return (
-    <aside className="w-64 shrink-0 border-r border-[#E2DBD0] dark:border-[#382F47] bg-[#FFFEFC] dark:bg-[#211B2C] flex flex-col justify-between overflow-y-auto select-none py-4 px-3">
+  const renderNavContent = () => (
+    <>
       <div className="space-y-6">
         {navSections.map((sec, idx) => (
           <div key={idx} className="space-y-1">
@@ -145,6 +168,40 @@ export const Sidebar: React.FC = () => {
           </p>
         </div>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop Persistent Sidebar */}
+      <aside className="w-64 shrink-0 border-r border-[#E2DBD0] dark:border-[#382F47] bg-[#FFFEFC] dark:bg-[#211B2C] hidden md:flex flex-col justify-between overflow-y-auto select-none py-4 px-3">
+        {renderNavContent()}
+      </aside>
+
+      {/* Mobile Slide-over Drawer */}
+      {isMobileNavOpen && (
+        <div
+          className="fixed inset-0 z-50 md:hidden flex animate-in fade-in duration-150"
+          onClick={() => setIsMobileNavOpen(false)}
+        >
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs" />
+          <aside
+            className="relative w-72 max-w-[85%] bg-[#FFFEFC] dark:bg-[#211B2C] border-r border-[#E2DBD0] dark:border-[#382F47] h-full flex flex-col justify-between overflow-y-auto select-none py-4 px-3 shadow-2xl animate-in slide-in-from-left duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#E2DBD0] dark:border-[#382F47]">
+              <TeamoraLogo size="sm" />
+              <button
+                onClick={() => setIsMobileNavOpen(false)}
+                className="p-1.5 rounded-lg text-[#77717D] hover:text-[#211B2C] dark:hover:text-[#F5F1E9] hover:bg-[#EBE5DB] dark:hover:bg-[#2C2438] cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            {renderNavContent()}
+          </aside>
+        </div>
+      )}
+    </>
   );
 };

@@ -4,6 +4,8 @@ import { Header } from './components/layout/Header.tsx';
 import { Sidebar } from './components/layout/Sidebar.tsx';
 import { PublicLandingPage } from './components/views/PublicLandingPage.tsx';
 import { MainDashboard } from './components/views/MainDashboard.tsx';
+import { CommandCenterView } from './components/views/CommandCenterView.tsx';
+import { PersonalInboxView } from './components/views/PersonalInboxView.tsx';
 import { WorkforceDirectory } from './components/views/WorkforceDirectory.tsx';
 import { AgentWorkspace } from './components/views/AgentWorkspace.tsx';
 import { OrchestrationCenter } from './components/views/OrchestrationCenter.tsx';
@@ -13,13 +15,18 @@ import { CrmView } from './components/views/CrmView.tsx';
 import { InventoryView } from './components/views/InventoryView.tsx';
 import { FinanceView } from './components/views/FinanceView.tsx';
 import { ProjectsView } from './components/views/ProjectsView.tsx';
+import { TeamCalendarView } from './components/views/TeamCalendarView.tsx';
+import { ResourcePlanningView } from './components/views/ResourcePlanningView.tsx';
 import { KnowledgeHubView } from './components/views/KnowledgeHubView.tsx';
 import { AutomationStudioView } from './components/views/AutomationStudioView.tsx';
 import { AnalyticsView } from './components/views/AnalyticsView.tsx';
+import { BenchmarkingLabView } from './components/views/BenchmarkingLabView.tsx';
 import { TeamSettingsView } from './components/views/TeamSettingsView.tsx';
 import { IntegrationsView } from './components/views/IntegrationsView.tsx';
 import { SubscriptionView } from './components/views/SubscriptionView.tsx';
 import { SecurityLogsView } from './components/views/SecurityLogsView.tsx';
+import { RagStudioView } from './components/views/RagStudioView.tsx';
+import { SystemHealthView } from './components/views/SystemHealthView.tsx';
 import { ErrorBoundary } from './components/common/ErrorBoundary.tsx';
 import { CheckCircle2, AlertTriangle, X } from 'lucide-react';
 
@@ -34,6 +41,10 @@ const AppContent: React.FC = () => {
         return <PublicLandingPage />;
       case 'dashboard':
         return <MainDashboard />;
+      case 'command-center':
+        return <CommandCenterView />;
+      case 'inbox':
+        return <PersonalInboxView />;
       case 'workforce':
         return <WorkforceDirectory />;
       case 'agent-workspace':
@@ -52,12 +63,22 @@ const AppContent: React.FC = () => {
         return <FinanceView />;
       case 'projects':
         return <ProjectsView />;
+      case 'calendar':
+        return <TeamCalendarView />;
+      case 'resources':
+        return <ResourcePlanningView />;
       case 'knowledge':
         return <KnowledgeHubView />;
+      case 'rag-studio':
+        return <RagStudioView />;
+      case 'health':
+        return <SystemHealthView />;
       case 'automation':
         return <AutomationStudioView />;
       case 'analytics':
         return <AnalyticsView />;
+      case 'benchmarks':
+        return <BenchmarkingLabView />;
       case 'team':
         return <TeamSettingsView />;
       case 'integrations':

@@ -24,6 +24,22 @@ export interface UserProfile {
   language: SupportedLanguage;
 }
 
+export interface SubtaskItem {
+  id: string;
+  title: string;
+  completed: boolean;
+  assignedAgentId?: string;
+}
+
+export interface TaskComment {
+  id: string;
+  author: string;
+  avatar?: string;
+  role: string;
+  content: string;
+  createdAt: string;
+}
+
 export interface AgentTask {
   id: string;
   orgId: string;
@@ -40,6 +56,9 @@ export interface AgentTask {
     description: string;
     status: 'pending' | 'in_progress' | 'completed' | 'failed';
   }>;
+  subtasks?: SubtaskItem[];
+  comments?: TaskComment[];
+  dueDate?: string;
   requiresApproval?: boolean;
   approvalId?: string;
   createdBy: string;
