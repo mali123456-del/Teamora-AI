@@ -27,11 +27,13 @@ import { SubscriptionView } from './components/views/SubscriptionView.tsx';
 import { SecurityLogsView } from './components/views/SecurityLogsView.tsx';
 import { RagStudioView } from './components/views/RagStudioView.tsx';
 import { SystemHealthView } from './components/views/SystemHealthView.tsx';
+import { HelpSupportView } from './components/views/HelpSupportView.tsx';
+import { CustomerOnboardingModal } from './components/modals/CustomerOnboardingModal.tsx';
 import { ErrorBoundary } from './components/common/ErrorBoundary.tsx';
 import { CheckCircle2, AlertTriangle, X } from 'lucide-react';
 
 const AppContent: React.FC = () => {
-  const { activeTab, bannerMessage, setBannerMessage } = useApp();
+  const { activeTab, bannerMessage, setBannerMessage, isOnboardingOpen, setIsOnboardingOpen } = useApp();
 
   const isPublicLanding = activeTab === 'landing';
 
@@ -87,6 +89,8 @@ const AppContent: React.FC = () => {
         return <SubscriptionView />;
       case 'security':
         return <SecurityLogsView />;
+      case 'help-support':
+        return <HelpSupportView />;
       default:
         return <MainDashboard />;
     }
@@ -142,6 +146,8 @@ const AppContent: React.FC = () => {
           </main>
         </div>
       )}
+
+      <CustomerOnboardingModal isOpen={isOnboardingOpen} onClose={() => setIsOnboardingOpen(false)} />
     </div>
   );
 };

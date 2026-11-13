@@ -109,6 +109,10 @@ interface AppContextType {
   // System Notification Toast
   bannerMessage: { title: string; type: 'success' | 'info' | 'warning' } | null;
   setBannerMessage: (msg: { title: string; type: 'success' | 'info' | 'warning' } | null) => void;
+
+  // Onboarding Modal State (Phase 366)
+  isOnboardingOpen: boolean;
+  setIsOnboardingOpen: (open: boolean) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -178,6 +182,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [bannerMessage, setBannerMessage] = useState<{ title: string; type: 'success' | 'info' | 'warning' } | null>(
     null
   );
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState<boolean>(false);
 
   // Domain Collections with Refresh-Safe Persistence
   const [tasks, setTasks] = useState<AgentTask[]>(() =>
@@ -1203,6 +1208,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         logAuditAction,
         bannerMessage,
         setBannerMessage,
+        isOnboardingOpen,
+        setIsOnboardingOpen,
       }}
     >
       {children}

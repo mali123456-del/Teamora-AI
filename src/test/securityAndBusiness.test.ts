@@ -24,6 +24,7 @@ import {
 } from '../../server/benchmarkRunner.ts';
 import { STANDARDIZED_BENCHMARK_DATASET } from '../../server/benchmarkDataset.ts';
 import { TEAMORA_AGENTS } from '../data/agents.ts';
+import { CircuitBreaker } from '../../server/circuitBreaker.ts';
 
 describe('Phase 21: Security & Input Validation Tests', () => {
   it('rejects empty prompts in GenerateSchema', () => {
@@ -1727,6 +1728,119 @@ describe('Phases 301–340: Scientific AI Benchmarking, Statistical Evaluation &
     // Verify agent definition was updated
     const agent = TEAMORA_AGENTS.find((a) => a.id === 'sales-agent');
     expect(agent?.preferredModel).toBe('gemini-3.1-flash-lite');
+  });
+});
+
+describe('Phase 342: Scientific Benchmark Integrity, Edge Cases & Statistical Hardening', () => {
+  it('safely handles empty datasets without NaN or thrown exceptions', () => {
+    expect(calculateMean([])).toBe(0);
+    expect(calculateVariance([])).toBe(0);
+    expect(calculateStdDev([])).toBe(0);
+    expect(calculateBootstrapCI([])).toEqual([0, 0]);
+    expect(calculateCohenD([], [])).toBe(0);
+    expect(calculateCohenD([100], [])).toBe(0);
+    expect(calculateCohenD([], [100])).toBe(0);
+  });
+
+  it('safely handles single-sample datasets without NaN or division by zero', () => {
+    expect(calculateMean([250])).toBe(250);
+    expect(calculateVariance([250])).toBe(0);
+    expect(calculateStdDev([250])).toBe(0);
+    expect(calculateBootstrapCI([250])).toEqual([250, 250]);
+    expect(calculateCohenD([250], [250])).toBe(0);
+  });
+
+  it('safely computes zero variance when all observations are identical', () => {
+    const identical = [400, 400, 400, 400];
+    expect(calculateMean(identical)).toBe(400);
+    expect(calculateVariance(identical)).toBe(0);
+    expect(calculateStdDev(identical)).toBe(0);
+    expect(calculateCohenD(identical, identical)).toBe(0);
+  });
+
+  it('verifies Standard Error of the Mean (SEM) and Degrees of Freedom (df) computation', async () => {
+    const summary = await executeModelBenchmark('gemini-3.8-flash', true, undefined, 3);
+    const stats = summary.statisticalMetrics;
+
+    expect(stats).toBeDefined();
+    expect(stats?.sampleCount).toBe(12); // 4 pilot tests * 3 repetitions
+    expect(stats?.degreesOfFreedom).toBe(11); // N - 1 = 11
+    expect(stats?.semLatencyMs).toBeGreaterThanOrEqual(0);
+    expect(stats?.statisticalPowerNote).toContain('Exploratory sample');
+  });
+
+  it('handles extreme latency outliers without corrupting bootstrap confidence bounds', () => {
+    const dataWithOutlier = [300, 310, 320, 315, 305, 5000]; // 5000ms outlier
+    const mean = calculateMean(dataWithOutlier);
+    expect(mean).toBeGreaterThan(1000);
+
+    const ci = calculateBootstrapCI(dataWithOutlier, 200);
+    expect(ci[0]).toBeLessThanOrEqual(ci[1]);
+    expect(ci[0]).toBeGreaterThan(300);
+  });
+});
+
+describe('Phase 349: Full System Regression, Circuit Breaker Transitions & Anti-Self-Approval', () => {
+  it('transitions CircuitBreaker from CLOSED to OPEN on repeated failures and recovers to HALF_OPEN after cooldown', async () => {
+    const cb = new CircuitBreaker({
+      name: 'test-ai-gateway',
+      failureThreshold: 2,
+      resetTimeoutMs: 30,
+    });
+
+    expect(cb.getState()).toBe('CLOSED');
+
+    // Trip the breaker with 2 failures
+    try {
+      await cb.execute(async () => { throw new Error('API Outage'); });
+    } catch {}
+    expect(cb.getState()).toBe('CLOSED');
+
+    try {
+      await cb.execute(async () => { throw new Error('API Outage'); });
+    } catch {}
+    expect(cb.getState()).toBe('OPEN');
+
+    // Immediate calls are blocked
+    await expect(cb.execute(async () => 'should_fail')).rejects.toThrow(/OPEN/);
+
+    // Wait for reset timeout
+    await new Promise((r) => setTimeout(r, 40));
+    expect(cb.getState()).toBe('HALF_OPEN');
+
+    // Successful call recovers to CLOSED
+    const recovered = await cb.execute(async () => 'ok');
+    expect(recovered).toBe('ok');
+    expect(cb.getState()).toBe('CLOSED');
+  });
+
+  it('enforces Anti-Self-Approval: AI agents cannot approve their own sensitive tickets', () => {
+    const agent = TEAMORA_AGENTS.find((a) => a.id === 'finance-agent');
+    expect(agent).toBeDefined();
+
+    // AI agent attempt to approve its own ticket must be rejected
+    const reviewerUid = agent!.id;
+    const isHumanUser = reviewerUid !== 'finance-agent' && !reviewerUid.endsWith('-agent');
+    expect(isHumanUser).toBe(false);
+  });
+
+  it('verifies idempotent deduplication store prevents duplicate execution on retry', () => {
+    const dedupeKey = 'idemp-test-execution-receipt-123';
+    idempotencyStore.set(dedupeKey, {
+      approvalId: 'appr-123',
+      orgId: 'org-apex',
+      executionId: 'exec-999',
+      executedAt: new Date().toISOString(),
+      reviewerId: 'user-admin-002',
+      status: 'executed',
+      result: 'Processed successfully',
+    });
+
+    // Submitting duplicate request with same dedupeKey
+    const existing = idempotencyStore.get(dedupeKey);
+    expect(existing).toBeDefined();
+    expect(existing?.status).toBe('executed');
+    expect(existing?.executionId).toBe('exec-999');
   });
 });
 

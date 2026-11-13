@@ -361,3 +361,192 @@ export const PAKISTAN_PAYMENT_GATEWAY_DOCS = {
     },
   ],
 };
+
+// ==========================================
+// Phase 369–370: Trial, Cancellation, Feature Entitlements & Billing Webhooks
+// ==========================================
+
+export type EntitledFeature =
+  | 'highThinking'
+  | 'searchGrounding'
+  | 'orchestrator3d'
+  | 'ragStudio'
+  | 'customWebhooks'
+  | 'auditExport';
+
+const FEATURE_MIN_PLAN: Record<EntitledFeature, PlanTier[]> = {
+  highThinking: ['starter', 'pro', 'business', 'enterprise'],
+  searchGrounding: ['starter', 'pro', 'business', 'enterprise'],
+  orchestrator3d: ['pro', 'business', 'enterprise'],
+  ragStudio: ['pro', 'business', 'enterprise'],
+  customWebhooks: ['business', 'enterprise'],
+  auditExport: ['free', 'starter', 'pro', 'business', 'enterprise'], // Always available for portability
+};
+
+export function enforceFeatureEntitlement(
+  orgId: string,
+  feature: EntitledFeature
+): { allowed: boolean; plan: PlanTier; status: SubscriptionStatus; reason?: string } {
+  const sub = getTenantSubscription(orgId);
+  // Data portability export remains permitted even if canceled or past_due (Phase 365 / 369)
+  if (feature === 'auditExport') {
+    return { allowed: true, plan: sub.plan, status: sub.status };
+  }
+  if (sub.status === 'canceled') {
+    return {
+      allowed: false,
+      plan: sub.plan,
+      status: sub.status,
+      reason: 'Subscription is canceled. Data export remains available, but active automation features are paused.',
+    };
+  }
+  const permittedPlans = FEATURE_MIN_PLAN[feature];
+  const allowed = permittedPlans.includes(sub.plan);
+  return {
+    allowed,
+    plan: sub.plan,
+    status: sub.status,
+    reason: allowed
+      ? undefined
+      : `Feature '${feature}' requires plan: ${permittedPlans[0].toUpperCase()} or higher (current: ${sub.plan.toUpperCase()}).`,
+  };
+}
+
+export function startTrialSubscription(
+  context: VerifiedSecurityContext,
+  trialPlan: PlanTier = 'pro',
+  trialDays: number = 14
+): { success: true; subscription: SubscriptionRecord } | { success: false; status: number; error: string } {
+  if (context.role !== 'owner' && context.role !== 'admin') {
+    return { success: false, status: 403, error: 'Forbidden: Requires Owner or Admin.' };
+  }
+  const sub = getTenantSubscription(context.orgId);
+  sub.plan = trialPlan;
+  sub.status = 'trialing';
+  sub.cancelAtPeriodEnd = false;
+  sub.currentPeriodStart = new Date().toISOString();
+  sub.currentPeriodEnd = new Date(Date.now() + trialDays * 86400000).toISOString();
+
+  recordAuditLog(context, 'subscription_trial_started', context.orgId, 'executed', {
+    trialPlan,
+    trialDays,
+  });
+  return { success: true, subscription: sub };
+}
+
+export function scheduleSubscriptionCancellation(
+  context: VerifiedSecurityContext,
+  immediate: boolean = false
+): { success: true; subscription: SubscriptionRecord } | { success: false; status: number; error: string } {
+  if (context.role !== 'owner' && context.role !== 'admin') {
+    return { success: false, status: 403, error: 'Forbidden: Requires Owner or Admin.' };
+  }
+  const sub = getTenantSubscription(context.orgId);
+  if (immediate) {
+    sub.status = 'canceled';
+    sub.cancelAtPeriodEnd = true;
+  } else {
+    sub.cancelAtPeriodEnd = true;
+  }
+  recordAuditLog(context, 'subscription_cancellation_updated', context.orgId, 'executed', {
+    immediate,
+    status: sub.status,
+    cancelAtPeriodEnd: sub.cancelAtPeriodEnd,
+  });
+  return { success: true, subscription: sub };
+}
+
+export interface BillingWebhookEventInput {
+  eventId: string;
+  eventType: 'invoice.paid' | 'invoice.payment_failed' | 'subscription.canceled' | 'charge.refunded';
+  orgId: string;
+  invoiceId?: string;
+  amountUsd?: number;
+  provider?: SubscriptionRecord['paymentProvider'];
+  mode?: 'sandbox' | 'live';
+}
+
+const processedWebhookEvents = new Set<string>();
+
+export function signBillingWebhookPayload(rawPayload: string, secret: string): string {
+  return crypto.createHmac('sha256', secret).update(rawPayload).digest('hex');
+}
+
+export function verifyBillingWebhookSignature(
+  rawPayload: string,
+  providedSignature: string,
+  secret: string
+): boolean {
+  if (!providedSignature || !secret) return false;
+  const normalizedProvided = providedSignature.replace(/^sha256=/i, '').trim();
+  const expected = signBillingWebhookPayload(rawPayload, secret);
+  if (normalizedProvided.length !== expected.length) return false;
+  try {
+    return crypto.timingSafeEqual(Buffer.from(normalizedProvided, 'hex'), Buffer.from(expected, 'hex'));
+  } catch {
+    return false;
+  }
+}
+
+export function processBillingWebhookEvent(
+  event: BillingWebhookEventInput,
+  rawPayload: string,
+  signatureHeader: string,
+  configuredSecret?: string
+): {
+  success: boolean;
+  status: number;
+  deduplicated?: boolean;
+  message: string;
+  billingMode: 'sandbox' | 'live';
+} {
+  const billingMode = (process.env.BILLING_MODE || 'sandbox').toLowerCase() === 'live' ? 'live' : 'sandbox';
+  const secret = configuredSecret || process.env.SAAS_WEBHOOK_SECRET || 'teamora_sandbox_webhook_secret';
+
+  if (!verifyBillingWebhookSignature(rawPayload, signatureHeader, secret)) {
+    return {
+      success: false,
+      status: 401,
+      message: 'Webhook HMAC-SHA256 signature verification failed.',
+      billingMode,
+    };
+  }
+
+  if (processedWebhookEvents.has(event.eventId)) {
+    return {
+      success: true,
+      status: 200,
+      deduplicated: true,
+      message: `Webhook event '${event.eventId}' already reconciled (idempotent noop).`,
+      billingMode,
+    };
+  }
+
+  processedWebhookEvents.add(event.eventId);
+  const sub = getTenantSubscription(event.orgId);
+
+  if (event.eventType === 'invoice.paid') {
+    sub.status = 'active';
+    sub.cancelAtPeriodEnd = false;
+  } else if (event.eventType === 'invoice.payment_failed') {
+    sub.status = 'past_due';
+  } else if (event.eventType === 'subscription.canceled') {
+    sub.status = 'canceled';
+    sub.cancelAtPeriodEnd = true;
+  } else if (event.eventType === 'charge.refunded' && event.invoiceId) {
+    const invoices = tenantInvoices.get(event.orgId) || [];
+    const targetInv = invoices.find((inv) => inv.id === event.invoiceId);
+    if (targetInv) {
+      targetInv.status = 'void';
+    }
+  }
+
+  return {
+    success: true,
+    status: 200,
+    deduplicated: false,
+    message: `[${billingMode === 'sandbox' ? 'SANDBOX_WEBHOOK' : 'LIVE_WEBHOOK'}] Processed '${event.eventType}' for org '${event.orgId}'.`,
+    billingMode,
+  };
+}
+

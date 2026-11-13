@@ -1,53 +1,385 @@
 [
   {
-    "id": "audit-1794427753708-6f00e28f",
-    "timestamp": "2026-11-11T20:09:13.708Z",
+    "id": "audit-1794557831258-2346bb09",
+    "timestamp": "2026-11-13T08:17:11.258Z",
     "orgId": "org-apex",
     "actorUid": "user-admin-002",
     "actorRole": "admin",
-    "action": "test_action_1",
-    "targetResource": "res-1",
+    "action": "backup_snapshot_created",
+    "targetResource": "snap-org-apex-1794557831257-d2cc7e",
     "status": "executed",
     "ipAddress": "127.0.0.1",
     "details": {
-      "step": 1
+      "checksumSha256": "a3bb8934f644d6d3900dda6549c3a51ab3d4865c19c92a5eea12ad650be51319",
+      "byteSize": 237,
+      "entityCounts": {
+        "organization": 1,
+        "tasks": 1,
+        "projects": 0,
+        "agentAssignments": 0,
+        "knowledgeRecords": 0,
+        "workflows": 0,
+        "reports": 0,
+        "auditLogs": 0
+      }
     },
     "previousHash": "0000000000000000000000000000000000000000000000000000000000000000",
-    "entryHash": "acf0c44d99cb001690e8693b6ded98427b6f91d3efabf3d33b8d3e939d1711da"
+    "entryHash": "2b1adfbde3606582de1410a430916df207b98911858359914824d60073042a42"
   },
   {
-    "id": "audit-1794427753709-ec0efad6",
-    "timestamp": "2026-11-11T20:09:13.709Z",
+    "id": "audit-1794557831259-85682495",
+    "timestamp": "2026-11-13T08:17:11.259Z",
     "orgId": "org-apex",
     "actorUid": "user-admin-002",
     "actorRole": "admin",
-    "action": "test_action_2",
-    "targetResource": "res-2",
+    "action": "backup_snapshot_created",
+    "targetResource": "snap-org-apex-1794557831259-eec734",
     "status": "executed",
     "ipAddress": "127.0.0.1",
     "details": {
-      "step": 2
+      "checksumSha256": "a20500feea3fa29d5a187f8bd4bb15fd5fa9fda13b88bd10e7777824820be7cb",
+      "byteSize": 264,
+      "entityCounts": {
+        "organization": 1,
+        "tasks": 1,
+        "projects": 1,
+        "agentAssignments": 0,
+        "knowledgeRecords": 0,
+        "workflows": 0,
+        "reports": 0,
+        "auditLogs": 0
+      }
     },
-    "previousHash": "acf0c44d99cb001690e8693b6ded98427b6f91d3efabf3d33b8d3e939d1711da",
-    "entryHash": "7597d6cda1bc8d9f7ec33245c0823d97c4668e909a5c6f95247a2ad74cb7ef45"
+    "previousHash": "2b1adfbde3606582de1410a430916df207b98911858359914824d60073042a42",
+    "entryHash": "fed3ff633c526ff61e297dba2ac0c6593ce246453daf8d51f7c135353917939e"
   },
   {
-    "id": "audit-1794427753712-51d7af32",
-    "timestamp": "2026-11-11T20:09:13.712Z",
+    "id": "audit-1794557831260-559c7852",
+    "timestamp": "2026-11-13T08:17:11.260Z",
+    "orgId": "org-b-competitor",
+    "actorUid": "user-competitor-999",
+    "actorRole": "owner",
+    "action": "backup_cross_tenant_restore_blocked",
+    "targetResource": "snap-org-apex-1794557831259-eec734",
+    "status": "denied",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "snapshotOrgId": "org-apex"
+    },
+    "previousHash": "fed3ff633c526ff61e297dba2ac0c6593ce246453daf8d51f7c135353917939e",
+    "entryHash": "2a0c25ea89b8fa267b3cfaafc0dcfa6348c44b421043b35c7c24f8914d125a32"
+  },
+  {
+    "id": "audit-1794557831260-d038c66c",
+    "timestamp": "2026-11-13T08:17:11.260Z",
     "orgId": "org-apex",
     "actorUid": "user-admin-002",
     "actorRole": "admin",
-    "action": "subscription_plan_updated",
+    "action": "backup_isolated_restore_verified",
+    "targetResource": "snap-org-apex-1794557831259-eec734",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "sandboxNamespace": "sandbox-verify-test",
+      "passed": true
+    },
+    "previousHash": "2a0c25ea89b8fa267b3cfaafc0dcfa6348c44b421043b35c7c24f8914d125a32",
+    "entryHash": "23df42df7d89a71ca7902d15ac69a8e5c5f5199e74f0f831fac637e30fcbf50e"
+  },
+  {
+    "id": "audit-1794557831262-6565663b",
+    "timestamp": "2026-11-13T08:17:11.262Z",
+    "orgId": "org-apex",
+    "actorUid": "user-member-004",
+    "actorRole": "member",
+    "action": "tenant_export_role_denied",
+    "targetResource": "org-apex",
+    "status": "denied",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "role": "member"
+    },
+    "previousHash": "23df42df7d89a71ca7902d15ac69a8e5c5f5199e74f0f831fac637e30fcbf50e",
+    "entryHash": "bdac3610e60c827dff06c1f3998ca925884e8b4ad1af1750cec5af891a14d8ba"
+  },
+  {
+    "id": "audit-1794557831262-6dd5ac45",
+    "timestamp": "2026-11-13T08:17:11.262Z",
+    "orgId": "org-apex",
+    "actorUid": "user-admin-002",
+    "actorRole": "admin",
+    "action": "tenant_export_cross_tenant_denied",
+    "targetResource": "org-b-competitor",
+    "status": "denied",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "requesterOrgId": "org-apex"
+    },
+    "previousHash": "bdac3610e60c827dff06c1f3998ca925884e8b4ad1af1750cec5af891a14d8ba",
+    "entryHash": "5f626fe170580141a85981354d84494df221f4dda01499bb8bf6e59933d177f8"
+  },
+  {
+    "id": "audit-1794557831263-8d2bfc94",
+    "timestamp": "2026-11-13T08:17:11.263Z",
+    "orgId": "org-apex",
+    "actorUid": "user-manager-003",
+    "actorRole": "manager",
+    "action": "tenant_data_exported",
     "targetResource": "org-apex",
     "status": "executed",
     "ipAddress": "127.0.0.1",
     "details": {
-      "targetPlan": "business",
+      "exportId": "exp-org-apex-1794557831262-7e61b7",
+      "format": "csv",
+      "schemaVersion": "1.0",
+      "checksumSha256": "a626a6f98189d10aad3123c019ab9e73338a9d807cbbeaa1b162f3a6298d977e",
+      "entityCounts": {
+        "organization": 1,
+        "tasks": 1,
+        "projects": 0,
+        "agentAssignments": 0,
+        "knowledgeRecords": 0,
+        "workflows": 0,
+        "reports": 0,
+        "auditLogs": 0
+      }
+    },
+    "previousHash": "5f626fe170580141a85981354d84494df221f4dda01499bb8bf6e59933d177f8",
+    "entryHash": "52e1e490ae47cf49eefcb16ef980bbb04c578122893d6d4ce776a7f238d1c3bf"
+  },
+  {
+    "id": "audit-1794557831264-a3c6a21b",
+    "timestamp": "2026-11-13T08:17:11.264Z",
+    "orgId": "org-apex",
+    "actorUid": "user-admin-002",
+    "actorRole": "admin",
+    "action": "team_invitation_created",
+    "targetResource": "inv-1794557831264-4863cc",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "inviteeEmail": "new.hire@apexglobal.io",
+      "assignedRole": "manager",
+      "expiresAt": "2026-11-14T08:17:11.264Z"
+    },
+    "previousHash": "52e1e490ae47cf49eefcb16ef980bbb04c578122893d6d4ce776a7f238d1c3bf",
+    "entryHash": "c56f223167543109537841c4cfe182dd0579d7fe019278f6c9da0c678525fbd4"
+  },
+  {
+    "id": "audit-1794557831265-bd7a8b42",
+    "timestamp": "2026-11-13T08:17:11.265Z",
+    "orgId": "org-apex",
+    "actorUid": "user-admin-002",
+    "actorRole": "admin",
+    "action": "team_member_revoked",
+    "targetResource": "uid-newhire-1",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "email": "new.hire@apexglobal.io"
+    },
+    "previousHash": "c56f223167543109537841c4cfe182dd0579d7fe019278f6c9da0c678525fbd4",
+    "entryHash": "acbc51762a126eada80f677d9bb5f073be4ca95a1bbcf30a15817d9cfa35d8d6"
+  },
+  {
+    "id": "audit-1794557831265-fee5a3f8",
+    "timestamp": "2026-11-13T08:17:11.265Z",
+    "orgId": "org-apex",
+    "actorUid": "user-admin-002",
+    "actorRole": "admin",
+    "action": "team_invitation_created",
+    "targetResource": "inv-1794557831265-143c2b",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "inviteeEmail": "expired.user@apexglobal.io",
+      "assignedRole": "viewer",
+      "expiresAt": "2026-11-13T07:17:11.265Z"
+    },
+    "previousHash": "acbc51762a126eada80f677d9bb5f073be4ca95a1bbcf30a15817d9cfa35d8d6",
+    "entryHash": "59a1daf8da607cac2f5e4d98a369421b4fc082d533e30f593886694ef43639d9"
+  },
+  {
+    "id": "audit-1794557831266-50015c1b",
+    "timestamp": "2026-11-13T08:17:11.266Z",
+    "orgId": "org-apex",
+    "actorUid": "user-admin-002",
+    "actorRole": "admin",
+    "action": "team_invitation_created",
+    "targetResource": "inv-1794557831266-a51921",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "inviteeEmail": "cancel.me@apexglobal.io",
+      "assignedRole": "member",
+      "expiresAt": "2026-11-14T08:17:11.266Z"
+    },
+    "previousHash": "59a1daf8da607cac2f5e4d98a369421b4fc082d533e30f593886694ef43639d9",
+    "entryHash": "f2c971631e3355b57f30237be611455287e20f0ad66438d37b89cedf0a5ce547"
+  },
+  {
+    "id": "audit-1794557831266-9a30d15d",
+    "timestamp": "2026-11-13T08:17:11.266Z",
+    "orgId": "org-apex",
+    "actorUid": "user-admin-002",
+    "actorRole": "admin",
+    "action": "team_invitation_cancelled",
+    "targetResource": "inv-1794557831266-a51921",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "email": "cancel.me@apexglobal.io"
+    },
+    "previousHash": "f2c971631e3355b57f30237be611455287e20f0ad66438d37b89cedf0a5ce547",
+    "entryHash": "7f900d8980f04f74d3fb86e903421a78f3455cc8266ffba2b55326cc09eaa4c0"
+  },
+  {
+    "id": "audit-1794557831267-7f289e58",
+    "timestamp": "2026-11-13T08:17:11.267Z",
+    "orgId": "org-test-lifecycle",
+    "actorUid": "user-owner-001",
+    "actorRole": "owner",
+    "action": "subscription_plan_updated",
+    "targetResource": "org-test-lifecycle",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "targetPlan": "pro",
       "currency": "USD",
-      "invoiceId": "inv-1794427753712-166c0f",
+      "invoiceId": "inv-1794557831267-885e79",
       "provider": "simulated_test"
     },
-    "previousHash": "7597d6cda1bc8d9f7ec33245c0823d97c4668e909a5c6f95247a2ad74cb7ef45",
-    "entryHash": "dcc7739f734c480f6603878cc39c5ff51d5da8f6b13b0873e2cc424dcb834adc"
+    "previousHash": "7f900d8980f04f74d3fb86e903421a78f3455cc8266ffba2b55326cc09eaa4c0",
+    "entryHash": "040757b736057c40ac5294f9efbc91f1cff93f88c685e49192fb2828f65ad86b"
+  },
+  {
+    "id": "audit-1794557831267-a376e4d4",
+    "timestamp": "2026-11-13T08:17:11.267Z",
+    "orgId": "org-test-lifecycle",
+    "actorUid": "user-owner-001",
+    "actorRole": "owner",
+    "action": "subscription_cancellation_updated",
+    "targetResource": "org-test-lifecycle",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "immediate": true,
+      "status": "canceled",
+      "cancelAtPeriodEnd": true
+    },
+    "previousHash": "040757b736057c40ac5294f9efbc91f1cff93f88c685e49192fb2828f65ad86b",
+    "entryHash": "6ce78e732f50b91d1257aa907f20f80175318a2eea8a21265398864665f34c01"
+  },
+  {
+    "id": "audit-1794557831267-206b4672",
+    "timestamp": "2026-11-13T08:17:11.267Z",
+    "orgId": "org-test-lifecycle",
+    "actorUid": "user-owner-001",
+    "actorRole": "owner",
+    "action": "tenant_data_exported",
+    "targetResource": "org-test-lifecycle",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "exportId": "exp-org-test-lifecycle-1794557831267-08baa9",
+      "format": "json",
+      "schemaVersion": "1.0",
+      "checksumSha256": "ac16d38ec9236a4b492c8b8cf1fcc46ed30d86b7511d2daa8896255095bb9f6a",
+      "entityCounts": {
+        "organization": 1,
+        "tasks": 0,
+        "projects": 0,
+        "agentAssignments": 0,
+        "knowledgeRecords": 0,
+        "workflows": 0,
+        "reports": 0,
+        "auditLogs": 0
+      }
+    },
+    "previousHash": "6ce78e732f50b91d1257aa907f20f80175318a2eea8a21265398864665f34c01",
+    "entryHash": "ba0cbc1312b47cfa043b28409d377d40411115b54d37b7d5b47ab75587f7875d"
+  },
+  {
+    "id": "audit-1794557831268-b197c01d",
+    "timestamp": "2026-11-13T08:17:11.268Z",
+    "orgId": "org-test-lifecycle",
+    "actorUid": "user-owner-001",
+    "actorRole": "owner",
+    "action": "org_workspace_archived",
+    "targetResource": "org-test-lifecycle",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "archivedAt": "2026-11-13T08:17:11.268Z"
+    },
+    "previousHash": "ba0cbc1312b47cfa043b28409d377d40411115b54d37b7d5b47ab75587f7875d",
+    "entryHash": "3f039548ab6249b5249806ba8f9e326baa9a17fc0f3414d50fe7fc23cd61e026"
+  },
+  {
+    "id": "audit-1794557831271-4d8e0151",
+    "timestamp": "2026-11-13T08:17:11.271Z",
+    "orgId": "org-apex",
+    "actorUid": "user-member-004",
+    "actorRole": "member",
+    "action": "support_ticket_created",
+    "targetResource": "tkt-1794557831270-bb8569",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "category": "bug",
+      "severity": "high"
+    },
+    "previousHash": "3f039548ab6249b5249806ba8f9e326baa9a17fc0f3414d50fe7fc23cd61e026",
+    "entryHash": "cabcc301452017c477c95348385b231b94dc056e1c464db747d83c3d0ab3b635"
+  },
+  {
+    "id": "audit-1794557831271-d36573ff",
+    "timestamp": "2026-11-13T08:17:11.271Z",
+    "orgId": "org-apex",
+    "actorUid": "user-admin-002",
+    "actorRole": "admin",
+    "action": "support_ticket_updated",
+    "targetResource": "tkt-1794557831270-bb8569",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "status": "in_review"
+    },
+    "previousHash": "cabcc301452017c477c95348385b231b94dc056e1c464db747d83c3d0ab3b635",
+    "entryHash": "ee4feca2c9c6003d35192342bec2378fbe10e563293796d2dcb72d0df12a30b2"
+  },
+  {
+    "id": "audit-1794557831276-8596959f",
+    "timestamp": "2026-11-13T08:17:11.276Z",
+    "orgId": "org-apex",
+    "actorUid": "user-admin-002",
+    "actorRole": "admin",
+    "action": "release_flag_updated",
+    "targetResource": "ops_telemetry_console",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "enabled": false,
+      "cohort": "internal_canary",
+      "checkpointRevisionId": "rev-1794557831276"
+    },
+    "previousHash": "ee4feca2c9c6003d35192342bec2378fbe10e563293796d2dcb72d0df12a30b2",
+    "entryHash": "545efa9e0cfbea7322c2e905ef0eb520aa8650e250e1c1d2f5c715392d02b40c"
+  },
+  {
+    "id": "audit-1794557831277-d9ced953",
+    "timestamp": "2026-11-13T08:17:11.277Z",
+    "orgId": "org-apex",
+    "actorUid": "user-admin-002",
+    "actorRole": "admin",
+    "action": "release_flags_rolled_back",
+    "targetResource": "rev-1794557831276",
+    "status": "executed",
+    "ipAddress": "127.0.0.1",
+    "details": {
+      "reason": "Pre-change checkpoint before updating ops_telemetry_console"
+    },
+    "previousHash": "545efa9e0cfbea7322c2e905ef0eb520aa8650e250e1c1d2f5c715392d02b40c",
+    "entryHash": "51234b5a64956bcd2cda815f2085a0c69a081e8b7d6d272562ff5d2d731a596b"
   }
 ]

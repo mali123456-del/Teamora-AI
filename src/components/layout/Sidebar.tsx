@@ -24,6 +24,7 @@ import {
   Calendar,
   Layers,
   Gauge,
+  HelpCircle,
   X,
 } from 'lucide-react';
 import { TeamoraLogo } from '../common/TeamoraLogo.tsx';
@@ -81,6 +82,7 @@ export const Sidebar: React.FC = () => {
         { id: 'integrations', label: 'Integrations & Keep', icon: Plug },
         { id: 'subscriptions', label: 'Subscription & Plans', icon: CreditCard },
         { id: 'security', label: 'Security & Audit Logs', icon: ShieldCheck },
+        { id: 'help-support', label: 'Help & Support', icon: HelpCircle },
       ],
     },
   ];

@@ -122,11 +122,14 @@ export interface StatisticalMetrics {
   meanLatencyMs: number;
   stdDevLatencyMs: number;
   varianceLatencyMs: number;
+  semLatencyMs: number; // Standard Error of the Mean: s / sqrt(N)
+  degreesOfFreedom: number; // N - 1
   ci95LatencyMs: [number, number]; // [lower, upper]
   meanAccuracyPct: number;
   stdDevAccuracyPct: number;
   sampleCount: number;
   cohenDVsBaseline?: number;
+  statisticalPowerNote: string;
 }
 
 export interface JudgeCalibration {
@@ -222,15 +225,25 @@ export function calculateBootstrapCI(values: number[], iterations: number = 200)
  * Calculates Cohen's d effect size between treatment and baseline.
  */
 export function calculateCohenD(treatment: number[], control: number[]): number {
-  if (treatment.length === 0 || control.length === 0) return 0;
+  if (!treatment || !control || treatment.length === 0 || control.length === 0) return 0;
+  if (treatment.length < 2 && control.length < 2) return 0;
+
   const mean1 = calculateMean(treatment);
   const mean2 = calculateMean(control);
   const var1 = calculateVariance(treatment, mean1);
   const var2 = calculateVariance(control, mean2);
 
-  const pooledSD = Math.sqrt(((treatment.length - 1) * var1 + (control.length - 1) * var2) / (treatment.length + control.length - 2));
-  if (pooledSD === 0) return 0;
-  return Math.round(((mean1 - mean2) / pooledSD) * 100) / 100;
+  const df = treatment.length + control.length - 2;
+  if (df <= 0) return 0;
+
+  const pooledVariance = ((treatment.length - 1) * var1 + (control.length - 1) * var2) / df;
+  if (pooledVariance <= 0 || isNaN(pooledVariance)) return 0;
+
+  const pooledSD = Math.sqrt(pooledVariance);
+  if (pooledSD === 0 || isNaN(pooledSD)) return 0;
+
+  const d = (mean1 - mean2) / pooledSD;
+  return isNaN(d) ? 0 : Math.round(d * 100) / 100;
 }
 
 /**
@@ -283,11 +296,54 @@ export async function executeModelBenchmark(
   const modelMeta = MODEL_REGISTRY.find((m) => m.id === modelId) || MODEL_REGISTRY[0];
   const dataset = isPilot ? STANDARDIZED_BENCHMARK_DATASET.slice(0, 4) : STANDARDIZED_BENCHMARK_DATASET;
 
+  const safeRepetitions = Math.max(1, Math.min(repetitions, 5));
+
+  if (dataset.length === 0) {
+    const emptySummary: ModelBenchmarkSummary = {
+      modelId: modelMeta.id,
+      modelName: modelMeta.name,
+      evaluatedAt: new Date().toISOString(),
+      repetitions: safeRepetitions,
+      testsEvaluated: 0,
+      testsPassed: 0,
+      accuracyPercentage: 0,
+      errorRatePercentage: 0,
+      overallScore: 0,
+      categoryScores: {},
+      averageLatencyMs: 0,
+      p50LatencyMs: 0,
+      p95LatencyMs: 0,
+      totalTokensUsed: 0,
+      estimatedCostPer1kTasks: 0,
+      reliabilityPercentage: 100,
+      results: [],
+      errorBreakdown: { logic_error: 0, format_error: 0, tool_error: 0, timeout: 0, provider_error: 0 },
+      statisticalMetrics: {
+        meanLatencyMs: 0,
+        stdDevLatencyMs: 0,
+        varianceLatencyMs: 0,
+        semLatencyMs: 0,
+        degreesOfFreedom: 0,
+        ci95LatencyMs: [0, 0],
+        meanAccuracyPct: 0,
+        stdDevAccuracyPct: 0,
+        sampleCount: 0,
+        cohenDVsBaseline: 0,
+        statisticalPowerNote: 'Empty dataset evaluated (N = 0).',
+      },
+      judgeCalibration: {
+        consistencyIndex: 1.0,
+        interRaterAgreement: 1.0,
+        deterministicAlignment: 100,
+      },
+    };
+    benchmarkRunHistory.unshift(emptySummary);
+    return emptySummary;
+  }
+
   const cycleResults: TestCaseResult[][] = [];
   const allLatencies: number[] = [];
   const cycleAccuracies: number[] = [];
-
-  const safeRepetitions = Math.max(1, Math.min(repetitions, 5));
 
   for (let rep = 0; rep < safeRepetitions; rep++) {
     const currentRunResults: TestCaseResult[] = [];
@@ -430,15 +486,24 @@ export async function executeModelBenchmark(
     reliabilityPercentage
   );
 
+  const semLatencyMs = Math.round((stdDevLatency / Math.sqrt(Math.max(1, allLatencies.length))) * 100) / 100;
+  const degreesOfFreedom = Math.max(0, allLatencies.length - 1);
+  const statisticalPowerNote = allLatencies.length < 30
+    ? `Exploratory sample (N = ${allLatencies.length}, df = ${degreesOfFreedom}). Non-parametric bootstrap CI provides empirical bounds; larger continuous evaluation runs recommended for asymptotic significance.`
+    : `Sufficient sample power (N = ${allLatencies.length}, df = ${degreesOfFreedom}).`;
+
   const statisticalMetrics: StatisticalMetrics = {
     meanLatencyMs: averageLatencyMs,
     stdDevLatencyMs: stdDevLatency,
     varianceLatencyMs: varianceLatency,
+    semLatencyMs,
+    degreesOfFreedom,
     ci95LatencyMs: ci95Latency,
     meanAccuracyPct: calculateMean(cycleAccuracies),
     stdDevAccuracyPct: calculateStdDev(cycleAccuracies),
     sampleCount: allLatencies.length,
     cohenDVsBaseline: modelMeta.id === 'gemini-3.1-flash-lite' ? -1.45 : (modelMeta.id === 'gemini-4-argon' ? 1.82 : 0.0),
+    statisticalPowerNote,
   };
 
   const judgeCalibration: JudgeCalibration = {

@@ -26,9 +26,35 @@ import {
   updateSubscriptionPlan,
   getTenantInvoices,
   PAKISTAN_PAYMENT_GATEWAY_DOCS,
+  PLAN_ENTITLEMENTS,
+  scheduleSubscriptionCancellation,
+  startTrialSubscription,
+  processBillingWebhookEvent,
   PlanTier,
   Currency,
 } from './saasEngine.ts';
+import {
+  getOrgDirectorySnapshot,
+  updateWorkspaceProfile,
+  transferWorkspaceOwnership,
+  archiveWorkspace,
+  createTeamInvitation,
+  acceptTeamInvitation,
+  cancelTeamInvitation,
+  revokeMemberAccess,
+  updateMemberRole,
+} from './organizationLifecycleEngine.ts';
+import {
+  createSupportTicket,
+  listSupportTickets,
+  updateSupportTicketStatus,
+  generateRedactedBugReport,
+} from './supportEngine.ts';
+import {
+  listReleaseFeatureFlags,
+  updateReleaseFlag,
+  rollbackReleaseFlags,
+} from './releaseConfig.ts';
 import {
   ingestDocument,
   queryKnowledgeHub,
@@ -49,6 +75,26 @@ import {
   requestAssignmentApproval,
   reviewAssignmentApproval,
 } from './benchmarkRunner.ts';
+import { getEnvironmentConfigHealth } from './envConfig.ts';
+import {
+  recordTelemetryRequest,
+  getRealRuntimeTelemetry,
+  getStructuredLogs,
+  listOperationalAlerts,
+  triggerOrDeduplicateAlert,
+  acknowledgeOperationalAlert,
+  resolveOperationalAlert,
+  listIncidents,
+  createIncident,
+  transitionIncidentState,
+  DEFAULT_ALERT_RULES,
+} from './observabilityEngine.ts';
+import {
+  createBackupSnapshot,
+  listBackupSnapshots,
+  verifyIsolatedRestore,
+  exportTenantData,
+} from './backupRecoveryEngine.ts';
 
 // ==========================================
 // 1. In-Memory Rate Limiter (Sliding Window)
@@ -343,11 +389,46 @@ export async function handleApiRequest(req: IncomingMessage, res: ServerResponse
     !url.startsWith('/api/saas') &&
     !url.startsWith('/api/security') &&
     !url.startsWith('/api/benchmarks') &&
+    !url.startsWith('/api/ops') &&
+    !url.startsWith('/api/backup') &&
+    !url.startsWith('/api/export') &&
+    !url.startsWith('/api/org') &&
+    !url.startsWith('/api/billing') &&
+    !url.startsWith('/api/support') &&
+    !url.startsWith('/api/release') &&
+    !url.startsWith('/api/rag') &&
+    !url.startsWith('/api/crawler') &&
     !url.startsWith('/status') &&
     !url.startsWith('/api/status')
   ) {
     return false;
   }
+
+  // Instrument request start & correlation headers for structured telemetry
+  const reqStartTime = Date.now();
+  const requestId = `req-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`;
+  const correlationId = (req.headers['x-correlation-id'] as string) || requestId;
+  const reqOrgId = (req.headers['x-teamora-org'] as string) || 'org-apex';
+  res.setHeader('X-Request-ID', requestId);
+  res.setHeader('X-Correlation-ID', correlationId);
+
+  const originalEnd = res.end.bind(res);
+  let telemetryRecorded = false;
+  (res as any).end = (...args: any[]) => {
+    if (!telemetryRecorded) {
+      telemetryRecorded = true;
+      recordTelemetryRequest({
+        requestId,
+        correlationId,
+        orgId: reqOrgId,
+        endpoint: url,
+        method: req.method || 'GET',
+        statusCode: res.statusCode || 200,
+        durationMs: Date.now() - reqStartTime,
+      });
+    }
+    return originalEnd(...args);
+  };
 
   // Client IP for rate limiting
   const clientIp =
@@ -357,12 +438,15 @@ export async function handleApiRequest(req: IncomingMessage, res: ServerResponse
 
   // 1. Health check
   if (url === '/api/status' || url === '/status') {
+    const telemetry = getRealRuntimeTelemetry();
     sendJson(res, 200, {
       status: 'ok',
       hasApiKey: !!process.env.GEMINI_API_KEY,
       timestamp: new Date().toISOString(),
       service: 'Teamora AI Enterprise Gateway',
-      version: '2.4.0',
+      version: '2.5.0',
+      uptimeSeconds: telemetry.uptimeSeconds,
+      memoryRssMb: telemetry.memory.rssMb,
     });
     return true;
   }
@@ -398,7 +482,13 @@ export async function handleApiRequest(req: IncomingMessage, res: ServerResponse
       }
       const sub = getTenantSubscription(authResult.context.orgId);
       const usage = getTenantUsage(authResult.context.orgId);
-      sendJson(res, 200, { subscription: sub, usage });
+      sendJson(res, 200, {
+        subscription: sub,
+        usage,
+        entitlement: PLAN_ENTITLEMENTS[sub.plan],
+        allPlans: PLAN_ENTITLEMENTS,
+        billingMode: (process.env.BILLING_MODE || 'sandbox').toLowerCase() === 'live' ? 'live' : 'sandbox',
+      });
       return true;
     }
 
@@ -483,6 +573,140 @@ export async function handleApiRequest(req: IncomingMessage, res: ServerResponse
     if (url.includes('/api/benchmarks/approvals')) {
       const approvals = getAssignmentApprovals();
       sendJson(res, 200, { success: true, approvals });
+      return true;
+    }
+
+    // 3G. Production Config & Environment Health (Redacted Safe View)
+    if (url.includes('/api/ops/config-health')) {
+      const authResult = await authenticateAndAuthorize(req, undefined, 'manager');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      sendJson(res, 200, { success: true, health: getEnvironmentConfigHealth() });
+      return true;
+    }
+
+    // 3H. Observability Telemetry, Logs, Alerts & Incidents (Phases 356–360)
+    if (url.includes('/api/ops/metrics')) {
+      const authResult = await authenticateAndAuthorize(req, undefined, 'viewer');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      sendJson(res, 200, {
+        success: true,
+        telemetry: getRealRuntimeTelemetry(),
+        rules: DEFAULT_ALERT_RULES,
+        envHealth: getEnvironmentConfigHealth(),
+      });
+      return true;
+    }
+
+    if (url.includes('/api/ops/logs')) {
+      const authResult = await authenticateAndAuthorize(req, undefined, 'manager');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const parsedUrl = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
+      const level = parsedUrl.searchParams.get('level') as any;
+      const limit = Number(parsedUrl.searchParams.get('limit') || 50);
+      const logs = getStructuredLogs({ orgId: authResult.context.orgId, level: level || undefined, limit });
+      sendJson(res, 200, { success: true, logs, total: logs.length });
+      return true;
+    }
+
+    if (url.includes('/api/ops/alerts')) {
+      const authResult = await authenticateAndAuthorize(req, undefined, 'viewer');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      sendJson(res, 200, {
+        success: true,
+        alerts: listOperationalAlerts(authResult.context.orgId),
+        rules: DEFAULT_ALERT_RULES,
+      });
+      return true;
+    }
+
+    if (url.includes('/api/ops/incidents')) {
+      const authResult = await authenticateAndAuthorize(req, undefined, 'viewer');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      sendJson(res, 200, {
+        success: true,
+        incidents: listIncidents(authResult.context.orgId),
+      });
+      return true;
+    }
+
+    // 3I. Backup Snapshots Metadata List (Phases 361–364)
+    if (url.includes('/api/backup/snapshots')) {
+      const authResult = await authenticateAndAuthorize(req, undefined, 'manager');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      sendJson(res, 200, {
+        success: true,
+        snapshots: listBackupSnapshots(authResult.context.orgId),
+      });
+      return true;
+    }
+
+    // 3J. Organization Directory, Members & Pending Invitations (Phases 367–368)
+    if (url.includes('/api/org/team')) {
+      const authResult = await authenticateAndAuthorize(req, undefined, 'viewer');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      sendJson(res, 200, {
+        success: true,
+        ...getOrgDirectorySnapshot(authResult.context.orgId),
+      });
+      return true;
+    }
+
+    // 3K. Support Tickets & Redacted Diagnostic Report (Phase 375)
+    if (url.includes('/api/support/tickets')) {
+      const authResult = await authenticateAndAuthorize(req, undefined, 'viewer');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      sendJson(res, 200, {
+        success: true,
+        tickets: listSupportTickets(authResult.context),
+      });
+      return true;
+    }
+
+    if (url.includes('/api/support/bug-report')) {
+      const authResult = await authenticateAndAuthorize(req, undefined, 'member');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      sendJson(res, 200, {
+        success: true,
+        report: generateRedactedBugReport(authResult.context),
+      });
+      return true;
+    }
+
+    // 3L. Release Candidate Feature Flags (Phases 376–378)
+    if (url.includes('/api/release/flags')) {
+      const authResult = await authenticateAndAuthorize(req, undefined, 'viewer');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      sendJson(res, 200, { success: true, flags: listReleaseFeatureFlags() });
       return true;
     }
 
@@ -720,6 +944,507 @@ export async function handleApiRequest(req: IncomingMessage, res: ServerResponse
       return true;
     } catch (err: any) {
       sendJson(res, 500, { error: err.message || 'Failed to update subscription' });
+      return true;
+    }
+  }
+
+  // 6B. Observability Alerts & Incident Actions (Phases 358–359)
+  if (url.includes('/api/ops/alerts/action')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'manager');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const action = rawBody.action as 'trigger' | 'acknowledge' | 'resolve';
+      if (action === 'trigger') {
+        const result = triggerOrDeduplicateAlert({
+          ruleId: rawBody.ruleId || 'MANUAL_DIAGNOSTIC',
+          orgId: authResult.context.orgId,
+          title: rawBody.title || 'Diagnostic Alert Check',
+          message: rawBody.message || 'Triggered diagnostic alert from Operations Console.',
+          severity: rawBody.severity || 'medium',
+        });
+        recordAuditLog(authResult.context, 'ops_alert_triggered', result.alert.id, 'executed', {
+          deduplicated: result.deduplicated,
+        });
+        sendJson(res, 200, { success: true, ...result });
+        return true;
+      }
+      if (action === 'acknowledge' && rawBody.alertId) {
+        const alert = acknowledgeOperationalAlert(rawBody.alertId, authResult.context.email);
+        if (!alert) {
+          sendJson(res, 404, { error: 'Alert not found' });
+          return true;
+        }
+        sendJson(res, 200, { success: true, alert });
+        return true;
+      }
+      if (action === 'resolve' && rawBody.alertId) {
+        const alert = resolveOperationalAlert(rawBody.alertId, authResult.context.email);
+        if (!alert) {
+          sendJson(res, 404, { error: 'Alert not found' });
+          return true;
+        }
+        sendJson(res, 200, { success: true, alert });
+        return true;
+      }
+      sendJson(res, 400, { error: 'Invalid alert action payload' });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Alert action failed' });
+      return true;
+    }
+  }
+
+  if (url.includes('/api/ops/incidents/action')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'manager');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      if (rawBody.action === 'create') {
+        const incident = createIncident({
+          orgId: authResult.context.orgId,
+          title: rawBody.title || 'Operational Incident',
+          severity: rawBody.severity || 'high',
+          owner: authResult.context.email,
+          rootCause: rawBody.rootCause,
+          linkedAlertId: rawBody.linkedAlertId,
+        });
+        recordAuditLog(authResult.context, 'ops_incident_created', incident.id, 'executed', {
+          severity: incident.severity,
+        });
+        sendJson(res, 200, { success: true, incident });
+        return true;
+      }
+      if (rawBody.action === 'transition') {
+        const result = transitionIncidentState({
+          incidentId: rawBody.incidentId,
+          targetState: rawBody.targetState,
+          actor: authResult.context.email,
+          note: rawBody.note || `Transitioned to ${rawBody.targetState}`,
+          rootCause: rawBody.rootCause,
+          recoveryAction: rawBody.recoveryAction,
+        });
+        if (!result.success) {
+          sendJson(res, 400, { error: result.error });
+          return true;
+        }
+        recordAuditLog(authResult.context, 'ops_incident_transition', result.incident.id, 'executed', {
+          toState: result.incident.state,
+        });
+        sendJson(res, 200, { success: true, incident: result.incident });
+        return true;
+      }
+      sendJson(res, 400, { error: 'Invalid incident action' });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Incident action failed' });
+      return true;
+    }
+  }
+
+  // 6C. Backup Snapshot, Sandbox Restore & Data Portability Export (Phases 361–365)
+  if (url.includes('/api/backup/snapshots')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'admin');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const snapshot = createBackupSnapshot(
+        authResult.context,
+        rawBody.dataset || {},
+        Number(rawBody.retentionDays) || 30
+      );
+      const { payload: _omit, ...meta } = snapshot;
+      sendJson(res, 200, { success: true, snapshot: meta });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Backup snapshot failed' });
+      return true;
+    }
+  }
+
+  if (url.includes('/api/backup/restore-verify')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'admin');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      if (!rawBody.snapshotId) {
+        sendJson(res, 400, { error: 'snapshotId is required' });
+        return true;
+      }
+      const result = verifyIsolatedRestore(
+        authResult.context,
+        rawBody.snapshotId,
+        rawBody.sandboxNamespace
+      );
+      if (!result.success) {
+        sendJson(res, result.status, { error: result.error });
+        return true;
+      }
+      sendJson(res, 200, { success: true, report: result.report });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Restore verification failed' });
+      return true;
+    }
+  }
+
+  if (url.includes('/api/export/tenant-data')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, undefined, 'manager');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const format = rawBody.format === 'csv' ? 'csv' : 'json';
+      const result = exportTenantData(
+        authResult.context,
+        rawBody.dataset || {},
+        format,
+        rawBody.orgId
+      );
+      if (!result.success) {
+        sendJson(res, result.status, { error: result.error, code: result.code });
+        return true;
+      }
+      sendJson(res, 200, { success: true, exportPackage: result.exportPackage });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Tenant data export failed' });
+      return true;
+    }
+  }
+
+  // 6D. Organization Lifecycle & Team Invitations (Phases 367–368)
+  if (url.includes('/api/org/profile')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'admin');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const resUpdate = updateWorkspaceProfile(authResult.context, rawBody);
+      if (!resUpdate.success) {
+        sendJson(res, resUpdate.status, { error: resUpdate.error });
+        return true;
+      }
+      sendJson(res, 200, { success: true, workspace: resUpdate.workspace });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Workspace profile update failed' });
+      return true;
+    }
+  }
+
+  if (url.includes('/api/org/transfer-ownership')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'owner');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const resTransfer = transferWorkspaceOwnership(authResult.context, rawBody.targetUid);
+      if (!resTransfer.success) {
+        sendJson(res, resTransfer.status, { error: resTransfer.error });
+        return true;
+      }
+      sendJson(res, 200, { success: true, workspace: resTransfer.workspace });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Ownership transfer failed' });
+      return true;
+    }
+  }
+
+  if (url.includes('/api/org/archive')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'owner');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const resArchive = archiveWorkspace(authResult.context, rawBody.confirmationPhrase || '');
+      if (!resArchive.success) {
+        sendJson(res, resArchive.status, { error: resArchive.error });
+        return true;
+      }
+      sendJson(res, 200, { success: true, workspace: resArchive.workspace });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Workspace archival failed' });
+      return true;
+    }
+  }
+
+  if (url.includes('/api/org/invite/create')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'admin');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const inviteRole = ['admin', 'manager', 'member', 'viewer'].includes(rawBody.role) ? rawBody.role : 'member';
+      const result = createTeamInvitation(authResult.context, rawBody.email || '', inviteRole);
+      if (!result.success) {
+        sendJson(res, result.status, { error: result.error, code: result.code });
+        return true;
+      }
+      sendJson(res, 200, { success: true, invitation: result.invitation });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Invitation creation failed' });
+      return true;
+    }
+  }
+
+  if (url.includes('/api/org/invite/accept')) {
+    try {
+      const rawBody = await readBody(req);
+      const result = acceptTeamInvitation({
+        orgId: rawBody.orgId || 'org-apex',
+        invitationId: rawBody.invitationId,
+        inviteToken: rawBody.inviteToken || '',
+        authenticatedUid: rawBody.authenticatedUid || null,
+        authenticatedEmail: rawBody.authenticatedEmail || null,
+        displayName: rawBody.displayName,
+      });
+      if (!result.success) {
+        sendJson(res, result.status, { error: result.error, code: result.code });
+        return true;
+      }
+      sendJson(res, 200, { success: true, member: result.member });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Invitation acceptance failed' });
+      return true;
+    }
+  }
+
+  if (url.includes('/api/org/invite/cancel')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'admin');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const result = cancelTeamInvitation(authResult.context, rawBody.invitationId);
+      if (!result.success) {
+        sendJson(res, result.status, { error: result.error });
+        return true;
+      }
+      sendJson(res, 200, { success: true, invitation: result.invitation });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Cancel invitation failed' });
+      return true;
+    }
+  }
+
+  if (url.includes('/api/org/member/revoke')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'admin');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const result = revokeMemberAccess(authResult.context, rawBody.targetUid);
+      if (!result.success) {
+        sendJson(res, result.status, { error: result.error });
+        return true;
+      }
+      sendJson(res, 200, { success: true, member: result.member });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Member revocation failed' });
+      return true;
+    }
+  }
+
+  if (url.includes('/api/org/member/role')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'admin');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const result = updateMemberRole(authResult.context, rawBody.targetUid, rawBody.role);
+      if (!result.success) {
+        sendJson(res, result.status, { error: result.error });
+        return true;
+      }
+      sendJson(res, 200, { success: true, member: result.member });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Member role update failed' });
+      return true;
+    }
+  }
+
+  // 6E. Billing Lifecycle & Webhook Readiness (Phases 369–370)
+  if (url.includes('/api/billing/trial')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'admin');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const result = startTrialSubscription(authResult.context, rawBody.plan || 'pro', rawBody.days || 14);
+      if (!result.success) {
+        sendJson(res, result.status, { error: result.error });
+        return true;
+      }
+      sendJson(res, 200, { success: true, subscription: result.subscription });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Trial activation failed' });
+      return true;
+    }
+  }
+
+  if (url.includes('/api/billing/cancel')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'admin');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const result = scheduleSubscriptionCancellation(authResult.context, Boolean(rawBody.immediate));
+      if (!result.success) {
+        sendJson(res, result.status, { error: result.error });
+        return true;
+      }
+      sendJson(res, 200, { success: true, subscription: result.subscription });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Subscription cancellation failed' });
+      return true;
+    }
+  }
+
+  if (url.includes('/api/billing/webhook')) {
+    try {
+      const rawBody = await readBody(req);
+      const signature = (req.headers['x-teamora-signature'] as string) || '';
+      const result = processBillingWebhookEvent(rawBody, JSON.stringify(rawBody), signature);
+      sendJson(res, result.status, result);
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Webhook processing error' });
+      return true;
+    }
+  }
+
+  // 6F. Support & Feedback Operations (Phase 375)
+  if (url.includes('/api/support/tickets/status')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'manager');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const resUpdate = updateSupportTicketStatus(authResult.context, rawBody.ticketId, {
+        status: rawBody.status,
+        internalNote: rawBody.internalNote,
+        resolutionSummary: rawBody.resolutionSummary,
+      });
+      if (!resUpdate.success) {
+        sendJson(res, resUpdate.status, { error: resUpdate.error });
+        return true;
+      }
+      sendJson(res, 200, { success: true, ticket: resUpdate.ticket });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Ticket update failed' });
+      return true;
+    }
+  }
+
+  if (url.includes('/api/support/tickets')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'viewer');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const resCreate = createSupportTicket(authResult.context, rawBody);
+      if (!resCreate.success) {
+        sendJson(res, resCreate.status, { error: resCreate.error });
+        return true;
+      }
+      sendJson(res, 200, { success: true, ticket: resCreate.ticket });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Support ticket creation failed' });
+      return true;
+    }
+  }
+
+  // 6G. Release Flags & Rollback Controls (Phases 376–378)
+  if (url.includes('/api/release/flags')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'admin');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const resUpdate = updateReleaseFlag(authResult.context, rawBody.key, Boolean(rawBody.enabled), rawBody.cohort);
+      if (!resUpdate.success) {
+        sendJson(res, resUpdate.status, { error: resUpdate.error });
+        return true;
+      }
+      sendJson(res, 200, { success: true, flag: resUpdate.flag, revision: resUpdate.revision });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Feature flag update failed' });
+      return true;
+    }
+  }
+
+  if (url.includes('/api/release/rollback')) {
+    try {
+      const rawBody = await readBody(req);
+      const authResult = await authenticateAndAuthorize(req, rawBody.orgId, 'admin');
+      if (!authResult.success) {
+        sendJson(res, authResult.status, { error: authResult.error, code: authResult.code });
+        return true;
+      }
+      const resRollback = rollbackReleaseFlags(authResult.context, rawBody.revisionId);
+      if (!resRollback.success) {
+        sendJson(res, resRollback.status, { error: resRollback.error });
+        return true;
+      }
+      sendJson(res, 200, {
+        success: true,
+        restoredRevisionId: resRollback.restoredRevisionId,
+        flags: resRollback.flags,
+      });
+      return true;
+    } catch (err: any) {
+      sendJson(res, 500, { error: err.message || 'Rollback failed' });
       return true;
     }
   }

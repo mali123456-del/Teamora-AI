@@ -58,27 +58,28 @@ A premium, modern, multi-tenant AI Workforce & Business Automation SaaS platform
 
 ## 4. Documentation Suite
 
+- [`docs/TEAMORA_PHASE_351_380_FINAL_REPORT.md`](./docs/TEAMORA_PHASE_351_380_FINAL_REPORT.md) — Phase 351–380 Master Operational Sign-Off Report (**READY WITH LIMITATIONS**, 120/120 passing)
+- [`docs/SAAS_OPERATIONAL_READINESS.md`](./docs/SAAS_OPERATIONAL_READINESS.md) — SaaS Operational Readiness Matrix across Env, Telemetry, DR, Billing & Support
+- [`docs/DEPLOYMENT_RUNBOOK.md`](./docs/DEPLOYMENT_RUNBOOK.md) — Production Deployment & Secret Injection Runbook
+- [`docs/INCIDENT_RESPONSE_RUNBOOK.md`](./docs/INCIDENT_RESPONSE_RUNBOOK.md) — Alert Triage, Incident State Machine & Non-Destructive Rollback Guide
+- [`docs/CUSTOMER_ONBOARDING_GUIDE.md`](./docs/CUSTOMER_ONBOARDING_GUIDE.md) — Workspace Setup, Invitations, Governance & Export Guide
+- [`docs/PRODUCTION_GO_LIVE_CHECKLIST.md`](./docs/PRODUCTION_GO_LIVE_CHECKLIST.md) — 10-Gate Pre-Release & Approval Checklist
+- [`docs/POST_RELEASE_MONITORING_PLAN.md`](./docs/POST_RELEASE_MONITORING_PLAN.md) — Post-Launch SLA & Telemetry Watch Plan
+- [`docs/PHASE_351_380_INITIAL_AUDIT.md`](./docs/PHASE_351_380_INITIAL_AUDIT.md) — Preflight Baseline Gap Audit (Phases 351–380)
+- [`docs/TEAMORA_PHASE_341_350_FINAL_REPORT.md`](./docs/TEAMORA_PHASE_341_350_FINAL_REPORT.md) — Phase 341–350 Master Final Release Report (READY WITH LIMITATIONS)
+- [`docs/PRODUCTION_READINESS_CHECKLIST.md`](./docs/PRODUCTION_READINESS_CHECKLIST.md) — Comprehensive 10-Gate Production Readiness Checklist
+- [`docs/KNOWN_LIMITATIONS.md`](./docs/KNOWN_LIMITATIONS.md) — Documented Operational Boundaries & Configuration Limits
+- [`docs/RELEASE_RISK_REGISTER.md`](./docs/RELEASE_RISK_REGISTER.md) — Monitored Security, Operational & Cloud Risks
+- [`docs/PHASE_341_ARCHITECTURE_AUDIT.md`](./docs/PHASE_341_ARCHITECTURE_AUDIT.md) — Architecture & Canonical 15 Workforce Audit
+- [`docs/PHASE_342_BENCHMARK_INTEGRITY_AUDIT.md`](./docs/PHASE_342_BENCHMARK_INTEGRITY_AUDIT.md) — 20 Golden Cases, SEM, df & Statistical Hardening
+- [`docs/PHASE_343_MODEL_REGISTRY_AUDIT.md`](./docs/PHASE_343_MODEL_REGISTRY_AUDIT.md) — Provider Specs, Pricing & Assignment Reconciliation
+- [`docs/PHASE_344_REPRODUCIBILITY_REPORT.md`](./docs/PHASE_344_REPRODUCIBILITY_REPORT.md) — Multi-Run Empirical Benchmark Reproducibility
+- [`docs/PHASE_345_SECURITY_AUDIT.md`](./docs/PHASE_345_SECURITY_AUDIT.md) — OWASP GenAI Top 10 (2026) Certified Security Audit
+- [`docs/PHASE_346_GOVERNANCE_VERIFICATION.md`](./docs/PHASE_346_GOVERNANCE_VERIFICATION.md) — Two-Stage Execution & Anti-Self-Approval Verification
+- [`docs/PHASE_347_RELIABILITY_AUDIT.md`](./docs/PHASE_347_RELIABILITY_AUDIT.md) — Circuit Breakers, Fault Injection & Offline Sync
+- [`docs/PHASE_348_PERFORMANCE_REPORT.md`](./docs/PHASE_348_PERFORMANCE_REPORT.md) — Low-Resource Profile (<85MB RSS, 60 FPS Three.js ECO)
+- [`docs/PHASE_349_REGRESSION_REPORT.md`](./docs/PHASE_349_REGRESSION_REPORT.md) — Full Regression Testing
 - [`docs/TEAMORA_PHASE_301_340_FINAL_REPORT.md`](./docs/TEAMORA_PHASE_301_340_FINAL_REPORT.md) — Phase 301–340 Master Final Release Report
-- [`docs/AI_MODEL_ASSIGNMENT_RECONCILIATION.md`](./docs/AI_MODEL_ASSIGNMENT_RECONCILIATION.md) — Authoritative 15 AI Employee Model Assignment Matrix
-- [`docs/AI_ADVANCED_BENCHMARK_RESULTS.md`](./docs/AI_ADVANCED_BENCHMARK_RESULTS.md) — Multi-run empirical benchmarks & statistical analysis
-- [`docs/AI_OPTIMIZATION_AND_TRAINING_REPORT.md`](./docs/AI_OPTIMIZATION_AND_TRAINING_REPORT.md) — 7-level optimization hierarchy, tuning & governance
-- [`docs/AI_MODEL_ROUTING_STRATEGY.md`](./docs/AI_MODEL_ROUTING_STRATEGY.md) — Multi-tier dynamic dispatch and SLA matrix
-- [`docs/AI_CONTINUOUS_EVALUATION.md`](./docs/AI_CONTINUOUS_EVALUATION.md) — Continuous telemetry, shadow testing & drift detection
-- [`docs/AI_INTELLIGENCE_SECURITY_AUDIT.md`](./docs/AI_INTELLIGENCE_SECURITY_AUDIT.md) — OWASP GenAI Top 10 (2026) certified audit
-- [`docs/AI_BENCHMARK_ENGINE_VERIFICATION.md`](./docs/AI_BENCHMARK_ENGINE_VERIFICATION.md) — Dataset integrity and scoring formulas
-- [`docs/AI_MODEL_ECOSYSTEM_AUDIT.md`](./docs/AI_MODEL_ECOSYSTEM_AUDIT.md) — Comprehensive AI model registry, tokens, quotas & pricing
-- [`docs/AI_BENCHMARKING_METHODOLOGY.md`](./docs/AI_BENCHMARKING_METHODOLOGY.md) — Standardized 8-domain evaluation methodology
-- [`docs/AI_MODEL_SCORING_SYSTEM.md`](./docs/AI_MODEL_SCORING_SYSTEM.md) — Weighted scoring mathematical formulas & domain profiles
-- [`docs/AI_MODEL_TRAINING_STRATEGY.md`](./docs/AI_MODEL_TRAINING_STRATEGY.md) — Prompt tuning, fine-tuning eligibility & safety governance
-- [`docs/AI_EMPLOYEE_MODEL_MATRIX.md`](./docs/AI_EMPLOYEE_MODEL_MATRIX.md) — 15 AI employee compatibility & optimal assignments
-- [`docs/AI_BENCHMARK_RESULTS.md`](./docs/AI_BENCHMARK_RESULTS.md) — Empirical benchmark outcomes & domain winners
-- [`docs/ui/AI_MODEL_BENCHMARKING_LAB.md`](./docs/ui/AI_MODEL_BENCHMARKING_LAB.md) — UI/UX specification for the Benchmarking Lab
-- [`docs/MASTER_PROJECT_AUDIT.md`](./docs/MASTER_PROJECT_AUDIT.md) — Comprehensive architecture and component inspection
-- [`docs/COMPONENT_QUALITY_SCORECARD.md`](./docs/COMPONENT_QUALITY_SCORECARD.md) — 99% quality scorecard across 9 engineering dimensions
-- [`docs/TESTING_STRATEGY.md`](./docs/TESTING_STRATEGY.md) — Multi-level testing strategy and coverage breakdown
-- [`docs/REMAINING_GAPS.md`](./docs/REMAINING_GAPS.md) — Prioritized roadmap analysis
-- [`docs/CHECKPOINT_VALIDATION.md`](./docs/CHECKPOINT_VALIDATION.md) — Checkpoint verification audit report
-- [`docs/TEAMORA_FINAL_MASTER_REPORT.md`](./docs/TEAMORA_FINAL_MASTER_REPORT.md) — Detailed final master release report
 - [`BUILD_STATUS.md`](./BUILD_STATUS.md) — Live build status and test evidence summary
 
 ---
@@ -92,8 +93,8 @@ npm run dev
 # Run TypeScript type check (0 errors)
 npm run lint
 
-# Run automated unit, security & integration test suite (96/96 passed)
-npm run test
+# Run automated unit, security, ops & SaaS acceptance suite (120/120 passed)
+npm test -- --run
 
 # Compile production bundle
 npm run build
